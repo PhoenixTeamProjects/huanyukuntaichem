@@ -8,6 +8,12 @@ Use only:
 - project-specific PM2 app `huanyukuntaichem-frontend`
 - project-specific Docker containers prefixed `huanyukuntai`
 
+Existing `huanyukuntai` containers were found on the VPS. Treat them as production data until audited:
+
+- `huanyukuntai-directus`
+- `huanyukuntai-directus-postgres`
+- `huanyukuntai-frontend`
+
 ## Forbidden Operations
 
 - Do not run `killall node`.
