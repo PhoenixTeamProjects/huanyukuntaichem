@@ -23,7 +23,12 @@ mkdir -p "$APP_ROOT/backups" "$CURRENT_DIR"
 if [ "$(find "$CURRENT_DIR" -mindepth 1 -maxdepth 1 | wc -l)" -gt 0 ]; then
   BACKUP_DIR="$APP_ROOT/backups/before-$COMMIT_SHA-$(date +%Y%m%d%H%M%S)"
   mkdir -p "$BACKUP_DIR"
-  tar -C "$CURRENT_DIR" -czf "$BACKUP_DIR/current.tar.gz" .
+  tar \
+    --exclude='./node_modules' \
+    --exclude='./frontend/node_modules' \
+    --exclude='./frontend/.next/cache' \
+    -C "$CURRENT_DIR" \
+    -czf "$BACKUP_DIR/current.tar.gz" .
 fi
 
 find "$CURRENT_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
