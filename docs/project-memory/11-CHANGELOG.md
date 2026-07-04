@@ -12,3 +12,5 @@
 - Started PM2 frontend on port `3007`.
 - Enabled Nginx host routing.
 - Recorded existing VPS Directus/PostgreSQL containers to prevent accidental overwrite.
+- Issued Let's Encrypt certificate for main, www, and CMS domains.
+- Enabled HTTP to HTTPS redirects and verified public HTTPS responses.

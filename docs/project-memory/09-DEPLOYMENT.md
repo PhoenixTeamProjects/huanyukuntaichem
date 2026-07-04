@@ -10,6 +10,13 @@ Plan A: GitHub + VPS.
 - WWW: `https://www.huanyukuntaichem.com`
 - CMS: `https://cms.huanyukuntaichem.com`
 
+## DNS
+
+- `huanyukuntaichem.com` A record points to the VPS.
+- `www.huanyukuntaichem.com` A record points to the VPS.
+- `cms.huanyukuntaichem.com` A record points to the VPS.
+- Cloudflare was temporarily kept on DNS-only gray cloud during origin HTTPS setup.
+
 ## VPS Paths
 
 - App: `/var/www/huanyukuntaichem/current`
@@ -21,6 +28,15 @@ Plan A: GitHub + VPS.
 - Next.js runs through PM2.
 - Directus and PostgreSQL run through Docker Compose.
 - Nginx reverse proxies the frontend and CMS.
+
+## HTTPS
+
+- Let's Encrypt certificate issued for `huanyukuntaichem.com`, `www.huanyukuntaichem.com`, and `cms.huanyukuntaichem.com`.
+- Certificate path: `/etc/letsencrypt/live/huanyukuntaichem.com/fullchain.pem`.
+- Private key path stays on the VPS under `/etc/letsencrypt/live/huanyukuntaichem.com/privkey.pem`.
+- Expiry date: 2026-10-02.
+- Certbot scheduled automatic renewal.
+- HTTP to HTTPS redirect is enabled by Certbot/Nginx.
 
 ## Current VPS State
 
