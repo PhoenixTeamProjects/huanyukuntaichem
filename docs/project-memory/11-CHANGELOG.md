@@ -21,3 +21,4 @@
 - Corrected the deployment root to match the VPS website convention: `/opt/websites/huanyukuntaichem-site` instead of `/var/www/huanyukuntaichem`.
 - Updated deployment backups to exclude `node_modules` and Next.js cache so GitHub Actions does not stall while archiving generated dependency folders.
 - Updated deployment backups to exclude the entire Next.js build directory and treat runtime file-change warnings as non-fatal.
+- Changed deployment to build in a release work directory first, then stop PM2 and switch `current` after the build succeeds.

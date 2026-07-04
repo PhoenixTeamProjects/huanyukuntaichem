@@ -12,15 +12,23 @@ if [ -z "$COMMIT_SHA" ]; then
 fi
 
 ARCHIVE="$RELEASES_DIR/$COMMIT_SHA.tar.gz"
+WORK_DIR="$RELEASES_DIR/work-$COMMIT_SHA"
 
 if [ ! -f "$ARCHIVE" ]; then
   echo "Deployment archive not found: $ARCHIVE" >&2
   exit 1
 fi
 
-mkdir -p "$APP_ROOT/backups" "$CURRENT_DIR"
+mkdir -p "$APP_ROOT/backups" "$RELEASES_DIR"
+rm -rf "$WORK_DIR"
+mkdir -p "$WORK_DIR"
+tar -xzf "$ARCHIVE" -C "$WORK_DIR"
 
-if [ "$(find "$CURRENT_DIR" -mindepth 1 -maxdepth 1 | wc -l)" -gt 0 ]; then
+cd "$WORK_DIR"
+npm ci
+npm --workspace frontend run build
+
+if [ -d "$CURRENT_DIR" ] && [ "$(find "$CURRENT_DIR" -mindepth 1 -maxdepth 1 | wc -l)" -gt 0 ]; then
   BACKUP_DIR="$APP_ROOT/backups/before-$COMMIT_SHA-$(date +%Y%m%d%H%M%S)"
   mkdir -p "$BACKUP_DIR"
   tar \
@@ -34,11 +42,9 @@ if [ "$(find "$CURRENT_DIR" -mindepth 1 -maxdepth 1 | wc -l)" -gt 0 ]; then
     -czf "$BACKUP_DIR/current.tar.gz" . || echo "Backup completed with non-fatal file change warnings."
 fi
 
-find "$CURRENT_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
-tar -xzf "$ARCHIVE" -C "$CURRENT_DIR"
-
+pm2 stop huanyukuntaichem-frontend || true
+rm -rf "$CURRENT_DIR"
+mv "$WORK_DIR" "$CURRENT_DIR"
 cd "$CURRENT_DIR"
-npm ci
-npm --workspace frontend run build
 pm2 startOrReload deployment/ecosystem.config.cjs --update-env
 pm2 save
