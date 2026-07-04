@@ -14,3 +14,4 @@
 - Recorded existing VPS Directus/PostgreSQL containers to prevent accidental overwrite.
 - Issued Let's Encrypt certificate for main, www, and CMS domains.
 - Enabled HTTP to HTTPS redirects and verified public HTTPS responses.
+- Updated GitHub Actions deployment to upload a commit archive instead of running `git pull` on the VPS.

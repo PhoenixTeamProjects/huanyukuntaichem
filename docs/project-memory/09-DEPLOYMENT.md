@@ -60,6 +60,8 @@ Required repository secrets:
 - `VPS_PORT`
 - `VPS_SSH_KEY`
 
+The workflow uploads a tar archive of the checked-out GitHub commit to `/var/www/huanyukuntaichem/releases/<commit>.tar.gz`, then runs `scripts/deploy-vps.sh <commit>` on the VPS. The VPS current directory does not need to be a Git working tree and should not store a GitHub token.
+
 ## Backend Update Behavior
 
 With Plan A, frontend content can read Directus dynamically through Server Components/ISR after API integration is completed. Do not describe this project as static-export based.
