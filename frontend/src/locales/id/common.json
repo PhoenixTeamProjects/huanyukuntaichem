@@ -1,0 +1,13 @@
+{
+  "nav": { "primary": "Navigasi utama", "language": "Bahasa", "products": "Produk", "applications": "Aplikasi", "service": "Layanan", "news": "Berita", "about": "Tentang", "contact": "Kontak" },
+  "cta": { "inquiry": "Permintaan", "contact": "Hubungi kami", "sendInquiry": "Kirim permintaan", "viewDetails": "Lihat detail", "readMore": "Baca lagi" },
+  "home": { "eyebrow": "Pasokan kimia industri", "title": "Solusi aditif bahan bakar untuk pasar industri", "summary": "Situs B2B multibahasa siap Directus untuk aditif bahan bakar dan produk kimia industri.", "capabilitiesTitle": "Struktur untuk produk dan permintaan", "capabilitiesText": "Situs siap untuk produk, artikel, aplikasi, SEO, dan permintaan melalui CMS.", "capabilityFuel": "Fokus aditif bahan bakar", "capabilityFuelText": "Rute siap untuk kategori diesel, bensin, dan bahan bakar industri.", "capabilityChemical": "Halaman kimia", "capabilityChemicalText": "Directus akan menyimpan spesifikasi, deskripsi, dan alt gambar.", "capabilityQuality": "Kualitas dan layanan", "capabilityQualityText": "Halaman memandu pembeli dari evaluasi ke permintaan." },
+  "products": { "intro": "Jelajahi kategori dan halaman produk yang dikelola CMS." },
+  "news": { "intro": "Artikel teknis dan berita akan dikelola di Directus." },
+  "about": { "intro": "Profil perusahaan harus dikonfirmasi di memori proyek dan Directus." },
+  "applications": { "intro": "Konten aplikasi menghubungkan produk dengan skenario pembeli." },
+  "service": { "intro": "Layanan menjelaskan konsultasi, sampel, dokumen, logistik, dan dukungan." },
+  "contact": { "intro": "Kirim kebutuhan, aplikasi, dan pasar tujuan untuk penawaran." },
+  "form": { "name": "Nama", "email": "Email", "company": "Perusahaan", "phone": "Telepon", "message": "Pesan", "sending": "Mengirim...", "sent": "Permintaan diterima.", "error": "Gagal mengirim. Coba lagi." },
+  "footer": { "quickLinks": "Tautan", "contact": "Kontak" }
+}

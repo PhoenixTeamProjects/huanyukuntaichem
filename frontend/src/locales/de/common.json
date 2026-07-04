@@ -1,0 +1,13 @@
+{
+  "nav": { "primary": "Hauptnavigation", "language": "Sprache", "products": "Produkte", "applications": "Anwendungen", "service": "Service", "news": "News", "about": "Über uns", "contact": "Kontakt" },
+  "cta": { "inquiry": "Anfrage", "contact": "Kontakt", "sendInquiry": "Anfrage senden", "viewDetails": "Details", "readMore": "Mehr lesen" },
+  "home": { "eyebrow": "Industrielle Chemieversorgung", "title": "Kraftstoffadditiv-Lösungen für industrielle Märkte", "summary": "Mehrsprachige B2B-Website mit Directus-Vorbereitung für Kraftstoffadditive und Industriechemikalien.", "capabilitiesTitle": "Struktur für Produkte und Anfragen", "capabilitiesText": "Die Website ist für Produkte, Artikel, Anwendungen, SEO und Anfragen per CMS vorbereitet.", "capabilityFuel": "Fokus Kraftstoff", "capabilityFuelText": "Routen für Diesel-, Benzin- und Industriekraftstoffadditive sind vorbereitet.", "capabilityChemical": "Chemieseiten", "capabilityChemicalText": "Directus speichert Spezifikationen, Beschreibungen und Alt-Texte.", "capabilityQuality": "Qualität und Service", "capabilityQualityText": "Seiten führen Käufer von der Bewertung zur Anfrage." },
+  "products": { "intro": "Durchsuchen Sie CMS-verwaltete Produktkategorien und Produktseiten." },
+  "news": { "intro": "Technische Artikel und News werden in Directus verwaltet." },
+  "about": { "intro": "Das Firmenprofil muss in Projektgedächtnis und Directus bestätigt werden." },
+  "applications": { "intro": "Anwendungen verbinden Produkte mit Käuferszenarien." },
+  "service": { "intro": "Service erklärt Beratung, Muster, Dokumente, Logistik und Support." },
+  "contact": { "intro": "Senden Sie Anforderungen, Anwendung und Zielmarkt für ein Angebot." },
+  "form": { "name": "Name", "email": "Email", "company": "Firma", "phone": "Telefon", "message": "Nachricht", "sending": "Senden...", "sent": "Anfrage erhalten.", "error": "Senden fehlgeschlagen. Bitte erneut versuchen." },
+  "footer": { "quickLinks": "Links", "contact": "Kontakt" }
+}

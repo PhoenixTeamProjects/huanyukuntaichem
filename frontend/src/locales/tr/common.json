@@ -1,0 +1,13 @@
+{
+  "nav": { "primary": "Ana gezinme", "language": "Dil", "products": "Ürünler", "applications": "Uygulamalar", "service": "Hizmet", "news": "Haberler", "about": "Hakkımızda", "contact": "İletişim" },
+  "cta": { "inquiry": "Talep", "contact": "Bize ulaşın", "sendInquiry": "Talep gönder", "viewDetails": "Detaylar", "readMore": "Devamı" },
+  "home": { "eyebrow": "Endüstriyel kimyasal tedarik", "title": "Endüstriyel pazarlar için yakıt katkı çözümleri", "summary": "Yakıt katkıları ve endüstriyel kimyasallar için Directus'a hazır çok dilli B2B sitesi.", "capabilitiesTitle": "Ürün netliği ve talepler için yapı", "capabilitiesText": "Site CMS ürünleri, makaleleri, uygulamaları, SEO ve talepleri için hazırdır.", "capabilityFuel": "Yakıt katkısı odağı", "capabilityFuelText": "Dizel, benzin ve endüstriyel yakıt katkı kategorileri için rotalar hazır.", "capabilityChemical": "Kimyasal sayfaları", "capabilityChemicalText": "Directus teknik özellikleri, açıklamaları ve alt metinleri tutacak.", "capabilityQuality": "Kalite ve hizmet", "capabilityQualityText": "Sayfalar alıcıyı değerlendirmeden talebe yönlendirir." },
+  "products": { "intro": "CMS tarafından yönetilen ürün kategorilerini ve sayfalarını inceleyin." },
+  "news": { "intro": "Teknik makaleler ve haberler Directus üzerinden yönetilecek." },
+  "about": { "intro": "Şirket profili proje hafızasında ve Directus'ta doğrulanmalıdır." },
+  "applications": { "intro": "Uygulama içeriği ürünleri alıcı senaryolarına bağlar." },
+  "service": { "intro": "Hizmet danışmanlık, numune, belge, lojistik ve desteği açıklar." },
+  "contact": { "intro": "Teklif için gereksinim, uygulama ve hedef pazarı gönderin." },
+  "form": { "name": "Ad", "email": "Email", "company": "Şirket", "phone": "Telefon", "message": "Mesaj", "sending": "Gönderiliyor...", "sent": "Talep alındı.", "error": "Gönderilemedi. Tekrar deneyin." },
+  "footer": { "quickLinks": "Bağlantılar", "contact": "İletişim" }
+}

@@ -1,0 +1,13 @@
+{
+  "nav": { "primary": "Navegação principal", "language": "Idioma", "products": "Produtos", "applications": "Aplicações", "service": "Serviço", "news": "Notícias", "about": "Sobre", "contact": "Contato" },
+  "cta": { "inquiry": "Consulta", "contact": "Fale conosco", "sendInquiry": "Enviar consulta", "viewDetails": "Ver detalhes", "readMore": "Ler mais" },
+  "home": { "eyebrow": "Fornecimento químico industrial", "title": "Soluções de aditivos de combustível para mercados industriais", "summary": "Site B2B multilíngue pronto para Directus para aditivos de combustível e produtos químicos industriais.", "capabilitiesTitle": "Estrutura para produtos e consultas", "capabilitiesText": "O site está pronto para produtos, artigos, aplicações, SEO e consultas via CMS.", "capabilityFuel": "Foco em combustível", "capabilityFuelText": "Rotas prontas para categorias de diesel, gasolina e combustível industrial.", "capabilityChemical": "Páginas químicas", "capabilityChemicalText": "Directus guardará especificações, descrições e textos alt.", "capabilityQuality": "Qualidade e serviço", "capabilityQualityText": "As páginas levam o comprador da avaliação à consulta." },
+  "products": { "intro": "Veja categorias e páginas de produtos gerenciadas por CMS." },
+  "news": { "intro": "Artigos técnicos e notícias serão gerenciados no Directus." },
+  "about": { "intro": "O perfil da empresa deve ser confirmado na memória do projeto e Directus." },
+  "applications": { "intro": "As aplicações conectarão produtos a cenários de compra." },
+  "service": { "intro": "O serviço explicará consulta, amostras, documentos, logística e suporte." },
+  "contact": { "intro": "Envie requisitos, aplicação e mercado para cotação." },
+  "form": { "name": "Nome", "email": "Email", "company": "Empresa", "phone": "Telefone", "message": "Mensagem", "sending": "Enviando...", "sent": "Consulta recebida.", "error": "Não foi possível enviar. Tente novamente." },
+  "footer": { "quickLinks": "Links", "contact": "Contato" }
+}

@@ -1,0 +1,13 @@
+{
+  "nav": { "primary": "Navigation principale", "language": "Langue", "products": "Produits", "applications": "Applications", "service": "Service", "news": "Actualités", "about": "À propos", "contact": "Contact" },
+  "cta": { "inquiry": "Demande", "contact": "Nous contacter", "sendInquiry": "Envoyer une demande", "viewDetails": "Voir détails", "readMore": "Lire plus" },
+  "home": { "eyebrow": "Fourniture chimique industrielle", "title": "Solutions d'additifs carburant pour marchés industriels", "summary": "Site B2B multilingue prêt pour Directus pour additifs carburant et produits chimiques industriels.", "capabilitiesTitle": "Structure pour produits et demandes", "capabilitiesText": "Le site est prêt pour produits, articles, applications, SEO et demandes via CMS.", "capabilityFuel": "Focus additifs", "capabilityFuelText": "Routes prêtes pour additifs diesel, essence et carburants industriels.", "capabilityChemical": "Pages chimiques", "capabilityChemicalText": "Directus stockera spécifications, descriptions et textes alt multilingues.", "capabilityQuality": "Qualité et service", "capabilityQualityText": "Les pages guident l'acheteur de l'évaluation à la demande." },
+  "products": { "intro": "Parcourez les catégories et pages produits gérées par CMS." },
+  "news": { "intro": "Les articles techniques et actualités seront gérés dans Directus." },
+  "about": { "intro": "Le profil d'entreprise doit être confirmé dans la mémoire projet et Directus." },
+  "applications": { "intro": "Les applications relieront produits et scénarios acheteurs." },
+  "service": { "intro": "Le service expliquera conseil, échantillons, documents, logistique et support." },
+  "contact": { "intro": "Envoyez vos exigences, application et marché pour devis." },
+  "form": { "name": "Nom", "email": "Email", "company": "Entreprise", "phone": "Téléphone", "message": "Message", "sending": "Envoi...", "sent": "Demande reçue.", "error": "Envoi impossible. Réessayez." },
+  "footer": { "quickLinks": "Liens", "contact": "Contact" }
+}

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="Industrial fuel additive laboratory and production background">
+  <rect width="1600" height="900" fill="#1d342b"/>
+  <path d="M0 610 C260 520 390 720 650 640 C900 565 1060 420 1600 470 L1600 900 L0 900 Z" fill="#275f4d"/>
+  <path d="M0 690 C280 610 455 790 755 700 C1030 620 1200 560 1600 610 L1600 900 L0 900 Z" fill="#d7a03d" opacity=".8"/>
+  <g opacity=".34" fill="none" stroke="#ffffff" stroke-width="8">
+    <rect x="990" y="180" width="210" height="420" rx="34"/>
+    <path d="M1045 180v-55h100v55"/>
+    <path d="M1028 335h145M1028 430h145M1028 525h145"/>
+    <path d="M1210 265h115v335"/>
+    <path d="M1325 390h120v210"/>
+  </g>
+  <g opacity=".22" fill="#ffffff">
+    <circle cx="315" cy="220" r="16"/>
+    <circle cx="390" cy="285" r="10"/>
+    <circle cx="470" cy="185" r="22"/>
+    <circle cx="580" cy="250" r="12"/>
+  </g>
+</svg>

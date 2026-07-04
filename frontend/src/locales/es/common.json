@@ -1,0 +1,13 @@
+{
+  "nav": { "primary": "Navegación principal", "language": "Idioma", "products": "Productos", "applications": "Aplicaciones", "service": "Servicio", "news": "Noticias", "about": "Empresa", "contact": "Contacto" },
+  "cta": { "inquiry": "Consulta", "contact": "Contáctenos", "sendInquiry": "Enviar consulta", "viewDetails": "Ver detalles", "readMore": "Leer más" },
+  "home": { "eyebrow": "Suministro químico industrial", "title": "Soluciones de aditivos de combustible para mercados industriales", "summary": "Sitio B2B multilingüe preparado para Directus para aditivos de combustible y productos químicos industriales.", "capabilitiesTitle": "Preparado para claridad de producto y consultas", "capabilitiesText": "La estructura admite productos, artículos, aplicaciones, SEO y consultas desde CMS.", "capabilityFuel": "Enfoque en aditivos", "capabilityFuelText": "Rutas listas para categorías de aditivos de diésel, gasolina y combustibles industriales.", "capabilityChemical": "Páginas químicas", "capabilityChemicalText": "Directus guardará especificaciones, descripciones y textos alt multilingües.", "capabilityQuality": "Calidad y servicio", "capabilityQualityText": "Las páginas guían al comprador desde evaluación hasta consulta." },
+  "products": { "intro": "Explore categorías y páginas de producto gestionadas por CMS." },
+  "news": { "intro": "Artículos técnicos y noticias se gestionarán en Directus." },
+  "about": { "intro": "El perfil de empresa debe confirmarse en la memoria del proyecto y Directus." },
+  "applications": { "intro": "Las aplicaciones conectarán productos con escenarios de compradores." },
+  "service": { "intro": "El servicio explicará consulta, muestras, documentos, logística y soporte." },
+  "contact": { "intro": "Envíe requisitos, aplicación y mercado de destino para cotización." },
+  "form": { "name": "Nombre", "email": "Email", "company": "Empresa", "phone": "Teléfono", "message": "Mensaje", "sending": "Enviando...", "sent": "Consulta recibida.", "error": "No se pudo enviar. Inténtelo otra vez." },
+  "footer": { "quickLinks": "Enlaces", "contact": "Contacto" }
+}

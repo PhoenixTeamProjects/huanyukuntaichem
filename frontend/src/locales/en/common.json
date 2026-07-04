@@ -1,0 +1,64 @@
+{
+  "nav": {
+    "primary": "Primary navigation",
+    "language": "Language",
+    "products": "Products",
+    "applications": "Applications",
+    "service": "Service",
+    "news": "News",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "cta": {
+    "inquiry": "Inquiry",
+    "contact": "Contact us",
+    "sendInquiry": "Send inquiry",
+    "viewDetails": "View details",
+    "readMore": "Read more"
+  },
+  "home": {
+    "eyebrow": "Industrial chemical supply",
+    "title": "Fuel additive solutions for demanding industrial markets",
+    "summary": "Huanyu Kuntai Chemical builds a Directus-ready multilingual B2B website for fuel additives and industrial chemical products.",
+    "capabilitiesTitle": "Built for product clarity and inquiry conversion",
+    "capabilitiesText": "The site structure is prepared for CMS-managed products, technical articles, applications, SEO, and inquiries.",
+    "capabilityFuel": "Fuel additive focus",
+    "capabilityFuelText": "Product routes are ready for diesel, gasoline, and industrial fuel additive categories.",
+    "capabilityChemical": "Chemical product pages",
+    "capabilityChemicalText": "Directus collections will hold multilingual product specifications, descriptions, and image alt text.",
+    "capabilityQuality": "Quality and service",
+    "capabilityQualityText": "Service, application, and contact pages guide buyers from evaluation to inquiry."
+  },
+  "products": {
+    "intro": "Browse CMS-managed product categories and product detail pages."
+  },
+  "news": {
+    "intro": "Technical articles and company news will be managed through Directus."
+  },
+  "about": {
+    "intro": "Company profile content must be finalized in the project memory and Directus before production publication."
+  },
+  "applications": {
+    "intro": "Application content will connect product use cases with target buyer scenarios."
+  },
+  "service": {
+    "intro": "Service content will explain consultation, sampling, documentation, logistics, and after-sales support."
+  },
+  "contact": {
+    "intro": "Send product requirements, target application, and destination market for a quotation."
+  },
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "company": "Company",
+    "phone": "Phone",
+    "message": "Message",
+    "sending": "Sending...",
+    "sent": "Inquiry received.",
+    "error": "The inquiry could not be sent. Please try again."
+  },
+  "footer": {
+    "quickLinks": "Quick links",
+    "contact": "Contact"
+  }
+}
