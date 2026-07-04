@@ -55,4 +55,4 @@ jobs:
       - name: Deploy on VPS
         run: |
           ssh -i ~/.ssh/huanyukuntaichem_deploy_key -p "${{ secrets.VPS_PORT }}" "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
-            "bash /var/www/huanyukuntaichem/current/scripts/deploy-vps.sh ${GITHUB_SHA}"
+            "sed -i 's/\r$//' /var/www/huanyukuntaichem/current/scripts/deploy-vps.sh && bash /var/www/huanyukuntaichem/current/scripts/deploy-vps.sh ${GITHUB_SHA}"
