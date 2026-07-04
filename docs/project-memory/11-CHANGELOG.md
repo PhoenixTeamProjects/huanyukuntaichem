@@ -15,3 +15,4 @@
 - Issued Let's Encrypt certificate for main, www, and CMS domains.
 - Enabled HTTP to HTTPS redirects and verified public HTTPS responses.
 - Updated GitHub Actions deployment to upload a commit archive instead of running `git pull` on the VPS.
+- Added a GitHub Actions precheck that reports missing VPS deployment secrets before SSH setup.

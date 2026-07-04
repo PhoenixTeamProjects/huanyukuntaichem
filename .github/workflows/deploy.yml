@@ -21,6 +21,22 @@ jobs:
             --exclude='frontend/.next' \
             -czf /tmp/huanyukuntaichem-${GITHUB_SHA}.tar.gz .
 
+      - name: Validate deployment secrets
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          missing=0
+          for name in VPS_HOST VPS_USER VPS_PORT VPS_SSH_KEY; do
+            if [ -z "${!name}" ]; then
+              echo "::error title=Missing GitHub secret::$name is not configured in repository Actions secrets"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
       - name: Prepare SSH
         run: |
           install -m 700 -d ~/.ssh
