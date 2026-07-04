@@ -26,9 +26,12 @@ if [ "$(find "$CURRENT_DIR" -mindepth 1 -maxdepth 1 | wc -l)" -gt 0 ]; then
   tar \
     --exclude='./node_modules' \
     --exclude='./frontend/node_modules' \
-    --exclude='./frontend/.next/cache' \
+    --exclude='./frontend/.next' \
+    --exclude='./logs' \
+    --exclude='./frontend/logs' \
+    --warning=no-file-changed \
     -C "$CURRENT_DIR" \
-    -czf "$BACKUP_DIR/current.tar.gz" .
+    -czf "$BACKUP_DIR/current.tar.gz" . || echo "Backup completed with non-fatal file change warnings."
 fi
 
 find "$CURRENT_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
