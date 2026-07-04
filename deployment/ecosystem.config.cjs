@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'huanyukuntaichem-frontend',
-      cwd: '/var/www/huanyukuntaichem/current/frontend',
+      cwd: '/opt/websites/huanyukuntaichem-site/current/frontend',
       script: 'node_modules/next/dist/bin/next',
       args: 'start -p 3007',
       env: {

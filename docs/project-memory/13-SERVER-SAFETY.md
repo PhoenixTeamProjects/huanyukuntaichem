@@ -4,7 +4,10 @@
 
 Use only:
 
-- `/var/www/huanyukuntaichem/current`
+- `/opt/websites/huanyukuntaichem-site`
+- `/opt/websites/huanyukuntaichem-site/current`
+- `/opt/websites/huanyukuntaichem-site/releases`
+- `/opt/websites/huanyukuntaichem-site/backups`
 - project-specific PM2 app `huanyukuntaichem-frontend`
 - project-specific Docker containers prefixed `huanyukuntai`
 

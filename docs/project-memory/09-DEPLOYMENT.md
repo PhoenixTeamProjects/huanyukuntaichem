@@ -19,7 +19,10 @@ Plan A: GitHub + VPS.
 
 ## VPS Paths
 
-- App: `/var/www/huanyukuntaichem/current`
+- App root: `/opt/websites/huanyukuntaichem-site`
+- Current app: `/opt/websites/huanyukuntaichem-site/current`
+- Releases: `/opt/websites/huanyukuntaichem-site/releases`
+- Backups: `/opt/websites/huanyukuntaichem-site/backups`
 - Frontend port: `3007`
 - Directus port: `8055`
 
@@ -40,7 +43,7 @@ Plan A: GitHub + VPS.
 
 ## Current VPS State
 
-- Code path: `/var/www/huanyukuntaichem/current`
+- Code path: `/opt/websites/huanyukuntaichem-site/current`
 - PM2 app: `huanyukuntaichem-frontend`
 - PM2 frontend port: `3007`
 - Existing Directus container: `huanyukuntai-directus`
@@ -60,7 +63,7 @@ Required repository secrets:
 - `VPS_PORT`
 - `VPS_SSH_KEY`
 
-The workflow uploads a tar archive of the checked-out GitHub commit to `/var/www/huanyukuntaichem/releases/<commit>.tar.gz`, uploads the matching `scripts/deploy-vps.sh` to `/var/www/huanyukuntaichem/releases/deploy-vps-<commit>.sh`, then runs that uploaded script on the VPS. The VPS current directory does not need to be a Git working tree and should not store a GitHub token.
+The workflow uploads a tar archive of the checked-out GitHub commit to `/opt/websites/huanyukuntaichem-site/releases/<commit>.tar.gz`, uploads the matching `scripts/deploy-vps.sh` to `/opt/websites/huanyukuntaichem-site/releases/deploy-vps-<commit>.sh`, then runs that uploaded script on the VPS. The VPS current directory does not need to be a Git working tree and should not store a GitHub token.
 
 ## Backend Update Behavior
 

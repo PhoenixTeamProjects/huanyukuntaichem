@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_ROOT="/var/www/huanyukuntaichem"
+APP_ROOT="/opt/websites/huanyukuntaichem-site"
 CURRENT_DIR="$APP_ROOT/current"
 RELEASES_DIR="$APP_ROOT/releases"
 COMMIT_SHA="${1:-}"
