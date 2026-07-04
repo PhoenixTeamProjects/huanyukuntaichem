@@ -51,8 +51,11 @@ jobs:
           scp -i ~/.ssh/huanyukuntaichem_deploy_key -P "${{ secrets.VPS_PORT }}" \
             /tmp/huanyukuntaichem-${GITHUB_SHA}.tar.gz \
             "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/huanyukuntaichem/releases/${GITHUB_SHA}.tar.gz"
+          scp -i ~/.ssh/huanyukuntaichem_deploy_key -P "${{ secrets.VPS_PORT }}" \
+            scripts/deploy-vps.sh \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/huanyukuntaichem/releases/deploy-vps-${GITHUB_SHA}.sh"
 
       - name: Deploy on VPS
         run: |
           ssh -i ~/.ssh/huanyukuntaichem_deploy_key -p "${{ secrets.VPS_PORT }}" "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
-            "sed -i 's/\r$//' /var/www/huanyukuntaichem/current/scripts/deploy-vps.sh && bash /var/www/huanyukuntaichem/current/scripts/deploy-vps.sh ${GITHUB_SHA}"
+            "sed -i 's/\r$//' /var/www/huanyukuntaichem/releases/deploy-vps-${GITHUB_SHA}.sh && bash /var/www/huanyukuntaichem/releases/deploy-vps-${GITHUB_SHA}.sh ${GITHUB_SHA}"

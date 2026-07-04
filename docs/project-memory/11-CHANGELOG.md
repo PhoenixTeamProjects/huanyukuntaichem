@@ -17,3 +17,4 @@
 - Updated GitHub Actions deployment to upload a commit archive instead of running `git pull` on the VPS.
 - Added a GitHub Actions precheck that reports missing VPS deployment secrets before SSH setup.
 - Added line-ending rules for shell scripts and YAML, and made the deploy workflow clean CRLF from the existing VPS deploy script before running it.
+- Changed GitHub Actions to execute the freshly uploaded deploy script from the release directory so the first archive deploy does not depend on an outdated script in `current`.
