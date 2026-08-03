@@ -1,5 +1,5 @@
 {
-  "nav": { "primary": "ناوبری اصلی", "language": "زبان", "products": "محصولات", "applications": "کاربردها", "service": "خدمات", "news": "اخبار", "about": "درباره ما", "contact": "تماس" },
+  "nav": { "primary": "ناوبری اصلی", "language": "زبان", "home": "خانه", "products": "محصولات", "applications": "کاربردها", "service": "خدمات", "news": "اخبار", "about": "درباره ما", "contact": "تماس" },
   "cta": { "inquiry": "استعلام", "contact": "تماس با ما", "sendInquiry": "ارسال استعلام", "viewDetails": "جزئیات", "readMore": "بیشتر بخوانید" },
   "home": { "eyebrow": "تامین مواد شیمیایی صنعتی", "title": "راهکارهای افزودنی سوخت برای بازارهای صنعتی", "summary": "وب سایت B2B چندزبانه آماده Directus برای افزودنی سوخت و محصولات شیمیایی صنعتی.", "capabilitiesTitle": "ساختار آماده برای محصول و استعلام", "capabilitiesText": "سایت برای محصولات، مقالات، کاربردها، SEO و استعلام از CMS آماده است.", "capabilityFuel": "تمرکز بر افزودنی سوخت", "capabilityFuelText": "مسیرها برای دسته های دیزل، بنزین و سوخت صنعتی آماده است.", "capabilityChemical": "صفحات شیمیایی", "capabilityChemicalText": "Directus مشخصات، توضیحات و متن جایگزین تصویر را نگه می دارد.", "capabilityQuality": "کیفیت و خدمات", "capabilityQualityText": "صفحات خریدار را از ارزیابی تا استعلام هدایت می کند." },
   "products": { "intro": "دسته ها و صفحات محصول مدیریت شده توسط CMS را مرور کنید." },

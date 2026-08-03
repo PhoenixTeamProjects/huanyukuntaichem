@@ -2,6 +2,7 @@
 
 ## 2026-08-03
 
+- Added a localized Home item as the first header navigation link after the user identified its absence in the deployed menu.
 - Adopted the user-provided chemical-division business master document as the current company and product boundary source.
 - Confirmed the official company names, HUANYU KUNTAI CHEM business brand, 2008 industry start, and global additive positioning.
 - Locked the website to Fuel Additives, Lubricant Additives, and Lubricant Additive Packages.

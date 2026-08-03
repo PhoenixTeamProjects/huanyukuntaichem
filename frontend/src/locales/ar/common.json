@@ -1,5 +1,5 @@
 {
-  "nav": { "primary": "التنقل الرئيسي", "language": "اللغة", "products": "المنتجات", "applications": "التطبيقات", "service": "الخدمة", "news": "الأخبار", "about": "من نحن", "contact": "اتصل بنا" },
+  "nav": { "primary": "التنقل الرئيسي", "language": "اللغة", "home": "الرئيسية", "products": "المنتجات", "applications": "التطبيقات", "service": "الخدمة", "news": "الأخبار", "about": "من نحن", "contact": "اتصل بنا" },
   "cta": { "inquiry": "استفسار", "contact": "اتصل بنا", "sendInquiry": "إرسال استفسار", "viewDetails": "عرض التفاصيل", "readMore": "اقرأ المزيد" },
   "home": { "eyebrow": "توريد كيميائي صناعي", "title": "حلول إضافات الوقود للأسواق الصناعية", "summary": "موقع B2B متعدد اللغات جاهز لربطه مع Directus لإضافات الوقود والمنتجات الكيميائية الصناعية.", "capabilitiesTitle": "هيكل واضح للمنتجات والاستفسارات", "capabilitiesText": "الموقع جاهز للمنتجات والمقالات والتطبيقات و SEO والاستفسارات عبر CMS.", "capabilityFuel": "تركيز على إضافات الوقود", "capabilityFuelText": "مسارات جاهزة لفئات إضافات الديزل والبنزين والوقود الصناعي.", "capabilityChemical": "صفحات كيميائية", "capabilityChemicalText": "سيحفظ Directus المواصفات والأوصاف ونصوص الصور البديلة.", "capabilityQuality": "الجودة والخدمة", "capabilityQualityText": "تقود الصفحات المشتري من التقييم إلى الاستفسار." },
   "products": { "intro": "تصفح فئات وصفحات المنتجات المدارة من CMS." },

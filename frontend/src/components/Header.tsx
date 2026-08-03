@@ -14,6 +14,7 @@ export default function Header({
   settings: SiteSettings;
 }) {
   const navItems = [
+    ['', messages.nav.home],
     ['products', messages.nav.products],
     ['applications', messages.nav.applications],
     ['service', messages.nav.service],
@@ -31,7 +32,7 @@ export default function Header({
         </Link>
         <nav className="nav-links" aria-label={messages.nav.primary}>
           {navItems.map(([href, label]) => (
-            <Link key={href} href={`/${locale}/${href}`}>
+            <Link key={href || 'home'} href={`/${locale}${href ? `/${href}` : ''}`}>
               {label}
             </Link>
           ))}
