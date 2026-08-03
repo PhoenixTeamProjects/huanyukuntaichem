@@ -26,6 +26,8 @@ tar -xzf "$ARCHIVE" -C "$WORK_DIR"
 
 cd "$WORK_DIR"
 npm ci
+export NEXT_PUBLIC_SITE_URL="https://huanyukuntaichem.com"
+export NEXT_PUBLIC_DIRECTUS_URL="https://cms.huanyukuntaichem.com"
 npm --workspace frontend run build
 
 if [ -d "$CURRENT_DIR" ] && [ "$(find "$CURRENT_DIR" -mindepth 1 -maxdepth 1 | wc -l)" -gt 0 ]; then

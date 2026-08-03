@@ -11,19 +11,37 @@ export default function ProductCategoryMenu({
   categories: ProductCategory[];
   activeSlug?: string;
 }) {
+  const parents = categories.filter((category) => !category.parent);
+
   return (
-    <aside className="sidebar">
-      <div className="list">
-        {categories.map((category) => (
-          <Link
-            key={category.id}
-            className={category.slug === activeSlug ? 'button secondary' : undefined}
-            href={`/${locale}/products/category/${category.slug}`}
-          >
-            {category.name}
-          </Link>
-        ))}
-      </div>
+    <aside className="sidebar product-tree" aria-label="Product categories">
+      {parents.map((parent) => {
+        const children = categories.filter((category) => category.parent === parent.id);
+
+        return (
+          <div className="category-group" key={parent.id}>
+            <Link
+              className={parent.slug === activeSlug ? 'category-parent active' : 'category-parent'}
+              href={`/${locale}/products/category/${parent.slug}`}
+            >
+              {parent.name}
+            </Link>
+            {children.length ? (
+              <div className="category-children">
+                {children.map((child) => (
+                  <Link
+                    key={child.id}
+                    className={child.slug === activeSlug ? 'active' : undefined}
+                    href={`/${locale}/products/category/${child.slug}`}
+                  >
+                    {child.name}
+                  </Link>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        );
+      })}
     </aside>
   );
 }

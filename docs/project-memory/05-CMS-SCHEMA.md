@@ -50,6 +50,7 @@ For translatable content, reserve fields for:
 - `name_*`
 - `summary_*`
 - `description_*`
+- `highlights_*`
 - `specifications`
 - `applications`
 - `seo_title_*`
@@ -57,6 +58,8 @@ For translatable content, reserve fields for:
 - `image`
 - `gallery`
 - `image_alt_*`
+
+Unverified technical, certification, commercial, packaging, or performance fields must remain nullable and hidden when empty.
 
 ## News
 

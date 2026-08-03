@@ -13,16 +13,33 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale: localeParam } = await params;
   const locale = normalizeLocale(localeParam);
   const settings = await getSiteSettings(locale);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://huanyukuntaichem.com';
+  const siteName = settings.siteName ?? 'HUANYU KUNTAI CHEM';
 
   return {
+    metadataBase: new URL(siteUrl),
     title: {
-      default: settings.siteName ?? 'Huanyu Kuntai Chemical',
-      template: `%s | ${settings.siteName ?? 'Huanyu Kuntai Chemical'}`
+      default: siteName,
+      template: `%s | ${siteName}`
     },
-    description: settings.tagline ?? 'Industrial chemical and fuel additive solutions',
+    description:
+      'Global fuel additives, lubricant additives and lubricant additive packages with formulation, OEM, quality control and supply support.',
     alternates: {
-      canonical: `/${locale}`
-    }
+      canonical: `/${locale}`,
+      languages: {
+        en: '/en',
+        'x-default': '/en'
+      }
+    },
+    openGraph: {
+      type: 'website',
+      siteName,
+      title: siteName,
+      description:
+        'Fuel additives, lubricant additives and additive-package solutions for global industrial B2B customers.',
+      url: `/${locale}`
+    },
+    robots: locale === 'en' ? { index: true, follow: true } : { index: false, follow: true }
   };
 }
 

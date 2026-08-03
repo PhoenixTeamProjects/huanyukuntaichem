@@ -1,5 +1,26 @@
 # 11 - Changelog
 
+## 2026-08-03
+
+- Adopted the user-provided chemical-division business master document as the current company and product boundary source.
+- Confirmed the official company names, HUANYU KUNTAI CHEM business brand, 2008 industry start, and global additive positioning.
+- Locked the website to Fuel Additives, Lubricant Additives, and Lubricant Additive Packages.
+- Preserved the existing header menu unchanged.
+- Rebuilt the homepage around additive technology, manufacturing, formulation, quality control, customization, and global supply.
+- Added a hierarchical product tree and verified product-family fallback content without invented technical parameters.
+- Built company-specific Applications, Service, About, Contact, and product-detail content.
+- Removed the unverified fallback email address from public settings.
+- Replaced simulated inquiry success with real Directus write behavior and explicit error handling.
+- Added SEO metadata defaults and noindex protection for untranslated locale routes.
+- Audited the live Directus/PostgreSQL runtime and confirmed existing public read plus inquiry-create permissions.
+- Created and validated a pre-chemical-migration PostgreSQL backup before changing CMS data.
+- Archived all published industrial-parts products, categories, applications, services, and news without deleting their records.
+- Published 31 chemical product categories, 28 product families, 8 application records, and 6 service records in Directus.
+- Corrected the Directus homepage, page records, global SEO defaults, and canonical domain for HUANYU KUNTAI CHEM.
+- Connected frontend product/category reads to Directus with a five-minute ISR cache and safe local fallback.
+- Mapped the inquiry API to the existing Directus inquiry field names and `pending` workflow status.
+- Added the public site and Directus URLs to the VPS build environment so statically generated product pages use live CMS data and ISR.
+
 ## 2026-07-04
 
 - Established Phoenix B2B project structure for Huanyu Kuntai Chemical.

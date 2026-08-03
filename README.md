@@ -4,11 +4,13 @@ This repository is the official website workspace for `huanyukuntaichem.com`.
 
 ## Current Status
 
-- Project stage: initial Phoenix B2B website structure established.
+- Project stage: company-specific chemical additives website implemented from the verified 2026-08-03 business master document.
 - Deployment mode: Plan A, GitHub + VPS.
 - Frontend: Next.js App Router, multilingual routes under `frontend/src/app/[locale]`.
 - CMS/backend: Directus + PostgreSQL planned on the VPS with Docker Compose.
-- Content rule: products, categories, news, pages, SEO text, image alt text, and inquiries belong in Directus, not hard-coded frontend data.
+- Product scope: Fuel Additives, Lubricant Additives, and Lubricant Additive Packages only.
+- Current content: verified English development fallback is implemented and ready for structured migration into Directus.
+- Content rule: products, categories, news, pages, SEO text, image alt text, and inquiries belong in Directus as the long-term source of truth.
 - Interface copy: fixed navigation, buttons, forms, empty states, and labels live in `frontend/src/locales`.
 
 ## Required Reading For Agents

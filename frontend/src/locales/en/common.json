@@ -17,26 +17,26 @@
     "readMore": "Read more"
   },
   "home": {
-    "eyebrow": "Industrial chemical supply",
-    "title": "Fuel additive solutions for demanding industrial markets",
-    "summary": "Huanyu Kuntai Chemical builds a Directus-ready multilingual B2B website for fuel additives and industrial chemical products.",
-    "capabilitiesTitle": "Built for product clarity and inquiry conversion",
-    "capabilitiesText": "The site structure is prepared for CMS-managed products, technical articles, applications, SEO, and inquiries.",
-    "capabilityFuel": "Fuel additive focus",
-    "capabilityFuelText": "Product routes are ready for diesel, gasoline, and industrial fuel additive categories.",
-    "capabilityChemical": "Chemical product pages",
-    "capabilityChemicalText": "Directus collections will hold multilingual product specifications, descriptions, and image alt text.",
-    "capabilityQuality": "Quality and service",
-    "capabilityQualityText": "Service, application, and contact pages guide buyers from evaluation to inquiry."
+    "eyebrow": "Fuel & lubricant additive technology",
+    "title": "Additive technology for global industry",
+    "summary": "Fuel additives, lubricant additives and additive-package solutions for global industrial B2B customers.",
+    "capabilitiesTitle": "Technical capability for long-term supply",
+    "capabilitiesText": "Formulation, controlled production, customization, quality and export support in one connected workflow.",
+    "capabilityFuel": "Fuel additive systems",
+    "capabilityFuelText": "Gasoline and diesel additive directions for cleanliness, performance, stability and protection.",
+    "capabilityChemical": "Lubricant additive technology",
+    "capabilityChemicalText": "Functional components and package systems for lubricant manufacturing and industrial applications.",
+    "capabilityQuality": "Quality and global supply",
+    "capabilityQualityText": "Batch control, documentation, packaging and export coordination for professional buyers."
   },
   "products": {
-    "intro": "Browse CMS-managed product categories and product detail pages."
+    "intro": "Browse verified fuel and lubricant additive product families."
   },
   "news": {
-    "intro": "Technical articles and company news will be managed through Directus."
+    "intro": "Reviewed additive technology, application guidance and company updates."
   },
   "about": {
-    "intro": "Company profile content must be finalized in the project memory and Directus before production publication."
+    "intro": "Learn about Huanyu Kuntai Chem, our additive focus, technical capabilities and global supply approach."
   },
   "applications": {
     "intro": "Application content will connect product use cases with target buyer scenarios."

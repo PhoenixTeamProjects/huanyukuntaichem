@@ -18,6 +18,7 @@ export default function Footer({
         <div>
           <h3>{settings.siteName}</h3>
           <p>{settings.tagline}</p>
+          <p className="footer-company">Xi&apos;an Huanyu Kuntai Industrial Technology Co., Ltd.</p>
         </div>
         <div>
           <h3>{messages.footer.quickLinks}</h3>
@@ -32,11 +33,15 @@ export default function Footer({
         <div>
           <h3>{messages.footer.contact}</h3>
           <p>
-            {settings.email}
-            <br />
-            {settings.address}
+            Fuel Additives<br />
+            Lubricant Additives<br />
+            Lubricant Additive Packages
           </p>
         </div>
+      </div>
+      <div className="container footer-bottom">
+        <span>Global B2B additive technology, manufacturing and supply.</span>
+        <span>Product data and certifications are published only after verification.</span>
       </div>
     </footer>
   );

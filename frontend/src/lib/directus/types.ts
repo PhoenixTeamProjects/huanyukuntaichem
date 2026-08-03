@@ -25,6 +25,8 @@ export interface Product {
   description: LocalizedText;
   image: string | null;
   imageAlt: LocalizedText;
+  highlights?: string[];
+  applications?: string[];
 }
 
 export interface NewsArticle {

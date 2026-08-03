@@ -51,7 +51,7 @@ Plan A: GitHub + VPS.
 - Existing PostgreSQL container: `huanyukuntai-directus-postgres`
 - Existing older frontend container: `huanyukuntai-frontend` on `127.0.0.1:3200`
 
-The existing Directus/PostgreSQL containers predate this repository initialization. Do not run `backend/docker-compose.yml` on the VPS until the existing containers, data volumes, admin access, and backup status have been audited.
+The existing Directus/PostgreSQL containers predate this repository initialization and were audited on 2026-08-03. Continue using those services; do not run `backend/docker-compose.yml` on the VPS or create replacement containers. A verified pre-migration database backup is stored under `/opt/websites/huanyukuntaichem-site/backups/directus/`.
 
 ## Automatic Deploy
 
@@ -67,4 +67,4 @@ The workflow uploads a tar archive of the checked-out GitHub commit to `/opt/web
 
 ## Backend Update Behavior
 
-With Plan A, frontend content can read Directus dynamically through Server Components/ISR after API integration is completed. Do not describe this project as static-export based.
+With Plan A, product categories and products read Directus through Server Components/ISR with a verified local fallback, and inquiries are written to the live `inquiries` collection. Do not describe this project as static-export based.
