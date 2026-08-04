@@ -18,9 +18,9 @@ import { getMessages, normalizeLocale } from '@/lib/i18n/messages';
 
 const capabilityIcons = [FlaskConical, Beaker, Settings2, ShieldCheck, PackageCheck, Factory, Globe2, CheckCircle2];
 const productImages = [
-  '/images/home/fuel-additives.webp',
-  '/images/home/lubricant-additives.webp',
-  '/images/home/additive-packages.webp'
+  '/images/home/fuel-additives-light.webp',
+  '/images/home/lubricant-additives-light.webp',
+  '/images/home/additive-packages-light.webp'
 ];
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -34,7 +34,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="energy-hero" data-hero>
         <div className="energy-hero-media" data-hero-image>
           <Image
-            src="/images/home/hero-energy-field.webp"
+            src="/images/home/hero-energy-field-light.webp"
             alt="Emerald and amber additive fluids flowing into a precision vessel"
             fill
             priority
@@ -79,7 +79,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <div className="energy-product-rail" data-product-rail>
           {business.productSystems.map((system, index) => (
             <article className="energy-product-card" key={system.number}>
-              <Image src={productImages[index]} alt={`${system.title} technology`} fill sizes="(max-width: 1023px) 100vw, 72vw" />
+              <div className="energy-product-image">
+                <Image src={productImages[index]} alt={`${system.title} technology`} fill sizes="(max-width: 1023px) 100vw, 72vw" />
+              </div>
               <div className="energy-product-shade" />
               <div className="energy-product-copy">
                 <span>{String(index + 1).padStart(2, '0')} / 03</span>

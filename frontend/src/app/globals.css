@@ -1,14 +1,14 @@
 :root {
-  --bg: #f4f6f5;
+  --bg: #f7fafb;
   --surface: #ffffff;
-  --surface-soft: #eaf0ed;
-  --text: #10231d;
-  --muted: #5b6c65;
-  --line: #d4ddd8;
-  --brand: #087b60;
-  --brand-strong: #064d3d;
-  --brand-deep: #0b211a;
-  --accent: #c8f04b;
+  --surface-soft: #edf7f9;
+  --text: #0b344d;
+  --muted: #607684;
+  --line: #d7e5e9;
+  --brand: #008b9d;
+  --brand-strong: #006d7e;
+  --brand-deep: #07384b;
+  --accent: #00a2b2;
   --accent-warm: #e4aa49;
   --danger: #9d2f2f;
   --shadow: 0 22px 50px rgba(11, 33, 26, 0.08);
@@ -325,7 +325,7 @@ p { line-height: 1.72; }
   will-change: transform, opacity;
 }
 .oil-flow-layer {
-  background: url('/images/home/hero-energy-field.webp') center / cover no-repeat;
+  background: url('/images/home/hero-energy-field-light.webp') center / cover no-repeat;
 }
 .oil-flow-layer-primary {
   opacity: .62;
@@ -439,4 +439,84 @@ p { line-height: 1.72; }
   html { scroll-behavior: auto; }
   .energy-product-card img, .button { transition: none; }
   .oil-flow-layer, .oil-flow-sheen { display: none; }
+}
+
+/* Light industrial palette matched to the supplied reference site */
+.site-header {
+  border-bottom-color: #dce9ed;
+  background: rgba(255,255,255,.96);
+  box-shadow: 0 8px 28px rgba(18,70,88,.05);
+}
+.site-header .brand { color: #0b344d; }
+.site-header .brand span, .site-header .nav-links, .site-header .nav-links select { color: #526b78; }
+.site-header .nav-links > a:not(.button):hover { color: var(--brand); border-color: var(--brand); }
+.site-header .button { border-color: var(--brand); background: var(--brand); color: #fff; }
+
+.energy-hero {
+  min-height: 650px;
+  background: #eef8fa;
+  color: #0b344d;
+}
+.energy-hero::before { background: rgba(239,248,250,.12); }
+.energy-hero h1 { max-width: 700px; color: #0b344d; font-size: clamp(48px, 5.7vw, 78px); line-height: 1.01; }
+.energy-hero-content > p { color: #496875; }
+.energy-hero .eyebrow { color: #007f91; }
+.energy-hero .energy-primary, .energy-hero .energy-primary:hover { border-color: var(--brand); background: var(--brand); color: #fff; }
+.energy-hero .button.secondary.light { border-color: #7fa4ae; color: #0b344d; }
+.energy-hero .button.secondary.light:hover { border-color: var(--brand); background: rgba(255,255,255,.64); }
+.energy-hero-layout { min-height: 500px; padding: 58px 0 38px; }
+.energy-trust { border-color: rgba(18,75,94,.18); background: rgba(255,255,255,.68); }
+.energy-trust > div, .energy-trust > div:first-child { border-color: rgba(18,75,94,.14); }
+.energy-trust strong { color: #0b344d; }
+.energy-trust span { color: #607684; }
+.oil-flow-layer-primary { opacity: .24; mix-blend-mode: multiply; filter: saturate(1.08) contrast(1.02); }
+.oil-flow-layer-secondary { opacity: .2; mix-blend-mode: soft-light; filter: saturate(1.08); }
+.oil-flow-sheen { opacity: .24; mix-blend-mode: screen; }
+
+.energy-products { min-height: 760px; background: #f8fbfc; color: #0b344d; }
+.energy-products .eyebrow { color: var(--brand); }
+.energy-products-head p { color: #607684; }
+.energy-product-card {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  border-color: #d8e7eb;
+  background: #fff;
+  box-shadow: 0 18px 44px rgba(22,77,94,.09);
+}
+.energy-product-image { position: relative; min-height: 300px; overflow: hidden; background: #edf6f8; }
+.energy-product-card img { z-index: 0; object-fit: cover; }
+.energy-product-shade { display: none; }
+.energy-product-copy { position: static; max-width: none; background: #fff; padding: 28px 32px 31px; }
+.energy-product-copy > span { color: var(--brand); }
+.energy-product-copy h3 { color: #0b344d; font-size: clamp(26px, 2.5vw, 40px); }
+.energy-product-copy p { color: #607684; }
+.energy-product-copy a { color: var(--brand-strong); }
+
+.energy-capabilities { background: #edf7f9; color: #0b344d; }
+.energy-capabilities .split-head > p, .energy-capabilities .capability-card p { color: #607684; }
+.energy-capabilities .capability-grid { gap: 16px; border: 0; background: transparent; }
+.energy-capabilities .capability-card { border: 1px solid #d7e5e9; background: #fff; }
+.energy-capabilities .capability-card svg { color: var(--brand); }
+.energy-quality { background: #fff; }
+.energy-customers { background: #f4f9fa; }
+.energy-customers .card { border-color: #d7e5e9; background: #fff; }
+.energy-inquiry { border-top-color: #d7e5e9; background: #e8f6f8; color: #0b344d; }
+.energy-inquiry .eyebrow { color: var(--brand); }
+.energy-inquiry .inquiry-layout > div > p { color: #607684; }
+.energy-inquiry .field { color: #3f5f6d; }
+.energy-inquiry .field input, .energy-inquiry .field textarea { border-color: #c9dde2; background: #fff; color: #0b344d; }
+.energy-inquiry .form .button { border-color: var(--brand); background: var(--brand); color: #fff; }
+
+.page-hero { background: #eaf6f8; color: #0b344d; }
+.page-hero p, .back-link { color: #607684; }
+.page-hero::after { border-color: rgba(0,139,157,.16); box-shadow: 0 0 0 70px rgba(0,139,157,.035); }
+.site-footer { background: #07384b; }
+
+@media (max-width: 760px) {
+  .energy-hero::before { background: rgba(238,248,250,.22); }
+  .energy-hero-media img { object-position: 61% center; }
+  .energy-hero h1 { color: #0b344d; }
+  .energy-hero-layout { min-height: 530px; }
+  .energy-trust > div, .energy-trust > div:first-child { border-color: rgba(18,75,94,.14); }
+  .energy-product-image { min-height: 270px; }
 }
