@@ -20,7 +20,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   text-rendering: optimizeLegibility;
 }
 a { color: inherit; text-decoration: none; }
@@ -549,4 +549,81 @@ p { line-height: 1.72; }
   .energy-hero-layout { min-height: 530px; }
   .energy-trust > div, .energy-trust > div:first-child { border-color: rgba(18,75,94,.14); }
   .energy-product-image { min-height: 270px; }
+}
+
+/* Reference-led inner page system */
+.inner-page-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 620px;
+  display: grid;
+  align-items: center;
+  background: #eaf7f9;
+  color: #0b344d;
+}
+.inner-page-hero-image { z-index: -3; object-fit: cover; object-position: 58% center; }
+.inner-page-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(90deg, rgba(244,251,252,.98) 0%, rgba(239,249,251,.91) 44%, rgba(235,247,249,.36) 74%, rgba(235,247,249,.16) 100%);
+}
+.inner-page-hero-content { padding: 74px 0 66px; }
+.inner-page-hero .eyebrow { margin-bottom: 16px; color: #00869a; }
+.inner-page-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 35px;
+  border: 1px solid #93dbe3;
+  border-radius: 999px;
+  background: rgba(255,255,255,.74);
+  color: #166076;
+  padding: 0 15px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.inner-page-hero h1 { max-width: 880px; margin: 22px 0 20px; color: #082f48; font-size: clamp(50px, 5.4vw, 76px); line-height: .99; letter-spacing: -.045em; }
+.inner-page-hero-content > p { max-width: 760px; color: #587583; font-size: 18px; line-height: 1.72; }
+.inner-page-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.inner-page-actions .button.secondary { border-color: #7db5bf; background: rgba(255,255,255,.42); color: #0b344d; }
+.inner-page-actions .button.secondary:hover { border-color: var(--brand); background: rgba(255,255,255,.84); }
+.inner-page-highlights { display: flex; flex-wrap: wrap; gap: 14px 32px; max-width: 950px; margin: 30px 0 0; padding: 0; list-style: none; }
+.inner-page-highlights li { display: flex; align-items: center; gap: 8px; border-left: 2px solid #0096a8; padding-left: 12px; color: #123b51; font-size: 13px; font-weight: 800; }
+.inner-page-highlights svg { color: #0096a8; }
+.inner-page-stats { border-bottom: 1px solid #d8e8ec; background: rgba(255,255,255,.97); }
+.inner-page-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+.inner-page-stats-grid > div { min-height: 142px; display: grid; place-content: center; gap: 5px; border-left: 1px solid #d8e8ec; text-align: center; }
+.inner-page-stats-grid > div:last-child { border-right: 1px solid #d8e8ec; }
+.inner-page-stats strong { color: #082f48; font-size: 31px; line-height: 1; }
+.inner-page-stats span { color: #718894; font-size: 12px; }
+.inner-content-section { background: #fff; }
+.inner-content-section > .container > .section-head:first-child { margin-bottom: 46px; }
+.reference-card-grid { gap: 18px; border: 0; background: transparent; }
+.reference-card-grid > article { border: 1px solid #d6e6ea; background: #fff; box-shadow: 0 18px 44px rgba(18,70,88,.07); }
+.section-dark { background: #07384b; }
+
+@media (max-width: 1040px) {
+  .inner-page-hero { min-height: 590px; }
+  .inner-page-hero h1 { max-width: 760px; }
+  .inner-page-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .inner-page-stats-grid > div:nth-child(3), .inner-page-stats-grid > div:nth-child(4) { border-top: 1px solid #d8e8ec; }
+}
+
+@media (max-width: 760px) {
+  .inner-page-hero { min-height: 730px; align-items: start; }
+  .inner-page-hero-image { object-position: 62% center; }
+  .inner-page-hero-overlay { background: linear-gradient(180deg, rgba(240,250,251,.93), rgba(234,247,249,.82)); }
+  .inner-page-hero-content { padding: 76px 0 54px; }
+  .inner-page-hero h1 { margin-top: 20px; font-size: clamp(42px, 12vw, 58px); line-height: 1.02; }
+  .inner-page-hero-content > p { font-size: 16px; }
+  .inner-page-actions { display: grid; }
+  .inner-page-actions .button { width: 100%; }
+  .inner-page-highlights { display: grid; gap: 13px; }
+  .inner-page-stats-grid { grid-template-columns: 1fr 1fr; }
+  .inner-page-stats-grid > div { min-height: 112px; padding: 16px 8px; }
+  .inner-page-stats strong { font-size: 24px; }
+  .inner-page-stats span { font-size: 10px; }
 }

@@ -4,6 +4,7 @@ import { normalizeLocale, getMessages } from '@/lib/i18n/messages';
 import { getProductCategories, getProducts } from '@/lib/directus/products';
 import { getBusinessContent } from '@/lib/directus/business';
 import ProductCategoryMenu from '@/components/ProductCategoryMenu';
+import InnerPageHero from '@/components/InnerPageHero';
 
 export default async function ProductsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: localeParam } = await params;
@@ -17,18 +18,25 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
 
   return (
     <>
-      <section className="page-hero">
-        <div className="container">
-          <div className="eyebrow">Product systems</div>
-          <h1>Fuel & lubricant additive portfolio</h1>
-          <p>Explore three clearly separated systems for fuel treatment, functional lubricant additives and lubricant additive packages.</p>
-        </div>
-      </section>
-      <section className="section">
+      <InnerPageHero
+        locale={locale}
+        eyebrow="Product catalog"
+        title="Fuel & lubricant additive portfolio"
+        summary="Explore three clearly separated systems for fuel treatment, functional lubricant additives and lubricant additive packages."
+        primary={{ href: '/contact', label: 'Send product inquiry' }}
+        secondary={{ href: '/applications', label: 'View applications' }}
+        highlights={['Fuel additive systems', 'Functional lubricant additives', 'Application-oriented additive packages']}
+      />
+      <section className="section inner-content-section">
         <div className="container two-column product-layout">
           <ProductCategoryMenu locale={locale} categories={categories} />
           <div>
-            <div className="product-system-grid product-overview">
+            <div className="section-head">
+              <div className="eyebrow dark">Three product systems</div>
+              <h2>Choose the correct additive route</h2>
+              <p>Start from the product system, then narrow the selection by application and verified technical requirement.</p>
+            </div>
+            <div className="product-system-grid product-overview reference-card-grid">
               {business.productSystems.map((system) => (
                 <article className="system-card" key={system.number}>
                   <span className="system-number">{system.number}</span>

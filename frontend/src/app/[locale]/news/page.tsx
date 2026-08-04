@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { normalizeLocale, getMessages } from '@/lib/i18n/messages';
 import { getNews } from '@/lib/directus/news';
+import InnerPageHero from '@/components/InnerPageHero';
 
 export default async function NewsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: localeParam } = await params;
@@ -9,13 +10,24 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
   const articles = await getNews(locale);
 
   return (
-    <section className="section">
+    <>
+    <InnerPageHero
+      locale={locale}
+      eyebrow="Knowledge center"
+      title="Additive technology and application guidance"
+      summary={messages.news.intro}
+      primary={{ href: '/products', label: 'Browse products' }}
+      secondary={{ href: '/contact', label: 'Send inquiry' }}
+      highlights={['Reviewed technical content', 'Application-oriented guidance', 'Verified information only']}
+    />
+    <section className="section inner-content-section">
       <div className="container">
         <div className="section-head">
-          <h1>{messages.nav.news}</h1>
-          <p>{messages.news.intro}</p>
+          <div className="eyebrow dark">Technical articles</div>
+          <h2>Practical additive knowledge</h2>
+          <p>Browse reviewed product knowledge, application guidance and company updates.</p>
         </div>
-        <div className="grid">
+        <div className="grid reference-card-grid">
           {articles.map((article) => (
             <article className="card" key={article.id}>
               <h2>{article.title}</h2>
@@ -28,5 +40,6 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
         </div>
       </div>
     </section>
+    </>
   );
 }

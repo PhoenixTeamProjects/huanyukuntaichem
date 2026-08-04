@@ -1,6 +1,7 @@
 import { CheckCircle2 } from 'lucide-react';
 import { normalizeLocale, getMessages } from '@/lib/i18n/messages';
 import InquiryForm from '@/components/InquiryForm';
+import InnerPageHero from '@/components/InnerPageHero';
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: localeParam } = await params;
@@ -9,14 +10,16 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
   return (
     <>
-      <section className="page-hero">
-        <div className="container">
-          <div className="eyebrow">Contact</div>
-          <h1>Discuss your additive requirement</h1>
-          <p>Provide the application and market context so our team can identify the correct product or development route.</p>
-        </div>
-      </section>
-      <section className="section">
+      <InnerPageHero
+        locale={locale}
+        eyebrow="Contact Huanyu Kuntai Chem"
+        title="Discuss your additive requirement"
+        summary="Provide the application and market context so our team can identify the correct product or development route."
+        primary={{ href: '#inquiry-form', label: 'Send inquiry' }}
+        secondary={{ href: '/products', label: 'View products' }}
+        highlights={['Product and application review', 'Technical selection support', 'Commercial details confirmed per inquiry']}
+      />
+      <section className="section inner-content-section" id="inquiry-form">
         <div className="container inquiry-layout contact-layout">
           <div>
             <div className="eyebrow dark">Helpful inquiry details</div>

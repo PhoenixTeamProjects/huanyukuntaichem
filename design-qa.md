@@ -52,4 +52,48 @@
 - Next.js generated 74 pages successfully.
 - Desktop and mobile Playwright captures completed.
 
+## 2026-08-04 - Reference-led inner-page system
+
+### Comparison target
+
+- Source routes: `https://huanyukuntai.com/products`, `/applications`, `/service`, `/news`, `/about-us`, and `/contact-us`.
+- Implementation routes: `http://127.0.0.1:3028/en/products`, `/applications`, `/service`, `/news`, `/about`, and `/contact`.
+- Desktop source evidence: `D:\agent\codex\寰宇坤泰化工网站\.playwright-mcp\page-2026-08-04T08-22-37-383Z.png`.
+- Desktop implementation evidence: `D:\agent\codex\寰宇坤泰化工网站\.playwright-mcp\page-2026-08-04T08-37-51-315Z.png`.
+- Mobile source evidence: `D:\agent\codex\寰宇坤泰化工网站\.playwright-mcp\page-2026-08-04T08-28-56-625Z.png`.
+- Mobile implementation evidence: `D:\agent\codex\寰宇坤泰化工网站\.playwright-mcp\page-2026-08-04T08-39-38-387Z.png`.
+- Combined comparison input: `C:\Users\phoenix\.codex\tmp\inner-pages-comparison.png`.
+- Focused body-region montage: `C:\Users\phoenix\.codex\tmp\inner-page-bodies.png`.
+- Viewports: 1440 x 900 and 390 x 844 CSS pixels, device scale factor 1. Source and implementation captures were normalized to identical panel sizes in the combined comparison.
+- State: public English inner pages, initial viewport; content-region captures begin at each page&apos;s first main content section.
+
+### Findings
+
+- No actionable P0, P1, or P2 findings remain.
+- Fonts and typography: the implementation now uses the reference&apos;s Inter/system-ui direction, compact uppercase eyebrow treatment, bold navy display hierarchy, and restrained blue-gray body copy. Chemical terminology creates different line wraps, but hierarchy remains equivalent.
+- Spacing and layout rhythm: all six primary inner pages now share the reference&apos;s tall visual hero, capsule positioning badge, paired CTAs, capability highlights, four-cell statistics strip, generous content sections, structured card grids, dark conversion block, and full footer.
+- Colors and tokens: pale cyan, white, deep navy, blue-gray and teal are consistently mapped to the existing chemical design tokens.
+- Image quality and asset fidelity: the source industrial-parts photography was intentionally not copied. The existing high-resolution chemical liquid image is used with the same pale technical art direction and responsive crop.
+- Copy and content: every page remains inside the verified chemical-additives business boundary. Industrial-parts claims, counts, contacts, and product content were not imported.
+- Interactions and accessibility: primary and secondary hero actions link to real routes, the contact hero links to the real inquiry form, semantic headings and lists are retained, form labels remain present, and all six routes report zero horizontal page overflow at desktop and mobile sizes.
+- Intentional constraint: the existing desktop header menu was not changed. On mobile it remains a horizontally scrollable navigation row rather than adopting the source hamburger, following the user&apos;s earlier instruction that the header menu should remain unchanged.
+
+### Comparison history
+
+1. Before this pass, inner pages used a short generic page hero and inconsistent content entry; News had no visual page hero at all. This was a P1 whole-site consistency gap relative to the requested reference layout.
+2. Added one shared inner-page hero/statistics system, page-specific CTA and highlight content, reference-led card surfaces, and consistent content section entry across Products, Applications, Service, News, About, and Contact.
+3. Post-fix desktop and mobile comparisons show equivalent information hierarchy and responsive behavior while preserving chemical-specific content and imagery.
+
+### Follow-up polish
+
+- P3: if the earlier header constraint is relaxed, replace the mobile horizontal navigation row with a compact menu matching the source&apos;s mobile behavior.
+
+### Verification
+
+- `npm run lint` from `frontend`: passed.
+- `npm run build` from `frontend`: passed; 74 routes generated.
+- Desktop QA: six primary inner routes, zero horizontal overflow, shared four-cell statistics strip, complete four-column footer.
+- Mobile QA: six primary inner routes at 390 x 844, zero horizontal overflow, two working hero actions per route.
+- Browser console: zero errors; preload warning removed by using eager image loading without a redundant preload.
+
 final result: passed

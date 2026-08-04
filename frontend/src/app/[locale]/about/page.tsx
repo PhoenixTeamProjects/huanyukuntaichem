@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, Factory, FlaskConical, Globe2, ShieldCheck } from 'lucide-react';
 import { normalizeLocale } from '@/lib/i18n/messages';
 import { getBusinessContent } from '@/lib/directus/business';
+import InnerPageHero from '@/components/InnerPageHero';
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: localeParam } = await params;
@@ -10,14 +11,16 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
   return (
     <>
-      <section className="page-hero about-hero">
-        <div className="container">
-          <div className="eyebrow">About Huanyu Kuntai Chem</div>
-          <h1>{business.positioning}</h1>
-          <p>{business.companyName}</p>
-        </div>
-      </section>
-      <section className="section">
+      <InnerPageHero
+        locale={locale}
+        eyebrow="About Huanyu Kuntai Chem"
+        title={business.positioning}
+        summary={`${business.companyName} focuses on fuel additives, lubricant additives and additive-package solutions for global industrial customers.`}
+        primary={{ href: '/contact', label: 'Start a conversation' }}
+        secondary={{ href: '/products', label: 'View products' }}
+        highlights={['Chemical manufacturing & stable supply', 'Formulation and laboratory support', 'International B2B delivery']}
+      />
+      <section className="section inner-content-section">
         <div className="container about-layout">
           <div>
             <div className="eyebrow dark">Company profile</div>
@@ -29,7 +32,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </div>
       </section>
       <section className="section section-tint">
-        <div className="container value-grid">
+        <div className="container value-grid reference-card-grid">
           <article><Factory size={28} /><h3>Manufacturing & supply</h3><p>Production, blending, filling, industrial packaging and stable batch supply.</p></article>
           <article><FlaskConical size={28} /><h3>R&D & laboratory</h3><p>Formula development, optimization, compatibility, stability and sample support.</p></article>
           <article><ShieldCheck size={28} /><h3>Quality control</h3><p>Raw-material, process, batch, packaging and finished-product controls.</p></article>

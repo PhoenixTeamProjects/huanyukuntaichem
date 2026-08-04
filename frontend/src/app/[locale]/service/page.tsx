@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, CheckCircle2, FileCheck2, PackageCheck } from 'lucide-react';
 import { normalizeLocale } from '@/lib/i18n/messages';
 import { getBusinessContent } from '@/lib/directus/business';
+import InnerPageHero from '@/components/InnerPageHero';
 
 export default async function ServicePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: localeParam } = await params;
@@ -10,20 +11,22 @@ export default async function ServicePage({ params }: { params: Promise<{ locale
 
   return (
     <>
-      <section className="page-hero">
-        <div className="container">
-          <div className="eyebrow">Technical & supply services</div>
-          <h1>From formulation support to global delivery</h1>
-          <p>Technical confirmation, customization, controlled production and export execution are managed as one connected B2B workflow.</p>
-        </div>
-      </section>
-      <section className="section">
+      <InnerPageHero
+        locale={locale}
+        eyebrow="Technical & supply services"
+        title="From formulation support to global delivery"
+        summary="Technical confirmation, customization, controlled production and export execution are managed as one connected B2B workflow."
+        primary={{ href: '/contact', label: 'Send service inquiry' }}
+        secondary={{ href: '/applications', label: 'View applications' }}
+        highlights={['Formula and sample support', 'OEM, ODM and Private Label', 'Quality, documents and export coordination']}
+      />
+      <section className="section inner-content-section">
         <div className="container">
           <div className="section-head split-head">
             <div><div className="eyebrow dark">Capabilities</div><h2>Support around the real application</h2></div>
             <p>OEM, ODM and Private Label are service capabilities that support qualified fuel and lubricant additive programs—not a separate product category.</p>
           </div>
-          <div className="capability-grid light-grid">
+          <div className="capability-grid light-grid reference-card-grid">
             {business.capabilities.map((capability) => (
               <article className="capability-card" key={capability.title}>
                 <CheckCircle2 size={22} />
