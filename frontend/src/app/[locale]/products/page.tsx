@@ -26,6 +26,11 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
         primary={{ href: '/contact', label: 'Send product inquiry' }}
         secondary={{ href: '/applications', label: 'View applications' }}
         highlights={['Fuel additive systems', 'Functional lubricant additives', 'Application-oriented additive packages']}
+        matrixItems={business.productSystems.map((system, index) => ({
+          title: system.title,
+          href: `/products/category/${system.slug}`,
+          image: ['/images/home/fuel-additives-light.webp', '/images/home/lubricant-additives-light.webp', '/images/home/additive-packages-light.webp'][index]
+        }))}
       />
       <section className="section inner-content-section">
         <div className="container two-column product-layout">

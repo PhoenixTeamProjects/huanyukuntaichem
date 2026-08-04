@@ -97,3 +97,29 @@
 - Browser console: zero errors; preload warning removed by using eager image loading without a redundant preload.
 
 final result: passed
+
+## 2026-08-04 - ZIP source correction
+
+### Ground truth and evidence
+
+- Exact source: `C:\Users\phoenix\Downloads\huanyukuntai-main.zip`, especially `PremiumHomePage.tsx`, `LocalizedContentPages.tsx`, `LocalizedStaticPages.tsx`, Header, TopBar, Footer and PageHero.
+- Settled implementation capture: `C:\Users\phoenix\.codex\tmp\huanyukuntaichem-source-led-home-1440x900.png`.
+- Same-viewport combined comparison: `C:\Users\phoenix\.codex\tmp\huanyukuntai-source-led-comparison.png`.
+- Viewport: 1440 x 900 CSS pixels. Mobile check: 390 x 844 with zero horizontal overflow.
+
+### Correction and findings
+
+- The earlier generic-hero comparison was not sufficiently faithful to the supplied source and is superseded by this section.
+- Homepage now matches the source composition: pale technical hero with image field, capsule label, paired CTAs, four proof cells and a floating inquiry dock. The following page flow now uses source-derived category imagery, an image/content split, dark capability region, process grid and final image CTA.
+- Products now matches the source-specific hero grid: copy and actions on the left, three verified chemical product systems in a bordered image matrix on the right, followed by the four-cell trust strip and catalog/sidebar body.
+- The implementation intentionally substitutes only chemical-additive imagery, company facts and the verified three-system taxonomy. No industrial-parts content was copied.
+- Same-input visual review shows equivalent hero proportions, information hierarchy, teal/ice-blue palette, CTA placement, proof-row rhythm and overlapping inquiry module. Remaining differences are content-driven: the source has four industrial product systems and direct contact details, while the chemical site has three verified systems and withholds unverified contact fields.
+- Product matrix images render at opacity 1 and z-index 0. Desktop and mobile pages have no horizontal document overflow.
+
+### Verification
+
+- `npm run lint` from `frontend`: passed.
+- `npm run build` from `frontend`: passed; 74 routes generated.
+- Browser checks: homepage at 1440 x 900 and 390 x 844; Products at 1440 x 900; no visible broken image, stacking or overflow issue.
+
+final result: passed

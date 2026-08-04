@@ -8,6 +8,12 @@ interface HeroAction {
   label: string;
 }
 
+interface HeroMatrixItem {
+  title: string;
+  href: string;
+  image: string;
+}
+
 export default function InnerPageHero({
   locale,
   eyebrow,
@@ -15,7 +21,8 @@ export default function InnerPageHero({
   summary,
   primary,
   secondary,
-  highlights = []
+  highlights = [],
+  matrixItems = []
 }: {
   locale: Locale;
   eyebrow: string;
@@ -24,6 +31,7 @@ export default function InnerPageHero({
   primary?: HeroAction;
   secondary?: HeroAction;
   highlights?: string[];
+  matrixItems?: HeroMatrixItem[];
 }) {
   const resolveHref = (href: string) => href.startsWith('#') ? href : `/${locale}${href}`;
 
@@ -32,7 +40,8 @@ export default function InnerPageHero({
       <section className="inner-page-hero">
         <Image className="inner-page-hero-image" src="/images/home/hero-energy-field-light.webp" alt="" fill loading="eager" sizes="100vw" />
         <div className="inner-page-hero-overlay" />
-        <div className="container inner-page-hero-content">
+        <div className={`container inner-page-hero-content ${matrixItems.length ? 'inner-page-hero-matrix-layout' : ''}`}>
+          <div>
           <div className="eyebrow">{eyebrow}</div>
           <span className="inner-page-badge">Fuel &amp; lubricant additive supply since 2008</span>
           <h1>{title}</h1>
@@ -48,6 +57,8 @@ export default function InnerPageHero({
               {highlights.map((item) => <li key={item}><CheckCircle2 size={17} />{item}</li>)}
             </ul>
           ) : null}
+          </div>
+          {matrixItems.length ? <div className="inner-page-matrix">{matrixItems.map((item, index) => <Link className={index === 2 ? 'matrix-wide' : ''} href={resolveHref(item.href)} key={item.title}><Image src={item.image} alt={item.title} fill sizes="(max-width: 760px) 100vw, 30vw" /><span>{item.title}<ArrowRight size={16} /></span></Link>)}</div> : null}
         </div>
       </section>
       <section className="inner-page-stats" aria-label="Company capability summary">
