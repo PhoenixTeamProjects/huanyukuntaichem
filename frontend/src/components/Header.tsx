@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Mail } from 'lucide-react';
+import { FlaskConical, Globe2, Mail, Phone } from 'lucide-react';
 import { localeNames, locales, type Locale } from '@/config/i18n';
 import type { Messages } from '@/lib/i18n/messages';
 import type { SiteSettings } from '@/lib/directus/types';
@@ -25,6 +25,19 @@ export default function Header({
 
   return (
     <header className="site-header">
+      <div className="topbar">
+        <div className="container topbar-inner">
+          <div className="topbar-group">
+            <span><Globe2 size={14} /> Global additive solutions since 2008</span>
+            <span><FlaskConical size={14} /> Fuel &amp; lubricant additive technology</span>
+          </div>
+          <div className="topbar-group topbar-contact">
+            {settings.phone ? <a href={`tel:${settings.phone}`}><Phone size={14} />{settings.phone}</a> : null}
+            {settings.email ? <a href={`mailto:${settings.email}`}><Mail size={14} />{settings.email}</a> : null}
+            <Link href={`/${locale}/contact`}>Technical support &amp; inquiry</Link>
+          </div>
+        </div>
+      </div>
       <div className="container nav">
         <Link className="brand" href={`/${locale}`}>
           {settings.siteName}

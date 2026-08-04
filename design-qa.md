@@ -6,6 +6,8 @@
 - Implementation screenshot: `C:\Users\phoenix\.codex\tmp\huanyukuntaichem-light-desktop-v2.png`
 - Mobile screenshot: `C:\Users\phoenix\.codex\tmp\huanyukuntaichem-light-mobile.png`
 - Side-by-side comparison: `C:\Users\phoenix\.codex\tmp\huanyukuntaichem-light-comparison.png`
+- Topbar/footer implementation evidence: `C:\Users\phoenix\.codex\tmp\huanyukuntaichem-local-header.png` and `C:\Users\phoenix\.codex\tmp\huanyukuntaichem-local-footer.png`
+- Topbar/footer combined comparison: `C:\Users\phoenix\.codex\tmp\topbar-footer-comparison.png`
 - Source pixels: 1440 x 6985
 - Implementation pixels: 1440 x 1024
 - Comparison viewport: 1440 x 1024 CSS pixels at device scale factor 1
@@ -21,6 +23,9 @@
 - Image quality: four generated chemical images use the source site's high-key blue-white industrial photography direction while preserving Huanyu Kuntai Chemical subject matter. Crops are sharp and intentional at desktop and mobile sizes.
 - Copy and content: all visible copy remains chemical-additive specific and sourced from the existing company content. No industrial-parts claims were imported from the reference.
 - Interactions: navigation, product links, inquiry actions, GSAP oil motion, horizontal product storytelling, reduced-motion fallback, and responsive navigation remain functional.
+- Header completeness: a compact pale-cyan information bar now establishes the verified global additive positioning and exposes a direct technical-inquiry route. Phone and email slots are data-driven and remain hidden until confirmed values are available.
+- Footer completeness: the former three-block footer is replaced by a full corporate footer with a technical-support CTA, company identity, three verified product systems, quick links, contact route, address, copyright, and verification statement.
+- Responsive behavior: the desktop footer uses four clear columns; tablet and mobile layouts collapse without horizontal overflow. The mobile topbar removes secondary wording while preserving the primary positioning and inquiry route.
 
 ## Comparison history
 
@@ -28,11 +33,13 @@
 2. Replaced the hero and three product images with high-key ice-blue chemical imagery; remapped global tokens and homepage surfaces to white, navy, pale cyan, and teal.
 3. First revised capture exposed a P1 product-card image stacking issue caused by the previous negative z-index. The image layer was moved to z-index 0.
 4. Post-fix full-page evidence confirms product images render correctly and the source palette carries from the hero through the product cards, content sections, inquiry form, and footer.
+5. Added the reference site&apos;s missing structural cues—information topbar and comprehensive footer—while keeping every public claim inside the chemical-division business boundary.
 
 ## Focused region evidence
 
 - The side-by-side image clearly shows the header, hero, CTA, trust strip, section transition, and the top of the product cards at readable scale, so no additional crop was required.
 - The full-page implementation capture `C:\Users\phoenix\.codex\tmp\huanyukuntaichem-light-fullpage-v2.png` confirms the revised product-card imagery and lower-page surface colors.
+- The combined topbar/footer image puts the source and implementation in one visual input. The implementation matches the source&apos;s compact information hierarchy and dark corporate closing section without copying industrial-parts facts or contact details.
 
 ## Follow-up polish
 
