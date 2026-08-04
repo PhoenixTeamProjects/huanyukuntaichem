@@ -98,6 +98,19 @@
 
 final result: passed
 
+## 2026-08-04 - Full inner-page module parity
+
+- Applications now includes the source sequence of hero/trust, application cards, image-led selection framework, four-step process and dark conversion section.
+- Service now includes hero/trust, capability grid, image-led support section, dark cooperation process, documentation cards and final image CTA.
+- News now includes hero/trust, five topic cards, article grid and dark guidance CTA.
+- About now includes hero/trust, image-led company story, value grid, four-step operating process, regional market grid and dark working-principle CTA.
+- Contact now includes hero/trust, four inquiry-support cards, detailed form with chemical image/help sidebar and the complete corporate footer.
+- Desktop validation: all five routes at 1440 x 900 have document `scrollWidth === clientWidth`; expected new module counts are present.
+- Mobile validation: all five routes at 390 x 844 have document `scrollWidth === clientWidth`.
+- Lint and production build pass; Next.js generated 74 routes.
+
+final result: passed
+
 ## 2026-08-04 - ZIP source correction
 
 ### Ground truth and evidence

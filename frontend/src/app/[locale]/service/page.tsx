@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, CheckCircle2, FileCheck2, PackageCheck } from 'lucide-react';
 import { normalizeLocale } from '@/lib/i18n/messages';
 import { getBusinessContent } from '@/lib/directus/business';
@@ -37,6 +38,12 @@ export default async function ServicePage({ params }: { params: Promise<{ locale
           </div>
         </div>
       </section>
+      <section className="section section-tint">
+        <div className="container reference-image-split">
+          <div className="reference-split-image"><Image src="/images/home/additive-packages-light.webp" alt="Additive package development support" fill sizes="(max-width: 900px) 100vw, 50vw" /></div>
+          <div className="reference-split-copy"><div className="eyebrow dark">Connected support</div><h2>Technical and commercial work stay connected.</h2><p className="lead">The same requirement follows through selection, sample, production, packaging, documentation and delivery.</p><ul className="feature-list">{business.serviceProcess.slice(0,4).map((step)=><li key={step.title}><strong>{step.title}</strong> — {step.description}</li>)}</ul></div>
+        </div>
+      </section>
       <section className="section section-dark">
         <div className="container two-panel">
           <div>
@@ -73,6 +80,7 @@ export default async function ServicePage({ params }: { params: Promise<{ locale
           </article>
         </div>
       </section>
+      <section className="section reference-final-cta"><Image src="/images/home/fuel-additives-light.webp" alt="Fuel additive service" fill sizes="100vw" /><div className="reference-final-shade" /><div className="container"><div className="eyebrow">Technical support</div><h2>Build the right supply route from the start.</h2><p>Tell us the application and market so the correct service path can be confirmed.</p><Link className="button" href={`/${locale}/contact`}>Start a service inquiry <ArrowRight size={17} /></Link></div></section>
     </>
   );
 }

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Factory, FlaskConical, Globe2, ShieldCheck } from 'lucide-react';
 import { normalizeLocale } from '@/lib/i18n/messages';
 import { getBusinessContent } from '@/lib/directus/business';
@@ -21,16 +22,16 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         highlights={['Chemical manufacturing & stable supply', 'Formulation and laboratory support', 'International B2B delivery']}
       />
       <section className="section inner-content-section">
-        <div className="container about-layout">
-          <div>
+        <div className="container reference-image-split">
+          <div className="reference-split-image"><Image src="/images/home/fuel-additives-light.webp" alt="Huanyu Kuntai chemical additive focus" fill sizes="(max-width: 900px) 100vw, 50vw" /></div>
+          <div className="reference-split-copy prose">
             <div className="eyebrow dark">Company profile</div>
             <h2>Focused exclusively on fuel and lubricant additive systems</h2>
-          </div>
-          <div className="prose">
             {business.companyIntroduction.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
           </div>
         </div>
       </section>
+      <section className="section section-tint"><div className="container"><div className="section-head"><div className="eyebrow dark">How we work</div><h2>From chemistry to long-term delivery</h2></div><div className="reference-process-grid">{business.serviceProcess.slice(0,4).map((step,index)=><article key={step.title}><span>{String(index+1).padStart(2,'0')}</span><h3>{step.title}</h3><p>{step.description}</p></article>)}</div></div></section>
       <section className="section section-tint">
         <div className="container value-grid reference-card-grid">
           <article><Factory size={28} /><h3>Manufacturing & supply</h3><p>Production, blending, filling, industrial packaging and stable batch supply.</p></article>

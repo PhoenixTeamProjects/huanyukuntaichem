@@ -20,6 +20,9 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
       secondary={{ href: '/contact', label: 'Send inquiry' }}
       highlights={['Reviewed technical content', 'Application-oriented guidance', 'Verified information only']}
     />
+    <section className="section section-tint">
+      <div className="container"><div className="section-head"><div className="eyebrow dark">Knowledge topics</div><h2>Browse by technical direction</h2></div><div className="reference-topic-grid">{['Fuel additive technology','Lubricant formulation','Additive package applications','Quality & documentation','Company & supply updates'].map((topic,index)=><article key={topic}><span>{String(index+1).padStart(2,'0')}</span><h3>{topic}</h3></article>)}</div></div>
+    </section>
     <section className="section inner-content-section">
       <div className="container">
         <div className="section-head">
@@ -40,6 +43,7 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
         </div>
       </div>
     </section>
+    <section className="section section-dark"><div className="container two-panel"><div><div className="eyebrow">Need product-specific guidance?</div><h2>Connect an article to your real application.</h2></div><div><p className="lead">Published content is general guidance. Product recommendations and claims are confirmed against the actual requirement.</p><Link className="button" href={`/${locale}/contact`}>Ask our team</Link></div></div></section>
     </>
   );
 }
