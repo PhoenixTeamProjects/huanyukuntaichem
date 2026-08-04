@@ -315,15 +315,47 @@ p { line-height: 1.72; }
   inset: 0;
   background: linear-gradient(90deg, rgba(2,13,10,.96) 0%, rgba(2,17,13,.86) 36%, rgba(3,20,15,.22) 74%, rgba(3,20,15,.18) 100%);
 }
-.energy-hero-media { position: absolute; z-index: -2; inset: -4%; transform-origin: center; will-change: transform; }
+.energy-hero-media { position: absolute; z-index: -3; inset: -4%; transform-origin: center; will-change: transform; }
 .energy-hero-media img { object-fit: cover; }
-.energy-hero-layout { min-height: 600px; display: grid; align-items: center; padding: 88px 0 54px; }
+.oil-flow-layer, .oil-flow-sheen {
+  position: absolute;
+  z-index: -2;
+  inset: -7%;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.oil-flow-layer {
+  background: url('/images/home/hero-energy-field.webp') center / cover no-repeat;
+}
+.oil-flow-layer-primary {
+  opacity: .62;
+  filter: saturate(1.2) contrast(1.06);
+  mix-blend-mode: screen;
+  -webkit-mask-image: radial-gradient(ellipse 48% 58% at 76% 38%, #000 28%, transparent 76%);
+  mask-image: radial-gradient(ellipse 48% 58% at 76% 38%, #000 28%, transparent 76%);
+}
+.oil-flow-layer-secondary {
+  opacity: .48;
+  filter: saturate(1.14) brightness(1.08);
+  mix-blend-mode: soft-light;
+  -webkit-mask-image: radial-gradient(ellipse 54% 42% at 70% 72%, #000 22%, transparent 76%);
+  mask-image: radial-gradient(ellipse 54% 42% at 70% 72%, #000 22%, transparent 76%);
+}
+.oil-flow-sheen {
+  z-index: -1;
+  opacity: .5;
+  background: linear-gradient(112deg, transparent 48%, rgba(211,255,181,.22) 53%, rgba(255,207,94,.16) 56%, transparent 62%);
+  mix-blend-mode: screen;
+  -webkit-mask-image: radial-gradient(ellipse 48% 55% at 76% 48%, #000 24%, transparent 74%);
+  mask-image: radial-gradient(ellipse 48% 55% at 76% 48%, #000 24%, transparent 74%);
+}
+.energy-hero-layout { position: relative; z-index: 1; min-height: 600px; display: grid; align-items: center; padding: 88px 0 54px; }
 .energy-hero-content { max-width: 760px; }
 .energy-hero h1 { max-width: 760px; margin-top: 18px; font-size: clamp(52px, 6.5vw, 94px); line-height: .98; letter-spacing: -.055em; text-wrap: balance; }
 .energy-hero-content > p { max-width: 630px; margin-top: 24px; color: rgba(239,248,243,.72); font-size: 17px; }
 .energy-hero .energy-primary { border-color: var(--accent); background: var(--accent); color: #10231d; }
 .energy-hero .energy-primary:hover { border-color: #dcff70; background: #dcff70; }
-.energy-trust { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid rgba(255,255,255,.16); }
+.energy-trust { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid rgba(255,255,255,.16); }
 .energy-trust > div { min-height: 108px; display: grid; align-content: center; gap: 7px; border-right: 1px solid rgba(255,255,255,.13); padding: 20px 30px; }
 .energy-trust > div:first-child { border-left: 1px solid rgba(255,255,255,.13); }
 .energy-trust strong { font-size: 14px; letter-spacing: .01em; }
@@ -406,4 +438,5 @@ p { line-height: 1.72; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .energy-product-card img, .button { transition: none; }
+  .oil-flow-layer, .oil-flow-sheen { display: none; }
 }

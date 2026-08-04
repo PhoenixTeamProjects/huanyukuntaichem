@@ -30,6 +30,35 @@ export default function HomeMotion({ children }: { children: ReactNode }) {
           scrollTrigger: { trigger: '[data-hero]', start: 'top top', end: 'bottom top', scrub: 1 }
         });
 
+        const oilFlow = gsap.timeline({
+          repeat: -1,
+          yoyo: true,
+          defaults: { ease: 'sine.inOut' }
+        });
+        oilFlow
+          .fromTo('[data-oil-layer="primary"]',
+            { xPercent: -4, yPercent: -2, scale: 1.02 },
+            { xPercent: 4.5, yPercent: 2.1, scale: 1.08, duration: desktop ? 4 : 5.2 },
+            0
+          )
+          .fromTo('[data-oil-layer="secondary"]',
+            { xPercent: 3.5, yPercent: 2, scale: 1.07 },
+            { xPercent: -3.5, yPercent: -2, scale: 1.01, duration: desktop ? 5.6 : 7 },
+            0
+          )
+          .fromTo('[data-oil-sheen]',
+            { xPercent: -10, autoAlpha: 0.12 },
+            { xPercent: 10, autoAlpha: 0.72, duration: desktop ? 3.2 : 4.6 },
+            0
+          );
+
+        ScrollTrigger.create({
+          trigger: '[data-hero]',
+          start: 'top bottom',
+          end: 'bottom top',
+          onToggle: ({ isActive }) => isActive ? oilFlow.play() : oilFlow.pause()
+        });
+
         gsap.utils.toArray<HTMLElement>('[data-scroll-reveal]').forEach((item) => {
           gsap.from(item, {
             autoAlpha: 0,

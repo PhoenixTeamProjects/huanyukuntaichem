@@ -27,6 +27,7 @@
 - Next.js generated 74 static pages successfully.
 - Local HTTP checks returned 200 for `/en`, `/en/products`, `/en/contact`, and `/en/service`.
 - Playwright Chromium captured desktop, mobile, full-page, and section states.
+- The hero oil animation was captured at two settled timeline positions; the oil region produced a measurable full-region pixel difference, confirming continuous motion after the entrance sequence.
 - Images were converted to WebP; the four homepage assets total under 700 KB.
 - Existing Directus content, localized routes, product links, service route, and inquiry form were retained.
 

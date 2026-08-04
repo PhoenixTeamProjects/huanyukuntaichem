@@ -41,6 +41,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             sizes="100vw"
           />
         </div>
+        <div className="oil-flow-layer oil-flow-layer-primary" data-oil-layer="primary" aria-hidden="true" />
+        <div className="oil-flow-layer oil-flow-layer-secondary" data-oil-layer="secondary" aria-hidden="true" />
+        <div className="oil-flow-sheen" data-oil-sheen aria-hidden="true" />
         <div className="container energy-hero-layout">
           <div className="energy-hero-content">
             <div className="eyebrow" data-hero-reveal>{business.hero.eyebrow}</div>
