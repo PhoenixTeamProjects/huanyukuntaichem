@@ -5,7 +5,7 @@ export const fallbackSettings: SiteSettings = {
   siteName: 'HUANYU KUNTAI CHEM',
   tagline: 'Additive Technology for Global Industry',
   email: null,
-  phone: null,
+  phone: '18182602513',
   address: 'China'
 };
 
