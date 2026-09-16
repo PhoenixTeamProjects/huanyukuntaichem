@@ -42,3 +42,36 @@ The user-provided long screenshot exposed a P1 rendering defect: the major below
 - [x] Production build passed.
 
 final result: passed
+
+## Products center implementation — 2026-09-16
+
+- Selected catalog reference: `C:/Users/phoenix/AppData/Local/Temp/codex-clipboard-e6a21094-e31f-413d-a771-d03ce5d3df09.png`.
+- Industry adaptation: the reference's sidebar/catalog relationship was retained, while all automotive-parts terminology, fields, imagery and retail actions were removed.
+- Page structure: full-width product hero, three product-system navigator, linked catalog, technical selection split, documentation support, application discovery, procurement FAQ, full-width final CTA and footer.
+- Catalog layout: 280px sticky category sidebar plus a four-column desktop product grid at the main desktop width; three columns on laptop, two-column application/system grids on tablet, and a one-column product grid with category select on mobile.
+- Behavior: category selection updates the result title, live computed count, visible products and URL state. Search and 20-product pagination use URL parameters; category changes reset pagination.
+- Demonstration data: 28 additive product families and the existing category hierarchy are sourced from the project fallback data. The Directus getters retain the same public interface, so verified CMS products replace the demonstration set when the backend is populated.
+- Truthfulness: no price, MOQ, fixed lead time, certification, dosage, composition or performance values were invented. Document, sample and lead-time language remains conditional.
+- Visual review: the desktop hero, three-system cards and four-column catalog were checked in the in-app browser. Product cards are equal-width and use 1:1 contained imagery; the category sidebar remains visually subordinate to the product area.
+- Interaction review: selecting `Lubricant Additives` changed the URL to `?category=lubricant-additives`, expanded its child categories, updated the result title and changed the result count from 28 to 15.
+- Automated checks: Products and shared site-chrome tests passed (6/6).
+- ESLint: passed.
+- Production Next.js build: passed, including all 74 generated static pages.
+
+final result: passed
+
+## Header and footer refinement — 2026-09-16
+
+- Reference source: `C:/Users/phoenix/Downloads/xinxinxiongming-main (1).zip`.
+- Scope: only the header/footer layout and information architecture were adapted; the Huanyu Kuntai color system and all company content were retained.
+- Header: verified as a two-level structure with a brand-colored contact bar, 80px white navigation, brand mark and lockup, centered primary navigation, separated language/inquiry tools, and a dedicated mobile menu.
+- Footer: verified as an independent brand block, two-column link group, contact block, and separate copyright strip. The redundant footer CTA was removed because the homepage already contains a full Final CTA section.
+- Content integrity: company name, tagline, phone, email, address and navigation continue to come from this project and its site settings; no facts or copy were imported from the reference company.
+- Visual integrity: existing blue/teal brand tokens are used throughout; the reference website's colors were not copied.
+- Browser review: desktop header renders as a single balanced row with no overlap at the production container width; the existing hero remains unchanged directly below it.
+- Responsive review: at 1040px and below, desktop navigation/tools switch to a menu button and an independent mobile navigation panel; footer groups reflow to two columns and then one column without horizontal overflow.
+- Automated structure tests: passed (2/2).
+- ESLint: passed.
+- Production Next.js build: passed (74 static pages generated).
+
+final result: passed

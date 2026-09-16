@@ -1,66 +1,33 @@
 import Link from 'next/link';
-import { ArrowRight, Mail, MapPin, Phone } from 'lucide-react';
+import { ArrowRight, FlaskConical, Mail, MapPin, Phone } from 'lucide-react';
 import type { Locale } from '@/config/i18n';
 import type { Messages } from '@/lib/i18n/messages';
 import type { SiteSettings } from '@/lib/directus/types';
 
-export default function Footer({
-  locale,
-  messages,
-  settings
-}: {
-  locale: Locale;
-  messages: Messages;
-  settings: SiteSettings;
-}) {
-  const productSystems = [
-    ['fuel-additives', 'Fuel Additives'],
-    ['lubricant-additives', 'Lubricant Additives'],
-    ['lubricant-additive-packages', 'Lubricant Additive Packages']
-  ];
-
-  const quickLinks = [
-    ['products', messages.nav.products],
-    ['applications', messages.nav.applications],
-    ['service', messages.nav.service],
-    ['about', messages.nav.about],
-    ['contact', messages.nav.contact]
-  ];
+export default function Footer({ locale, messages, settings }: { locale: Locale; messages: Messages; settings: SiteSettings }) {
+  const productSystems = [['fuel-additives', 'Fuel Additives'], ['lubricant-additives', 'Lubricant Additives'], ['lubricant-additive-packages', 'Lubricant Additive Packages']];
+  const quickLinks = [['products', messages.nav.products], ['applications', messages.nav.applications], ['service', messages.nav.service], ['about', messages.nav.about], ['contact', messages.nav.contact]];
 
   return (
     <footer className="site-footer">
-      <div className="container footer-cta">
-        <div>
-          <span>Technical &amp; commercial support</span>
-          <h2>Discuss your additive requirements with our team.</h2>
-        </div>
-        <Link className="button footer-cta-button" href={`/${locale}/contact`}>
-          Send an inquiry <ArrowRight size={17} />
-        </Link>
-      </div>
-
       <div className="container footer-grid">
         <div className="footer-brand">
-          <h3>{settings.siteName}</h3>
-          <strong>{settings.tagline}</strong>
+          <Link className="footer-brand-lockup" href={`/${locale}`}>
+            <span className="footer-brand-mark" aria-hidden="true"><FlaskConical size={25} /></span>
+            <span><h3>{settings.siteName}</h3><strong>{settings.tagline}</strong></span>
+          </Link>
           <p className="footer-company">Xi&apos;an Huanyu Kuntai Industrial Technology Co., Ltd.</p>
           <p>Fuel additive, lubricant additive and additive-package solutions for global industrial B2B customers.</p>
         </div>
-        <div className="footer-column">
-          <h3>Product systems</h3>
-          <nav aria-label="Product systems">
-            {productSystems.map(([slug, label]) => (
-              <Link key={slug} href={`/${locale}/products?category=${slug}`}>{label}</Link>
-            ))}
-          </nav>
-        </div>
-        <div className="footer-column">
-          <h3>{messages.footer.quickLinks}</h3>
-          <nav aria-label={messages.footer.quickLinks}>
-            {quickLinks.map(([href, label]) => (
-              <Link key={href} href={`/${locale}/${href}`}>{label}</Link>
-            ))}
-          </nav>
+        <div className="footer-link-groups">
+          <div className="footer-column">
+            <h3>Product systems</h3>
+            <nav aria-label="Product systems">{productSystems.map(([slug, label]) => <Link key={slug} href={`/${locale}/products?category=${slug}`}>{label}</Link>)}</nav>
+          </div>
+          <div className="footer-column">
+            <h3>{messages.footer.quickLinks}</h3>
+            <nav aria-label={messages.footer.quickLinks}>{quickLinks.map(([href, label]) => <Link key={href} href={`/${locale}/${href}`}>{label}</Link>)}</nav>
+          </div>
         </div>
         <div className="footer-column footer-contact">
           <h3>{messages.footer.contact}</h3>
@@ -71,9 +38,11 @@ export default function Footer({
           <Link className="footer-contact-link" href={`/${locale}/contact`}>Contact our team <ArrowRight size={15} /></Link>
         </div>
       </div>
-      <div className="container footer-bottom">
-        <span>© {new Date().getFullYear()} Xi&apos;an Huanyu Kuntai Industrial Technology Co., Ltd.</span>
-        <span>Product data and certifications are published only after verification.</span>
+      <div className="footer-bottom-wrap">
+        <div className="container footer-bottom">
+          <span>© {new Date().getFullYear()} Xi&apos;an Huanyu Kuntai Industrial Technology Co., Ltd.</span>
+          <span>Product data and certifications are published only after verification.</span>
+        </div>
       </div>
     </footer>
   );
