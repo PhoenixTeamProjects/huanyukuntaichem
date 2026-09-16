@@ -39,3 +39,8 @@ test('applications page uses the selected scene assets', () => {
   ];
   for (const asset of requiredAssets) assert.match(source, new RegExp(asset.replace('.', '\\.')));
 });
+
+test('split application stories use a bounded inner container on large screens', () => {
+  const innerContainers = source.match(/applications-story-inner/g) ?? [];
+  assert.equal(innerContainers.length, 3);
+});

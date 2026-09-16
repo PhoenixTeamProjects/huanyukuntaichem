@@ -69,8 +69,9 @@ export default async function ApplicationsPage({ params }: { params: Promise<{ l
       </section>
 
       <section id="passenger-vehicles" className="applications-story applications-onroad">
-        <div className="applications-story-media"><Image src="/images/applications/applications-onroad.webp" alt="Passenger car and commercial truck on the road" fill sizes="(max-width: 900px) 100vw, 55vw" /></div>
-        <div className="applications-story-copy">
+        <div className="applications-story-inner">
+          <div className="applications-story-media"><Image src="/images/applications/applications-onroad.webp" alt="Passenger car and commercial truck on the road" fill sizes="(max-width: 900px) 100vw, 55vw" /></div>
+          <div className="applications-story-copy">
           <span className="applications-index">01</span><div className="eyebrow dark">On-road mobility</div>
           <h2>Protection for passenger and commercial transport.</h2>
           <p>Application-led selection for gasoline and diesel systems operating across daily mobility and demanding transport duty.</p>
@@ -78,11 +79,13 @@ export default async function ApplicationsPage({ params }: { params: Promise<{ l
             {[app['Passenger vehicles'], app['Commercial vehicles']].map((item, index) => { const Icon = index === 0 ? CarFront : Truck; return <article id={index === 1 ? 'commercial-vehicles' : undefined} key={item.title}><Icon size={27} /><h3>{item.title}</h3><p>{item.description}</p><strong>{item.direction}</strong></article>; })}
           </div>
           <Link className="applications-text-link" href={productsHref}>View relevant products <ArrowRight size={16} /></Link>
+          </div>
         </div>
       </section>
 
       <section id="heavy-duty-diesel" className="applications-story applications-offhighway">
-        <div className="applications-story-copy">
+        <div className="applications-story-inner">
+          <div className="applications-story-copy">
           <span className="applications-index">02</span><div className="eyebrow dark">Heavy-duty &amp; off-highway</div>
           <h2>Additive directions for equipment working in tough environments.</h2>
           <p>Fuel and lubricant systems for heavy loads, varied duty cycles and equipment operating away from the highway.</p>
@@ -90,8 +93,9 @@ export default async function ApplicationsPage({ params }: { params: Promise<{ l
             {[app['Heavy-duty diesel engines'], app['Construction machinery'], app['Agricultural engines']].map((item, index) => { const Icon = [Gauge, Tractor, Sprout][index]; return <article id={index === 1 ? 'construction-machinery' : index === 2 ? 'agricultural-engines' : undefined} key={item.title}><Icon size={27} /><h3>{item.title}</h3><p>{item.description}</p><strong>{item.direction}</strong></article>; })}
           </div>
           <Link className="applications-text-link" href={productsHref}>View heavy-duty products <ArrowRight size={16} /></Link>
+          </div>
+          <div className="applications-story-media"><Image src="/images/applications/applications-offhighway.webp" alt="Construction excavator and agricultural tractor" fill sizes="(max-width: 900px) 100vw, 55vw" /></div>
         </div>
-        <div className="applications-story-media"><Image src="/images/applications/applications-offhighway.webp" alt="Construction excavator and agricultural tractor" fill sizes="(max-width: 900px) 100vw, 55vw" /></div>
       </section>
 
       <section id="industrial-machinery" className="applications-industrial">
@@ -107,8 +111,9 @@ export default async function ApplicationsPage({ params }: { params: Promise<{ l
       </section>
 
       <section id="lubricant-manufacturing" className="applications-story applications-formulation">
-        <div className="applications-story-media"><Image src="/images/applications/applications-formulation.webp" alt="Lubricant formulation laboratory and controlled filling environment" fill sizes="(max-width: 900px) 100vw, 55vw" /></div>
-        <div className="applications-story-copy">
+        <div className="applications-story-inner">
+          <div className="applications-story-media"><Image src="/images/applications/applications-formulation.webp" alt="Lubricant formulation laboratory and controlled filling environment" fill sizes="(max-width: 900px) 100vw, 55vw" /></div>
+          <div className="applications-story-copy">
           <span className="applications-index">04</span><div className="eyebrow dark">From formulation to market</div>
           <h2>Supporting lubricant producers and aftermarket brands.</h2>
           <p>From component selection to customized, market-ready programs, the route begins with the intended formulation and customer need.</p>
@@ -116,6 +121,7 @@ export default async function ApplicationsPage({ params }: { params: Promise<{ l
             {[app['Lubricant manufacturing'], app['Automotive aftermarket']].map((item, index) => { const Icon = index === 0 ? FlaskConical : Tags; return <article id={index === 1 ? 'automotive-aftermarket' : undefined} key={item.title}><Icon size={27} /><h3>{item.title}</h3><p>{item.description}</p><strong>{item.direction}</strong></article>; })}
           </div>
           <Link className="applications-text-link" href={contactHref}>Discuss your program <ArrowRight size={16} /></Link>
+          </div>
         </div>
       </section>
 

@@ -360,7 +360,8 @@ p { line-height: 1.72; }
 .applications-card-copy small { display: block; max-width: 260px; margin-top: 8px; color: rgba(255,255,255,.68); font-size: 11px; font-weight: 700; line-height: 1.4; }
 .applications-card-copy i { position: absolute; right: 0; bottom: 1px; width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.65); border-radius: 50%; color: #fff; }
 
-.applications-story { min-height: 660px; display: grid; grid-template-columns: 55% 45%; background: #fff; }
+.applications-story { min-height: 660px; background: #fff; }
+.applications-story-inner { width: min(1400px, calc(100% - 48px)); min-height: 660px; margin: 0 auto; display: grid; grid-template-columns: 55% 45%; }
 .applications-story-media { position: relative; min-height: 660px; overflow: hidden; }
 .applications-story-media img { object-fit: cover; object-position: center; }
 .applications-story-copy { display: flex; flex-direction: column; justify-content: center; padding: 84px clamp(42px,5.5vw,100px); }
@@ -377,7 +378,8 @@ p { line-height: 1.72; }
 .applications-story-items p { margin-top: 8px; color: #6a7e89; font-size: 12px; line-height: 1.55; }
 .applications-story-items strong { display: block; margin-top: 10px; color: #00899c; font-size: 11px; line-height: 1.45; }
 .applications-text-link { display: inline-flex; align-items: center; gap: 8px; color: #007f91; font-size: 13px; font-weight: 900; }
-.applications-offhighway { grid-template-columns: 45% 55%; background: #edf8fa; }
+.applications-offhighway { background: #edf8fa; }
+.applications-offhighway .applications-story-inner { grid-template-columns: 45% 55%; }
 .applications-formulation { background: #fff; }
 
 .applications-industrial { position: relative; isolation: isolate; min-height: 680px; display: grid; align-items: center; color: #fff; }
@@ -459,7 +461,7 @@ p { line-height: 1.72; }
   .applications-quicknav-grid { grid-template-columns: repeat(4,1fr); }
   .applications-quicknav a:nth-child(-n+4) { border-bottom: 1px solid #dce9ed; }
   .applications-explorer-grid { grid-template-columns: repeat(2,1fr); }
-  .applications-story, .applications-offhighway { grid-template-columns: 1fr; }
+  .applications-story-inner, .applications-offhighway .applications-story-inner { width: 100%; grid-template-columns: 1fr; }
   .applications-story-media { min-height: 540px; }
   .applications-offhighway .applications-story-media { order: -1; }
   .applications-story-copy { padding: 76px 7vw 82px; }
