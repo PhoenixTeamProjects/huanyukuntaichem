@@ -360,11 +360,11 @@ p { line-height: 1.72; }
 .applications-card-copy small { display: block; max-width: 260px; margin-top: 8px; color: rgba(255,255,255,.68); font-size: 11px; font-weight: 700; line-height: 1.4; }
 .applications-card-copy i { position: absolute; right: 0; bottom: 1px; width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.65); border-radius: 50%; color: #fff; }
 
-.applications-story { min-height: 660px; background: #fff; }
-.applications-story-inner { width: min(1400px, calc(100% - 48px)); min-height: 660px; margin: 0 auto; display: grid; grid-template-columns: 55% 45%; }
-.applications-story-media { position: relative; min-height: 660px; overflow: hidden; }
+.applications-story { min-height: 560px; background: #fff; }
+.applications-story-inner { width: min(1200px, calc(100% - 40px)); min-height: 560px; margin: 0 auto; display: grid; grid-template-columns: 55% 45%; }
+.applications-story-media { position: relative; min-height: 560px; overflow: hidden; }
 .applications-story-media img { object-fit: cover; object-position: center; }
-.applications-story-copy { display: flex; flex-direction: column; justify-content: center; padding: 84px clamp(42px,5.5vw,100px); }
+.applications-story-copy { display: flex; flex-direction: column; justify-content: center; padding: 64px clamp(42px,4vw,64px); }
 .applications-index { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 14px; color: #00899c; font-size: 14px; font-weight: 900; letter-spacing: .13em; }
 .applications-index::after { content: ''; width: 56px; height: 1px; background: currentColor; opacity: .55; }
 .applications-story-copy h2, .applications-industrial-copy h2 { max-width: 720px; margin: 14px 0 18px; color: #082f48; font-size: clamp(40px,3.6vw,54px); line-height: 1.08; letter-spacing: -.04em; }

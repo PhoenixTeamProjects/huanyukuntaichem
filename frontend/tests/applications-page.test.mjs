@@ -44,3 +44,9 @@ test('split application stories use a bounded inner container on large screens',
   const innerContainers = source.match(/applications-story-inner/g) ?? [];
   assert.equal(innerContainers.length, 3);
 });
+
+test('split application stories follow the site container width and scene-image scale', () => {
+  const css = readFileSync(new URL('../src/app/globals.css', import.meta.url), 'utf8');
+  assert.match(css, /\.applications-story-inner\s*\{[^}]*width:\s*min\(1200px,\s*calc\(100% - 40px\)\)/s);
+  assert.match(css, /\.applications-story-media\s*\{[^}]*min-height:\s*560px/s);
+});
