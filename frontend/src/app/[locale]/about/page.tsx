@@ -1,59 +1,43 @@
-import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Factory, FlaskConical, Globe2, ShieldCheck } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowRight, Beaker, Boxes, CheckCircle2, ClipboardCheck, Factory, FileCheck2, FlaskConical, Globe2, Handshake, PackageCheck, ShieldCheck, Tags, Truck } from 'lucide-react';
 import { normalizeLocale } from '@/lib/i18n/messages';
 import { getBusinessContent } from '@/lib/directus/business';
-import InnerPageHero from '@/components/InnerPageHero';
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: localeParam } = await params;
   const locale = normalizeLocale(localeParam);
   const business = await getBusinessContent(locale);
+  const contact = `/${locale}/contact`;
+  const focus = [
+    ['Fuel Additives','Fuel-system cleanliness, combustion, stability and performance directions.','/images/home/fuel-additives.webp'],
+    ['Lubricant Additives','Functional components for lubricant formulation and industrial applications.','/images/home/lubricant-additives.webp'],
+    ['Lubricant Additive Packages','Application-led package solutions for automotive and industrial lubricants.','/images/home/additive-packages.webp']
+  ];
+  const capabilities = [[Factory,'Manufacturing & stable supply'],[FlaskConical,'Formulation development'],[Beaker,'Laboratory & application support'],[ShieldCheck,'Quality control'],[Tags,'Packaging customization'],[Globe2,'Global delivery']] as const;
+  const buyers = ['Importers & distributors','Lubricant manufacturers','Blending plants','Automotive chemical brands','Industrial companies','Private-label brand owners'];
 
-  return (
-    <>
-      <InnerPageHero
-        locale={locale}
-        eyebrow="About Huanyu Kuntai Chem"
-        title={business.positioning}
-        summary={`${business.companyName} focuses on fuel additives, lubricant additives and additive-package solutions for global industrial customers.`}
-        primary={{ href: '/contact', label: 'Start a conversation' }}
-        secondary={{ href: '/products', label: 'View products' }}
-        highlights={['Chemical manufacturing & stable supply', 'Formulation and laboratory support', 'International B2B delivery']}
-      />
-      <section className="section inner-content-section">
-        <div className="container reference-image-split">
-          <div className="reference-split-image"><Image src="/images/home/fuel-additives-light.webp" alt="Huanyu Kuntai chemical additive focus" fill sizes="(max-width: 900px) 100vw, 50vw" /></div>
-          <div className="reference-split-copy prose">
-            <div className="eyebrow dark">Company profile</div>
-            <h2>Focused exclusively on fuel and lubricant additive systems</h2>
-            {business.companyIntroduction.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-          </div>
-        </div>
-      </section>
-      <section className="section section-tint"><div className="container"><div className="section-head"><div className="eyebrow dark">How we work</div><h2>From chemistry to long-term delivery</h2></div><div className="reference-process-grid">{business.serviceProcess.slice(0,4).map((step,index)=><article key={step.title}><span>{String(index+1).padStart(2,'0')}</span><h3>{step.title}</h3><p>{step.description}</p></article>)}</div></div></section>
-      <section className="section section-tint">
-        <div className="container value-grid reference-card-grid">
-          <article><Factory size={28} /><h3>Manufacturing & supply</h3><p>Production, blending, filling, industrial packaging and stable batch supply.</p></article>
-          <article><FlaskConical size={28} /><h3>R&D & laboratory</h3><p>Formula development, optimization, compatibility, stability and sample support.</p></article>
-          <article><ShieldCheck size={28} /><h3>Quality control</h3><p>Raw-material, process, batch, packaging and finished-product controls.</p></article>
-          <article><Globe2 size={28} /><h3>Global delivery</h3><p>Export documentation, logistics coordination and long-term international supply.</p></article>
-        </div>
-      </section>
-      <section className="section">
-        <div className="container">
-          <div className="section-head"><div className="eyebrow dark">Global markets</div><h2>Regional demand, product-specific execution</h2><p>Every market is served according to its application, documentation and destination requirements.</p></div>
-          <div className="grid market-grid">
-            {business.markets.map((market) => <article className="card" key={market.title}><h3>{market.title}</h3><p>{market.description}</p></article>)}
-          </div>
-        </div>
-      </section>
-      <section className="section section-dark">
-        <div className="container two-panel">
-          <div><div className="eyebrow">Our working principle</div><h2>Advanced chemistry. Reliable performance.</h2></div>
-          <div><p className="lead">We publish only verified company facts, product data, certification scope and technical claims. Missing data remains unpublished until confirmed.</p><Link className="button" href={`/${locale}/contact`}>Start a conversation <ArrowRight size={17} /></Link></div>
-        </div>
-      </section>
-    </>
-  );
+  return <>
+    <section className="about-hero"><Image src="/images/about/about-hero-hykt.webp" alt="HYKT additive manufacturing cooperation" fill priority sizes="100vw"/><div className="about-hero-overlay"/><div className="about-container about-hero-inner"><div className="eyebrow">About Huanyu Kuntai Chem</div><h1>Additive technology built for global industry.</h1><p>{business.companyName} focuses on fuel additives, lubricant additives and additive-package solutions for international industrial customers.</p><div className="actions"><Link className="button" href="#capabilities">Explore our capabilities <ArrowRight size={17}/></Link><Link className="button secondary light" href={contact}>Contact our team</Link></div></div></section>
+
+    <section className="about-profile"><div className="about-container about-profile-grid"><div className="about-profile-media"><Image src="/images/about/about-lab-team-hykt.webp" alt="HYKT additive laboratory team reviewing formulation data" fill sizes="(max-width:900px) 100vw, 55vw"/></div><div className="about-profile-copy"><div className="eyebrow dark">Company profile</div><h2>Focused on the chemistry behind reliable performance.</h2>{business.companyIntroduction.map(paragraph=><p key={paragraph}>{paragraph}</p>)}<ul><li><CheckCircle2 size={19}/>Fuel and lubricant additive specialization</li><li><CheckCircle2 size={19}/>Application-led technical support</li><li><CheckCircle2 size={19}/>Stable B2B supply and cooperation</li></ul></div></div></section>
+
+    <section className="about-facts"><div className="about-container about-facts-grid">{[['Since 2008','Focused on additive technology'],['3 Product Systems','Fuel, lubricant and additive packages'],['B2B Industrial Supply','Built around professional buyers'],['OEM / ODM / Private Label','Customization support available']].map(([title,text])=><article key={title}><strong>{title}</strong><span>{text}</span></article>)}</div></section>
+
+    <section className="about-focus"><div className="about-container"><Header eyebrow="Our business focus" title="Three additive systems. One connected supply partner." text="Our portfolio is organized around the product systems customers use to find the right technical direction."/><div className="about-focus-grid">{focus.map(([title,text,image])=><article key={title}><div><Image src={image} alt={title} fill sizes="(max-width:760px) 100vw, 33vw"/></div><section><h3>{title}</h3><p>{text}</p><Link href={`/${locale}/products`}>Explore system <ArrowRight size={15}/></Link></section></article>)}</div></div></section>
+
+    <section className="about-capabilities" id="capabilities"><Image src="/images/about/about-production-hykt.webp" alt="HYKT additive blending filling and packaging capability" fill sizes="100vw"/><div className="about-capabilities-overlay"/><div className="about-container about-capabilities-inner"><Header eyebrow="Core capabilities" title="Built to support the complete B2B requirement." text="Technical direction, controlled execution and international supply remain connected throughout the project."/><div className="about-capability-grid">{capabilities.map(([Icon,title],index)=><article key={title}><span>{String(index+1).padStart(2,'0')}</span><Icon size={28}/><h3>{title}</h3></article>)}</div></div></section>
+
+    <section className="about-process"><div className="about-container"><Header eyebrow="How we work" title="From requirement review to repeat supply." text="A structured cooperation route keeps technical, production and delivery decisions aligned."/><div className="about-process-grid">{business.serviceProcess.slice(0,5).map((step,index)=><article key={step.title}><span>{String(index+1).padStart(2,'0')}</span><h3>{step.title}</h3><p>{step.description}</p>{index<4&&<ArrowRight size={17}/>}</article>)}</div></div></section>
+
+    <section className="about-quality"><div className="about-container about-quality-grid"><div className="about-quality-media"><Image src="/images/home/refined/quality-control.webp" alt="Laboratory quality control and traceability" fill sizes="(max-width:900px) 100vw, 52vw"/></div><div className="about-quality-copy"><div className="eyebrow dark">Quality &amp; traceability</div><h2>Quality control across every critical stage.</h2><p>Inspection and documentation stay connected from incoming materials through finished-product release.</p><ol>{[['Raw-material review',ClipboardCheck],['Process monitoring',Factory],['Finished-product testing',FlaskConical],['Batch management',Boxes],['Packaging & release review',PackageCheck]].map(([title,Icon],index)=>{const ItemIcon=Icon as typeof ClipboardCheck;return <li key={String(title)}><span>{String(index+1).padStart(2,'0')}</span><ItemIcon size={21}/><strong>{String(title)}</strong></li>})}</ol></div></div></section>
+
+    <section className="about-global"><div className="about-container about-global-grid"><div className="about-global-copy"><div className="eyebrow dark">Global B2B cooperation</div><h2>Built for professional buyers and long-term supply.</h2><p>We work around the buyer’s application, market, documentation, packaging and delivery requirements.</p><div className="about-buyer-grid">{buyers.map(item=><span key={item}><Handshake size={18}/>{item}</span>)}</div><Link className="button" href={contact}>Discuss cooperation <ArrowRight size={17}/></Link></div><div className="about-global-media"><Image src="/images/about/about-global-supply-hykt.webp" alt="HYKT international additive supply and logistics" fill sizes="(max-width:900px) 100vw, 55vw"/></div></div></section>
+
+    <section className="about-principles"><div className="about-container"><Header eyebrow="Our working principles" title="Professional cooperation starts with clarity." text="The information we publish and the support we provide must remain connected to verified facts and real requirements."/><div className="about-principle-grid"><article><FileCheck2 size={30}/><h3>Verified Information</h3><p>Unverified product data, certificates and commercial claims remain unpublished.</p></article><article><Truck size={30}/><h3>Reliable Cooperation</h3><p>Production, packaging, documents and delivery are coordinated around the confirmed order.</p></article><article><FlaskConical size={30}/><h3>Application-led Support</h3><p>Recommendations begin with the fluid system, operating conditions and performance target.</p></article></div></div></section>
+
+    <section className="about-cta"><Image src="/images/applications/applications-cta.webp" alt="Global additive supply cooperation" fill sizes="100vw"/><div className="about-cta-overlay"/><div className="about-container about-cta-inner"><div className="eyebrow">Start a long-term cooperation</div><h2>Build a reliable additive supply relationship.</h2><p>Share your product, application, packaging and destination requirements with our team.</p><div className="actions"><Link className="button" href={contact}>Start a conversation <ArrowRight size={17}/></Link><Link className="button secondary light" href={`/${locale}/products`}>Explore products</Link></div></div></section>
+  </>;
 }
+
+function Header({eyebrow,title,text}:{eyebrow:string;title:string;text:string}){return <div className="about-section-head"><div className="eyebrow dark">{eyebrow}</div><h2>{title}</h2><p>{text}</p></div>}
