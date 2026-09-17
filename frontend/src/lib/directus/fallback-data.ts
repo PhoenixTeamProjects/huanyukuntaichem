@@ -102,19 +102,29 @@ export const fallbackProducts: Product[] = [
   product('grease-additive-solutions', 'grease-additive-solutions', 'Grease Additive Solutions', 'Functional additive directions for grease formulations and related application requirements.', ['Functional component selection', 'Formulation support', 'Application-specific documentation'], ['Lubricating grease formulations'])
 ];
 
+const news = (slug: string, category: string, title: string, excerpt: string, content: string, image: string): NewsArticle => ({
+  id: `news-${slug}`,
+  slug,
+  category,
+  title,
+  excerpt,
+  content,
+  image,
+  imageAlt: title,
+  publishedAt: '2026-09-01'
+});
+
 export const fallbackNews: NewsArticle[] = [
-  {
-    id: 'technical-content-center',
-    slug: 'technical-content-center',
-    category: null,
-    title: 'Technical content center in preparation',
-    excerpt: 'Product knowledge, application guidance and additive technology articles will be published after technical review.',
-    content:
-      'Huanyu Kuntai Chem is preparing a reviewed technical-content system for fuel additives, lubricant additives and additive packages. Articles will be published through Directus only after product facts, terminology and supporting materials have been checked.',
-    image: null,
-    imageAlt: null,
-    publishedAt: null
-  }
+  news('choosing-the-right-additive-direction', 'Lubricant formulation', 'How to choose the right additive direction for your application', 'Effective selection starts with the base fluid, equipment duty, operating environment and target performance—not with a generic product list.', 'The first step in additive selection is to define the complete application context. Base fluid chemistry, equipment type, operating temperature, load and service interval can all change the appropriate technical direction.\n\nA useful inquiry should therefore include the intended fluid system, current formulation information where available, target performance and any market or documentation requirements. Final product, dosage and compatibility recommendations require technical confirmation against the actual formulation.', '/images/home/lubricant-additives.webp'),
+  news('fuel-additives-cleaner-combustion', 'Fuel additives', 'How fuel additives support cleaner combustion', 'A practical overview of deposit control, combustion quality and system cleanliness.', 'Fuel-additive programs can address several different requirements, including injector cleanliness, deposit control, ignition quality, stability and moisture management. These functions should not be treated as interchangeable.\n\nSelection begins with the fuel type, vehicle or equipment, operating pattern and the specific performance issue being addressed. Product claims and dosage must be confirmed for the chosen additive and intended market.', '/images/home/fuel-additives.webp'),
+  news('lubricant-additive-direction', 'Lubricant formulation', 'Choosing the right lubricant additive direction', 'Start with the base oil, application duty and required performance balance.', 'Lubricant formulations depend on the interaction between base oil, viscosity system and functional additives. A component that performs well in one system may require a different dosage or compatibility review in another.\n\nDefine the application, base oil, viscosity target, operating conditions and desired performance before selecting a detergent, dispersant, anti-wear agent, antioxidant or other functional component.', '/images/home/lubricant-additives.webp'),
+  news('additive-package-formulation', 'Additive packages', 'What an additive package does in a formulation', 'How coordinated components simplify application-oriented formulation development.', 'An additive package combines several functional components around an intended lubricant application. It can simplify sourcing and formulation work, but it does not remove the need to confirm the base oil, treat rate and performance direction.\n\nPackage selection should be based on the lubricant type, target market, available test information and the actual production route.', '/images/home/additive-packages.webp'),
+  news('tds-sds-coa-guide', 'Quality & documentation', 'Understanding TDS, SDS and COA documentation', 'The role of product, safety and batch documents in a verified B2B supply route.', 'A Technical Data Sheet describes verified product characteristics and application information. A Safety Data Sheet communicates handling and safety information. A Certificate of Analysis reports applicable information for a specific batch.\n\nDocument availability and content depend on the confirmed product and supply arrangement. Documents should be matched to the actual grade rather than treated as interchangeable marketing material.', '/images/home/refined/quality-control.webp'),
+  news('heavy-duty-diesel-additives', 'Fuel additives', 'Additive selection for heavy-duty diesel applications', 'Operating duty, fuel quality and climate all influence the technical direction.', 'Heavy-duty diesel equipment can operate under sustained load, variable fuel quality and wide temperature ranges. Cleaning, cetane, lubricity, stability and cold-flow requirements must therefore be evaluated separately.\n\nThe operating environment, storage cycle, fuel specification and equipment use should be reviewed before a diesel additive direction is confirmed.', '/images/home/refined/application-heavy-duty.webp'),
+  news('batch-control-export-delivery', 'Quality & documentation', 'From batch control to export delivery', 'Why inspection, traceability, packaging and documents should remain connected.', 'Reliable export supply depends on more than finished-product testing. Raw-material review, process monitoring, batch identification, packing confirmation and document coordination form one connected route.\n\nKeeping these records aligned helps the supplier and customer identify the supplied batch, packaging arrangement and applicable technical information.', '/images/home/refined/supply-chain.webp'),
+  news('pour-point-depressants-low-temperature-flow', 'Lubricant formulation', 'Low-temperature flow and pour point depressants', 'What formulators should review when balancing base oil behavior and cold-flow targets.', 'Pour point depressants modify wax-related low-temperature behavior, but their response varies with base-oil composition and formulation structure. A generic treat rate cannot represent every system.\n\nBase oil, viscosity grade, test target and compatibility with the wider additive system should be confirmed through formulation work and appropriate testing.', '/images/home/refined/application-industrial-machinery.webp'),
+  news('batch-traceability-additive-supply', 'Quality systems', 'Why batch traceability matters in additive supply', 'Connecting inspection, production and shipment information supports a more controlled supply route.', 'Batch traceability connects incoming materials, process records, finished-product checks, packaging and release information. It provides a practical record of what was produced and supplied.\n\nThe exact test data and documents available depend on the product and commercial arrangement, so requirements should be confirmed before the order is finalized.', '/images/home/refined/quality-control.webp'),
+  news('export-delivery-coordination', 'Global supply', 'Coordinating packaging, documents and export delivery', 'Export supply works best when product, packaging and destination requirements are reviewed together.', 'Packaging type, label information, marks, shipment method and destination documentation can affect the production and delivery plan. Early confirmation reduces avoidable changes later in the order.\n\nCustomers should share destination, expected volume, packaging preference and required documents during the inquiry stage.', '/images/home/refined/export-capability-v2.webp')
 ];
 
 export function localizeFallback<T>(items: T[], _locale: Locale): T[] {

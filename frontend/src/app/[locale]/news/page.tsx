@@ -1,49 +1,28 @@
+import Image from 'next/image';
 import Link from 'next/link';
-import { normalizeLocale, getMessages } from '@/lib/i18n/messages';
-import { getNews } from '@/lib/directus/news';
-import InnerPageHero from '@/components/InnerPageHero';
+import { ArrowRight, Beaker, BookOpenCheck, ClipboardCheck, FileCheck2, Fuel, Gauge, ListChecks, PackageCheck, ThermometerSun } from 'lucide-react';
+import { normalizeLocale } from '@/lib/i18n/messages';
+import NewsHub from '@/components/NewsHub';
 
 export default async function NewsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: localeParam } = await params;
   const locale = normalizeLocale(localeParam);
-  const messages = getMessages(locale);
-  const articles = await getNews(locale);
 
-  return (
-    <>
-    <InnerPageHero
-      locale={locale}
-      eyebrow="Knowledge center"
-      title="Additive technology and application guidance"
-      summary={messages.news.intro}
-      primary={{ href: '/products', label: 'Browse products' }}
-      secondary={{ href: '/contact', label: 'Send inquiry' }}
-      highlights={['Reviewed technical content', 'Application-oriented guidance', 'Verified information only']}
-    />
-    <section className="section section-tint">
-      <div className="container"><div className="section-head"><div className="eyebrow dark">Knowledge topics</div><h2>Browse by technical direction</h2></div><div className="reference-topic-grid">{['Fuel additive technology','Lubricant formulation','Additive package applications','Quality & documentation','Company & supply updates'].map((topic,index)=><article key={topic}><span>{String(index+1).padStart(2,'0')}</span><h3>{topic}</h3></article>)}</div></div>
-    </section>
-    <section className="section inner-content-section">
-      <div className="container">
-        <div className="section-head">
-          <div className="eyebrow dark">Technical articles</div>
-          <h2>Practical additive knowledge</h2>
-          <p>Browse reviewed product knowledge, application guidance and company updates.</p>
-        </div>
-        <div className="grid reference-card-grid">
-          {articles.map((article) => (
-            <article className="card" key={article.id}>
-              <h2>{article.title}</h2>
-              <p>{article.excerpt}</p>
-              <Link className="button secondary" href={`/${locale}/news/${article.slug}`}>
-                {messages.cta.readMore}
-              </Link>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-    <section className="section section-dark"><div className="container two-panel"><div><div className="eyebrow">Need product-specific guidance?</div><h2>Connect an article to your real application.</h2></div><div><p className="lead">Published content is general guidance. Product recommendations and claims are confirmed against the actual requirement.</p><Link className="button" href={`/${locale}/contact`}>Ask our team</Link></div></div></section>
-    </>
-  );
+  return <>
+    <section className="news-hero"><Image src="/images/home/refined/hero-laboratory.webp" alt="Additive research and technical knowledge" fill priority sizes="100vw"/><div className="news-hero-overlay"/><div className="news-container news-hero-inner"><div className="eyebrow">Knowledge center</div><h1>Practical additive knowledge for better decisions.</h1><p>Explore reviewed insights on fuel additives, lubricant formulation, additive packages, documentation and industrial supply.</p><div className="actions"><Link className="button" href="#latest-insights">Explore insights <ArrowRight size={17}/></Link><Link className="button secondary light" href={`/${locale}/contact`}>Ask a technical question</Link></div></div></section>
+
+    <section className="news-featured"><div className="news-container news-featured-grid"><div className="news-featured-media"><Image src="/images/home/lubricant-additives.webp" alt="Lubricant additive formulation insight" fill unoptimized sizes="(max-width:900px) 100vw, 58vw"/></div><div className="news-featured-copy"><div className="eyebrow dark">Featured insight</div><span className="news-meta">Lubricant formulation · 8 min read</span><h2>How to choose the right additive direction for your application</h2><p>Effective selection starts with the base fluid, equipment duty, operating environment and target performance—not with a generic product list.</p><Link href={`/${locale}/news/choosing-the-right-additive-direction`}>Read featured article <ArrowRight size={16}/></Link></div></div></section>
+
+    <NewsHub locale={locale}/>
+
+    <section className="news-application-focus"><div className="news-container news-application-grid"><div className="news-application-media"><Image src="/images/applications/applications-offhighway.webp" alt="Heavy-duty equipment operating conditions" fill sizes="(max-width:900px) 100vw, 56vw"/></div><div className="news-application-copy"><div className="eyebrow dark">Application insight</div><span className="news-meta">Heavy-duty systems</span><h2>Additive selection under demanding operating conditions.</h2><p>A reliable direction starts with the real equipment, fuel environment and performance target.</p><div className="news-application-factors"><article><Fuel size={25}/><div><h3>Fuel quality</h3><p>Review cleanliness, stability and combustion requirements.</p></div></article><article><Gauge size={25}/><div><h3>Operating duty</h3><p>Match the direction to load, cycle and equipment demand.</p></div></article><article><ThermometerSun size={25}/><div><h3>Climate conditions</h3><p>Consider temperature range and seasonal operation.</p></div></article></div><Link href={`/${locale}/applications`}>Explore application guidance <ArrowRight size={16}/></Link></div></div></section>
+
+    <section className="news-guide"><Image src="/images/applications/applications-industrial.webp" alt="Industrial additive application and formulation" fill sizes="100vw"/><div className="news-guide-overlay"/><div className="news-container news-guide-inner"><div><div className="eyebrow">Technical guide</div><h2>From application conditions to a verified product direction.</h2><p>Our technical content explains the questions that matter before a product, dosage or package direction is confirmed.</p></div><div className="news-guide-points"><article><Beaker size={27}/><h3>Fluid &amp; chemistry</h3><p>Base fluid, formulation structure and compatibility.</p></article><article><BookOpenCheck size={27}/><h3>Duty &amp; performance</h3><p>Equipment, operating conditions and target results.</p></article><article><FileCheck2 size={27}/><h3>Documentation</h3><p>Technical files matched to the verified supply.</p></article></div></div></section>
+
+    <section className="news-resources"><div className="news-container"><div className="news-section-head"><div><div className="eyebrow dark">Technical resources</div><h2>Practical references for your next inquiry.</h2></div><p>Use these guides to prepare the information needed for a clearer technical and commercial response.</p></div><div className="news-resource-grid">{[[ListChecks,'Product selection guide','The operating and performance details that shape product direction.'],[FileCheck2,'TDS / SDS / COA explained','Understand which document applies to the product, safety or batch.'],[ClipboardCheck,'Formulation information checklist','Prepare base fluid, dosage, compatibility and target information.'],[PackageCheck,'Packaging & export documentation','Review packing, marks, destination and document requirements.']].map(([Icon,title,text],index)=>{const ItemIcon=Icon as typeof ListChecks;return <article key={String(title)}><span>{String(index+1).padStart(2,'0')}</span><ItemIcon size={27}/><h3>{String(title)}</h3><p>{String(text)}</p><Link href={`/${locale}/contact`}>Request guidance <ArrowRight size={15}/></Link></article>})}</div></div></section>
+
+    <section className="news-company"><div className="news-container"><div className="news-section-head"><div><div className="eyebrow dark">Company &amp; supply updates</div><h2>Inside our route from production to delivery.</h2></div><p>Updates on quality control, customized supply and international cooperation.</p></div><div className="news-company-grid"><article><div><Image src="/images/home/refined/quality-control.webp" alt="Additive quality control" fill sizes="(max-width:760px) 100vw, 50vw"/></div><small>Quality systems</small><h3>Why batch traceability matters in additive supply</h3><Link href={`/${locale}/news/batch-traceability-additive-supply`}>Read update <ArrowRight size={15}/></Link></article><article><div><Image src="/images/home/refined/export-capability-v2.webp" alt="International additive delivery" fill sizes="(max-width:760px) 100vw, 50vw"/></div><small>Global supply</small><h3>Coordinating packaging, documents and export delivery</h3><Link href={`/${locale}/news/export-delivery-coordination`}>Read update <ArrowRight size={15}/></Link></article></div></div></section>
+
+    <section className="news-inquiry"><Image src="/images/applications/applications-cta.webp" alt="Technical product inquiry support" fill sizes="100vw"/><div className="news-inquiry-overlay"/><div className="news-container news-inquiry-inner"><div className="eyebrow">Technical / Product Inquiry</div><h2>Connect the insight to your actual requirement.</h2><p>Share the application, formulation direction, target performance and market with our team.</p><div className="actions"><Link className="button" href={`/${locale}/contact`}>Start a technical inquiry <ArrowRight size={17}/></Link><Link className="button secondary light" href={`/${locale}/products`}>Browse products</Link></div></div></section>
+  </>;
 }
