@@ -1,43 +1,52 @@
-# Applications Page Design QA
+# Contact Page Design QA
 
-## Visual target
+- Source visual truth: `C:\Users\phoenix\.codex\generated_images\01a04218-c348-7310-a1ef-57fde1b60975\exec-348b6ac8-f3a6-4e49-85f0-d66e388c3e5c.png`
+- Implementation: `http://127.0.0.1:3010/en/contact`
+- Browser-rendered evidence: Codex in-app browser tab 1, captured inline at the hero, inquiry-form, and process states.
+- Viewport: 1267 × 553 CSS px, device density 1.
+- Source pixels: 810 × 1920. The source is a compressed full-page concept; comparisons use section proportions rather than literal full-page pixel scale.
+- State: English public Contact page, anonymous visitor, default form state.
 
-- Selected target: Product Design option 3, `exec-7cab7968-7c95-4ddc-aa50-e859ccb71186.png`.
-- Required blend: retain option 3's immersive application stories, dark industrial anchor, solution pathways and working process; add option 1's 4 x 2 Explore by Application image entry grid.
-- Compared at the desktop application route: `http://127.0.0.1:3012/en/applications`.
+## Full-view comparison evidence
 
-## Structure review
+The implementation preserves the selected third concept's sequence and visual roles: cinematic laboratory hero, dark direct-contact rail, four inquiry pathways, large image/form split, dark four-step process, Xi'an location split, industrial image CTA, and existing corporate footer. The user's follow-up spacing change is intentionally reflected by reducing ordinary section padding to 52–56px and the inquiry section's bottom transition to 16px while retaining the source composition and content height.
 
-- Hero: purpose-made transport, equipment and industrial scene; copy remains vertically centered.
-- Quick application navigation: all eight verified application routes present.
-- Explore by Application: 4 x 2 large-image grid present on desktop.
-- On-road Mobility: independent large split section present.
-- Heavy-duty & Off-highway: independent reverse split section present.
-- Industrial Reliability: full-width dark image anchor present.
-- From Formulation to Market: independent laboratory/production split present.
-- Application-to-Chemistry Matrix: added as a dark technical summary with directional status levels and a verification disclaimer.
-- Technical Review: added with a purpose-made laboratory image and five decision inputs.
-- Solution Pathways: three equal product-system paths present.
-- Working Process: five-step application path present.
-- Final CTA: full-width dark scenic image with centered inquiry action present.
+## Focused region comparison evidence
 
-## Responsive and content checks
+- Hero: large left-aligned two-line title, dark left overlay, specialists on the right, two CTA buttons, and international contact rail match the approved hierarchy.
+- Inquiry split: the laboratory image and navy checklist remain the visual anchor; the form retains the approved two-column field order and includes customer Email.
+- Contact details: no Chinese characters remain on the English page; Phone, WhatsApp, WeChat, CTA and footer consistently show `+86 181 8260 2513`.
+- Process: the four connected numbered stages keep the approved dark full-width visual role.
+- Location: verified English address is paired with a large Xi'an city image rather than an invented map.
 
-- Desktop: large images retain their intended visual weight and section boundaries are clear.
-- Tablet: application grid becomes two columns; split stories become full-width image plus content.
-- Mobile: application grid becomes one column, split stories stack, process becomes one column and primary actions become full width.
-- Headings are limited to natural one- or two-line wraps.
-- All public business statements are derived from verified project content; no technical values, certificates or performance claims were invented.
-- Header and footer remain unchanged.
+## Required fidelity surfaces
 
-## Findings resolved
+- Fonts and typography: existing site sans-serif stack, weights, eyebrow tracking, display hierarchy and two-line maximum hero wrapping are consistent with the current site and selected mockup.
+- Spacing and layout rhythm: 1320px page container, balanced 44/56 and 45/55 splits, 52–56px ordinary section transitions, a compact 16px inquiry-to-process transition, and 12–48px responsive section padding. No excessive blank transition remains in inspected desktop states.
+- Colors and tokens: existing deep navy, petroleum teal, pale blue-gray and white brand system is preserved.
+- Image quality and assets: four separate, high-resolution photorealistic assets match the selected industrial/laboratory/Xi'an/logistics roles; imagery is not repeated between major anchors.
+- Copy and content: verified product scope, public phone, WhatsApp, WeChat and English address only. No company email, response-time promise, certificate, capacity or market statistic was invented.
 
-- P1: hero and industrial copy containers initially expanded to the viewport edge. Removed the conflicting width override so both align to the global 1200px container.
-- P2: lazy-loaded scene imagery briefly appeared blank during capture. Rechecked after image optimization completed; all scene images render correctly.
-- P2: the two requested technical sections were inserted without replacing or compressing the approved immersive application stories.
+## Findings
 
-## Remaining polish
+No actionable P0, P1 or P2 visual mismatch remains in the inspected desktop states.
 
-- No blocking P0, P1 or P2 findings.
+## Comparison history
+
+- P2: Initial implementation used 94–112px section padding and read as overly separated compared with adjacent site pages. The first reduction still left a visibly empty pale-blue band below the inquiry split.
+- Fix: Contact help, inquiry, process and location sections were reduced to 52px, 52px/16px, 56px and 56px respectively; responsive spacing was reduced proportionally.
+- Post-fix evidence: browser inspection of the inquiry and process transition shows only a narrow 16px separator, with the dark process section entering immediately after the inquiry panel.
+
+## Primary interactions checked
+
+- Anchor links resolve to the inquiry form.
+- Phone links use `tel:+8618182602513`.
+- WhatsApp links use `https://wa.me/8618182602513`.
+- Inquiry form exposes Name, Company, Country/Region, Phone or WhatsApp, Email, Product interest and Requirement details.
+- Navigation and footer links remain present in the browser accessibility tree.
+
+## Follow-up polish
+
+- P3: A final mobile-device screenshot can be captured during the deployment review if the user wants pixel-level tuning for a specific handset width.
 
 final result: passed

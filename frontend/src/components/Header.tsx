@@ -9,6 +9,7 @@ import type { SiteSettings } from '@/lib/directus/types';
 
 export default function Header({ locale, messages, settings }: { locale: Locale; messages: Messages; settings: SiteSettings }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const phoneHref = settings.phone ? `tel:${settings.phone.replace(/[^\d+]/g, '')}` : null;
   const navItems = [
     ['', messages.nav.home], ['products', messages.nav.products], ['applications', messages.nav.applications],
     ['service', messages.nav.service], ['news', messages.nav.news], ['about', messages.nav.about], ['contact', messages.nav.contact]
@@ -32,7 +33,7 @@ export default function Header({ locale, messages, settings }: { locale: Locale;
             <span><FlaskConical size={14} /> Fuel &amp; lubricant additive technology</span>
           </div>
           <div className="topbar-group topbar-contact">
-            {settings.phone ? <a href={`tel:${settings.phone}`}><Phone size={14} />{settings.phone}</a> : null}
+            {settings.phone && phoneHref ? <a href={phoneHref}><Phone size={14} />{settings.phone}</a> : null}
             {settings.email ? <a href={`mailto:${settings.email}`}><Mail size={14} />{settings.email}</a> : null}
             <Link href={`/${locale}/contact`}>Technical support &amp; inquiry</Link>
           </div>

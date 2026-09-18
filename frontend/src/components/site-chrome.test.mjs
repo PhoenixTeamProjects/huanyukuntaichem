@@ -11,6 +11,7 @@ test('header follows the approved information-bar, brand, desktop-tools and mobi
   assert.match(header, /mobile-nav-toggle/);
   assert.match(header, /mobile-nav-panel/);
   assert.match(header, /settings\.phone/);
+  assert.match(header, /settings\.phone\.replace/);
   assert.match(header, /settings\.email/);
 });
 
@@ -20,5 +21,6 @@ test('footer uses the reference four-column structure without a duplicate CTA', 
   assert.match(footer, /footer-contact/);
   assert.doesNotMatch(footer, /footer-cta/);
   assert.match(footer, /settings\.phone/);
+  assert.match(footer, /settings\.phone\.replace/);
   assert.match(footer, /settings\.email/);
 });

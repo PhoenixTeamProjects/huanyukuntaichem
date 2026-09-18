@@ -5,6 +5,7 @@ import type { Messages } from '@/lib/i18n/messages';
 import type { SiteSettings } from '@/lib/directus/types';
 
 export default function Footer({ locale, messages, settings }: { locale: Locale; messages: Messages; settings: SiteSettings }) {
+  const phoneHref = settings.phone ? `tel:${settings.phone.replace(/[^\d+]/g, '')}` : null;
   const productSystems = [['fuel-additives', 'Fuel Additives'], ['lubricant-additives', 'Lubricant Additives'], ['lubricant-additive-packages', 'Lubricant Additive Packages']];
   const quickLinks = [['products', messages.nav.products], ['applications', messages.nav.applications], ['service', messages.nav.service], ['about', messages.nav.about], ['contact', messages.nav.contact]];
 
@@ -32,7 +33,7 @@ export default function Footer({ locale, messages, settings }: { locale: Locale;
         <div className="footer-column footer-contact">
           <h3>{messages.footer.contact}</h3>
           {settings.email ? <a href={`mailto:${settings.email}`}><Mail size={16} />{settings.email}</a> : null}
-          {settings.phone ? <a href={`tel:${settings.phone}`}><Phone size={16} />{settings.phone}</a> : null}
+          {settings.phone && phoneHref ? <a href={phoneHref}><Phone size={16} />{settings.phone}</a> : null}
           {settings.address ? <span><MapPin size={16} />{settings.address}</span> : null}
           <p>Send your product, application and destination-market requirements through our inquiry form.</p>
           <Link className="footer-contact-link" href={`/${locale}/contact`}>Contact our team <ArrowRight size={15} /></Link>

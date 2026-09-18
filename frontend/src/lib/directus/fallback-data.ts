@@ -5,8 +5,8 @@ export const fallbackSettings: SiteSettings = {
   siteName: 'HUANYU KUNTAI CHEM',
   tagline: 'Additive Technology for Global Industry',
   email: null,
-  phone: '18182602513',
-  address: 'China'
+  phone: '+86 181 8260 2513',
+  address: 'No. 66 Dongqi Road, Xincheng District, Xi’an, Shaanxi, China'
 };
 
 const category = (
