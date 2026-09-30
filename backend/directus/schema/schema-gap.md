@@ -1,11 +1,11 @@
-# Schema Gap & Dry-Run Diff — 现有 Directus vs v1.5 Universal Core（v4 修正）
+# Schema Gap & Dry-Run Diff — 现有 Directus vs v1.5 Universal Core（v5 修正）
 
-> 来源：v1.5 §13 + §26 + §43 + §44 + §45 + §48 + Owner Audit v4  
-> 编制时间：2026-10-01 UTC（v4）
+> 来源：v1.5 §13 + §26 + §43 + §44 + §45 + §48 + Owner Audit v5  
+> 编制时间：2026-10-01 UTC（v5）
 
 ---
 
-## 1. Collection 级状态总览
+## 1. Collection 级状态（v5）
 
 | Collection | Status | Migration |
 |---|---|---|
@@ -16,330 +16,339 @@
 | `news_categories` | create | create |
 | `news` | create | create |
 | `pages` | create | create · **单 canonical sections + inline translations** |
-| `inquiries` | existing + diff | field-name preserved + status enum/default replaced + 7 new |
+| `inquiries` | existing + diff | **10 unchanged + 1 metadata update + 7 new = 18** |
 | `redirects` | optional | 不启用 |
 
 ---
 
-## 2. 字段计数术语分离（v4 关键修正）
+## 2. 字段计数（v5 · 沿用 v4 实测 600/589）
 
 ### 2.1 三层术语
 
 | 术语 | 含义 |
 |---|---|
-| **A. Canonical model field count** | 模型中所有字段（包括 unchanged + update + new）的总计数 |
-| **B. Planned new-model fields** | 新 schema 中应该应用的字段（= canonical - unchanged - update） |
-| **C. Actual Directus fields.create API operations** | apply-schema 时实际调用 `fields.create` 的次数（**TO_BE_VERIFIED_IN_PHASE_2B**） |
+| **A. Canonical model field count** | 模型中所有字段的总计数 |
+| **B. Planned new-model fields** | 新 schema 中应该应用的字段 = A − unchanged − update |
+| **C. Actual Directus fields.create API operations** | **TO_BE_VERIFIED_IN_PHASE_2B**（Directus 11 自动创建 system fields 时可能略高于 B） |
 
-### 2.2 Per-collection 字段精确统计（v4 实测 · 非硬编码）
+### 2.2 Per-collection 字段精确统计
 
-公式：canonical total = base + single + translatable-source × 10 + relation + structured
-
-| Collection | System (base) | Single-value | Trans source ×10 | Relation | Structured (JSON) | Canonical total |
+| Collection | System | Single | Trans ×10 | Relation | Structured | Canonical |
 |---|---|---|---|---|---|---|
-| site_settings | 7 (id, status, sort, date_*, user_*) | 6 (company_name_cn, company_english_name, email, phone, whatsapp, social_links) | 7 sources ×10 = 70 (site_name, tagline, company_name, address, footer_intro, default_seo_title, default_seo_description) | 4 (logo, logo_white, favicon, default_og_image) | 0 | **87** |
-| product_categories | 7 | 4 (slug, level, show_in_menu, featured) | 6 sources ×10 = 60 (category_name, category_description, image_alt, seo_title, seo_description, seo_keywords) | 2 (parent M2O self, image M2O file) | 0 | **73** |
-| **products** | 7 | 5 (slug, internal_product_code, moq, featured_product, customizable) | 9 sources ×10 = 90 (product_name, short_description, detailed_description, lead_time, packaging, image_alt, seo_title, seo_description, seo_keywords) | 3 (product_category M2O, main_image M2O, product_images M2M) | **2** (specifications + highlights JSON；**products.applications 已删除**) | **107** |
-| applications | 7 | 2 (slug, featured) | 7 sources ×10 = 70 (title, short_description, content, image_alt, seo_title, seo_description, seo_keywords) | 2 (image M2O, related_products M2M) | 0 | **81** |
-| news_categories | 7 | 1 (slug) | 4 sources ×10 = 40 (category_name, description, seo_title, seo_description) | 0 | 0 | **48** |
-| news | 7 | 4 (slug, published_at, author, featured) | 7 sources ×10 = 70 (title, excerpt, content, image_alt, seo_title, seo_description, seo_keywords) | 2 (category M2O, cover_image M2O) | 0 | **83** |
-| pages | 6 (no sort) | 3 (page_key, slug, hero_button_link) | 9 sources ×10 = 90 (title, hero_title, hero_subtitle, hero_image_alt, hero_button_text, seo_title, seo_description, seo_keywords, image_alt) | 3 (hero_image, og_image, image — all M2O file) | **1** (sections single canonical JSON) | **103** |
-| inquiries | (existing 11 fields) | 10 unchanged + 1 status metadata update | 0 | 1 new (assigned_to M2O users) | 0 | **18** (10 unchanged + 1 update + 7 new) |
+| site_settings | 7 | 6 | 70 (7 src) | 4 | 0 | **87** |
+| product_categories | 7 | 4 | 60 (6 src) | 2 | 0 | **73** |
+| **products** | 7 | 5 | 90 (9 src) | 3 | **2** (specifications + highlights; **applications 已删除**) | **107** |
+| applications | 7 | 2 | 70 (7 src) | 2 | 0 | **81** |
+| news_categories | 7 | 1 | 40 (4 src) | 0 | 0 | **48** |
+| news | 7 | 4 | 70 (7 src) | 2 | 0 | **83** |
+| pages | 6 | 3 | 90 (9 src) | 3 | **1** (sections single canonical) | **103** |
+| inquiries | (11 existing) | 10 unchanged + 1 metadata update | 0 | 1 new (assigned_to) | 0 | **18** |
 
-### 2.3 Aggregations（v4 实测 · 非硬编码）
+### 2.3 Aggregations（v4 实测 · v5 沿用 · 内部一致）
 
-| 指标 | 计算 | **v4 实测值** |
+| 指标 | 值 |
+|---|---|
+| **CANONICAL_FIELD_TOTAL (A)** | **600** (87+73+107+81+48+83+103+18) |
+| **UNCHANGED_FIELDS** | **10** |
+| **METADATA_UPDATE_FIELDS** | **1** |
+| **PLANNED_NEW_MODEL_FIELDS (B)** | **589** (600 − 10 − 1) |
+| **ACTUAL_DIRECTUS_FIELD_CREATE_OPERATIONS (C)** | **TO_BE_VERIFIED_IN_PHASE_2B** |
+
+---
+
+## 3. Relations 分层（v5 沿用 v4 · TO_BE_VERIFIED for API operations）
+
+| 概念 | 数量 | 来源 |
 |---|---|---|
-| **Canonical total fields (A)** | 87 + 73 + 107 + 81 + 48 + 83 + 103 + 18 | **600** |
-| **Unchanged fields** | inquiries 11 中除 status 外 | **10** |
-| **Metadata-update fields** | inquiries.status (enum + default 替换) | **1** |
-| **Planned new-model fields (B)** | 600 − 10 − 1 | **589** |
-| **Actual Directus fields.create API operations (C)** | **TO_BE_VERIFIED_IN_PHASE_2B**（Directus 11 可能在创建 collection 时自动建 system 字段，Phase 2B dry-run 必须实测确认） | **(TO_BE_VERIFIED_IN_PHASE_2B)** |
+| **LOGICAL_RELATIONS** | **16** | Mapping 分析 |
+| **M2M_RELATIONS** | **2** | Mapping 分析 |
+| **JUNCTION_COLLECTIONS_REQUIRED** | **2**（products_files, applications_products） | Mapping |
+| **JUNCTION_FIELDS_REQUIRED** | **4**（products_files: products_id + directus_files_id; applications_products: applications_id + products_id） | Mapping |
+| Physical FK constraints expected | 18（14 M2O × 1 + 2 M2M × 2） | Mapping 推断 |
+| **DIRECTUS_RELATION_API_OPERATIONS** | **TO_BE_VERIFIED_IN_PHASE_2B** | Phase 2B dry-run |
 
-**注**：v3 旧版"610/611"表述不准确。**v4 实测精确值 600/589**。如果 Phase 2B 实测发现 Directus 11 会自动创建某些 system fields，最终 actual API count 可能略高于 589。
-
-### 2.4 字段计数证据链（Source-Driven）
-
-每个字段都对应"Referenced field"列，从 Phase 2A 的 fallback-data.ts / business.ts / frontend/src/lib/directus/* 等真实源文件实测得出。**不是从 v3 数字推断**。
+**Phase 2B 必须验证**：Directus 11.x `relations.create` API 在 M2M 时是否一次创建 junction table + 2 junction fields + 2 FK constraints；这是 Directus 版本相关的实现细节。
 
 ---
 
-## 3. Relations 分层（v4 修正）
+## 4. 移除双真理源（v5 · 强制）
 
-### 3.1 四种关系概念（严格分离 · **TO_BE_VERIFIED for API operations**）
-
-| 概念 | 含义 | 数量 | 来源 |
-|---|---|---|---|---|
-| **Logical relations** | 业务关系概念（"products 关联 applications"） | **16** | Mapping 分析 |
-| **Directus relation objects** | 通过 Directus API `/relations` 创建的元数据记录 | **16 expected** | **TO_BE_VERIFIED_IN_PHASE_2B** |
-| **M2M relations** | 多对多关系 | **2** | Mapping 分析 |
-| **Junction collections required** | M2M 关系所需的中间表 | **2**（products_files, applications_products） | Mapping |
-| **Junction fields required** | 中间表内连接两侧的字段 | **4**（products_files: products_id + directus_files_id; applications_products: applications_id + products_id） | Mapping |
-| **Physical FK constraints expected** | 数据库 foreign key 索引 | **18**（14 M2O × 1 + 2 M2M × 2） | Mapping 推断 |
-| **Directus API operations for relations** | 实际调用 `relations.create` 次数 | **TO_BE_VERIFIED_IN_PHASE_2B** | Phase 2B dry-run |
-
-**v3 错误**：将"16 relations.create 自动创建 2 junction tables + 4 junction fields + 18 FK"作为**已验证事实**陈述。
-
-**v4 修正**：
-- Logical / junction / FK count 是 **Mapping 分析结果**（基于 v1.5 spec）
-- **API operation count TO_BE_VERIFIED_IN_PHASE_2B** against installed Directus version
-- Phase 2B 必须实际 dry-run schema operation order against installed Directus 11.x
-
-### 3.2 Relations 完整清单（v4 · 16 logical relations）
-
-| # | Logical | Source | Source Field | Target | Type | Junction Table | FK Count | On Delete |
-|---|---|---|---|---|---|---|---|---|
-| 1 | category self-ref | product_categories | parent | product_categories (id) | M2O self | — | 1 | RESTRICT |
-| 2 | products → category | products | product_category | product_categories | M2O | — | 1 | RESTRICT |
-| 3 | products → file (main) | products | main_image | directus_files | M2O | — | 1 | SET NULL |
-| 4 | products ↔ files (gallery) | products | product_images | directus_files | M2M | products_files | 2 | SET NULL |
-| 5 | applications → file | applications | image | directus_files | M2O | — | 1 | SET NULL |
-| **6** | **applications ↔ products**（**单一真理源**） | applications | related_products | products | **M2M** | applications_products | **2** | SET NULL |
-| 7 | news → category | news | category | news_categories | M2O | — | 1 | RESTRICT |
-| 8 | news → file (cover) | news | cover_image | directus_files | M2O | — | 1 | SET NULL |
-| 9 | pages → file (hero) | pages | hero_image | directus_files | M2O | — | 1 | SET NULL |
-| 10 | pages → file (og) | pages | og_image | directus_files | id | M2O | — | 1 | SET NULL |
-| 11 | pages → file (image) | pages | image | directus_files | M2O | — | 1 | SET NULL |
-| 12 | site_settings → file (logo) | site_settings | logo | directus_files | M2O | — | 1 | SET NULL |
-| 13 | site_settings → file (logo_white) | site_settings | logo_white | directus_files | M2O | — | 1 | SET NULL |
-| 14 | site_settings → file (favicon) | site_settings | favicon | directus_files | M2O | — | 1 | SET NULL |
-| 15 | site_settings → file (default_og_image) | site_settings | default_og_image | directus_files | M2O | — | 1 | SET NULL |
-| 16 | inquiries → user (assigned_to) | inquiries | assigned_to | directus_users | M2O | — | 1 | SET NULL |
-
----
-
-## 4. 移除双真理源（v4 强制）
-
-**`products.applications` JSON 字段不创建**。
-
-**单一真理源**：`applications.related_products` M2M（通过 `applications_products` 中间表）。
-
-**Migration 规则（v4 严格）**：
-- ✅ **仅 7 unique values** 精确 allowlist 自动映射
-- ⚠️ **59 unique values + 58 occurrences** 待人工 review（DO NOT AUTO-CREATE）
+- ✅ `products.applications` JSON 字段**不创建**
+- ✅ **单一真理源**：`applications.related_products` M2M
+- ✅ **仅 7 unique values auto-map**（实测）：Passenger vehicles / Commercial vehicles / Heavy-duty diesel engines / Construction machinery / Industrial machinery / Lubricant manufacturing / Automotive aftermarket
+- ✅ **13 unique + 13 occurrences 待人工 review**（**DO NOT AUTO-CREATE**）
 - ❌ 禁止 fuzzy / substring / invented
-- 详见 `compatibility-map.md §2`
 
 ---
 
-## 5. RBAC 矩阵（v4 修正含 Public 媒体授权）
+## 5. RBAC 矩阵（v5 关键 RBAC 修正）
 
-### 5.1 Public 媒体授权（**v4 implementable**）
+### 5.1 Inquiry Writer（**v5 关键 RBAC**）
 
-**不要**用 `directus_files.is_public=true`（**该字段不存在**）。
+**禁止**使用前端 DTO 字段名（name / company / source_path / product_slug）。
 
-**Phase 2B 实施步骤**：
+**必须**使用 Directus collection 字段名。
 
-1. **确定性发现/创建 folder IDs**（用 Directus API `/folders`）：
-   - `/Products/` `/Product-Categories/` `/Applications/` `/News/` `/Company/` `/Certificates/` `/Downloads/` —— public
-   - **`/Private/`** —— **private（Public role denied）**
-2. Public policy 配置：
-   - 对 public folder IDs（及其 descendants）允许 read
-   - 对 `/Private/` folder ID **拒绝** read
-3. **禁止** broad `directus_files` listing（必须 folder-scoped）
+#### 5.1.1 Inquiry Writer CREATE allowed fields whitelist
+（仅 Directus collection 实际字段）
 
-### 5.2 Roles / Policies 总览
+```
+customer_name
+email
+company_name
+phone
+whatsapp
+country
+message
+source_page
+product_interested
+locale
+```
 
-| # | Policy | Source | Admin | App |
-|---|---|---|---|---|
-| 1 | "Policy for Administrator" | existing | True | True |
-| 2 | "Administrator" | existing | True | True |
-| 3 | "$t:public_label" (= Public) | existing | False | False |
-| 4 | Content Editor Policy | new | False | False |
-| 5 | Product Manager Policy | new | False | False |
-| 6 | Sales Staff Policy | new | False | False |
-| 7 | SEO Editor Policy | new | False | False |
-| 8 | Website Reader Policy | new | False | True |
-| 9 | Inquiry Writer Policy | new | False | False |
+#### 5.1.2 Inquiry Writer NOT allowed
 
-**Total**: 9 policies · 6 roles · 2 service tokens
+```
+id
+status
+date_created
+date_updated
+internal_notes
+assigned_to
+outcome
+next_follow_up_at
+```
 
-### 5.3 Inquiry Writer Least-Privilege Matrix（v1.5 §43.2）
+#### 5.1.3 status NOT writable（**v5 关键 RBAC**）
 
-| Collection / Action | Read | Create | Update | Delete |
-|---|---|---|---|---|
-| **inquiries** | ❌ | ✅ **白名单字段** | ❌ | ❌ |
-| Other collections | ❌ | ❌ | ❌ | ❌ |
+```
+INQUIRY_WRITER_STATUS_WRITE_PERMISSION = DENIED
+INQUIRY_STATUS_INITIALIZATION           = DIRECTUS_DEFAULT_NEW
+```
 
-**Inquiry Writer 创建白名单字段**：
-- ✅ 允许：`name` / `email` / `company` / `phone` / `whatsapp` / `country` / `message` / `source_path` / `product_slug` / `locale`
-- ✅ 强制 `status = 'new'`
-- ❌ 禁止：传 `id` / `date_created` / `date_updated` / `status` / `internal_notes` / `assigned_to` / `outcome` / `next_follow_up_at`
+- Inquiry Writer create permission **excludes** `status`
+- `/api/inquiries` **不**接收 browser status field
+- `/api/inquiries` **不**转发 user-supplied status
+- Directus field default `new` 自动生效
+- 防止 public-facing service 创建 `status=contacted/qualified/quoted/follow_up/closed`
 
-### 5.4 Public Least-Privilege Matrix
+### 5.2 Next.js adapter 字段映射（v5）
 
-| Collection / Action | Read | Create | Update | Delete |
-|---|---|---|---|---|
-| products / categories / news / applications / pages / site_settings | ❌ | ❌ | ❌ | ❌ |
-| inquiries | ❌ | ❌ | ❌ | ❌ |
-| directus_files in public folders | ✅ read | ❌ | ❌ | ❌ |
-| directus_files in `/Private/` | ❌ | ❌ | ❌ | ❌ |
-| directus_files (broad listing) | ❌ | ❌ | ❌ | ❌ |
-| directus_users / system | ❌ | ❌ | ❌ | ❌ |
+| Frontend DTO | Directus collection field |
+|---|---|
+| `name` | `customer_name` |
+| `email` | `email` |
+| `company` | `company_name` |
+| `phone` | `phone` |
+| `whatsapp` | `whatsapp` |
+| `country` | `country` |
+| `message` | `message` |
+| `sourcePath` | `source_page` |
+| `productSlug` | `product_interested` |
+| `locale` | `locale` |
+
+**DO NOT put DTO names into Directus permissions**（v5 强制）。
+
+### 5.3 Public 媒体授权（v5 · folder ID allowlist）
+
+**禁止**用 `directus_files.is_public=true`（不存在）。
+
+**Phase 2B 确定性发现/创建**：
+- `/Products/` `/Product-Categories/` `/Applications/` `/News/` `/Company/` `/Certificates/` `/Downloads/` —— **public allowlist**
+- `/Private/` —— **private（**Public 不 allowlist**）**
+
+Public permission filter: `directus_files.folder IN (<public folder IDs>)`
+
+**禁止** broad `directus_files` listing
+
+### 5.4 Roles / Policies / Service Tokens 总览
+
+- 9 policies (3 existing + 6 new)
+- 6 roles (2 existing + 4 new)
+- **SERVICE_IDENTITIES_REQUIRED=2**（Website Reader + Inquiry Writer）
+- **SERVICE_IDENTITY_BINDING_IMPLEMENTATION=TO_BE_VERIFIED_IN_PHASE_2B_AGAINST_INSTALLED_DIRECTUS_VERSION**
 
 ---
 
-## 6. Structured Fields · 运营 UX（v4 强制 · v1.5 §27.1）
+## 6. Service Identities（v5 · 逻辑需求）
 
-### 6.1 选型决策
+| Identity | 服务端限制 | 权限 |
+|---|---|---|
+| **Website Reader** | server-side only | read published content only; no writes; no inquiry access; no system/admin |
+| **Inquiry Writer** | server-side only | create inquiries only（白名单 Directus fields）；no read/list/update/delete；no status write；no other collections；no system/admin |
 
-**采用 Option A**：Directus Repeater interface + structured JSON + raw JSON hidden for operators。
+**Phase 2B 必须验证**：
+- Directus 11.x static access token 模型
+- token ↔ role ↔ policy 绑定模型
+- 实际 API 操作顺序
 
-**降级路径**：Phase 2B 实测 Directus 11 Repeater interface 不安全 → 改用 Option B（controlled child collections）。
-
-### 6.2 Operator UX 规范
-
-| 字段 | Directus interface | 运营者所见 | raw JSON 可见？ | add/remove/reorder | 多语言编辑 | 验证 | 发布门 |
-|---|---|---|---|---|---|---|---|
-| `products.specifications` | Repeater | "Add parameter" 表单（key + value ×10 locales） | ❌ NO | ✅ UI | ✅ 10 语言 tab | ✅ key 非空 | ⚠️ 缺关键字段阻止 |
-| `products.highlights` | Repeater | "Add highlight"（stable id + sort + text ×10 locales） | ❌ NO | ✅ UI | ✅ 10 语言 tab | ✅ text 非空 | ⚠️ 缺翻译阻止该语言发布 |
-| `pages.sections` | Repeater | "Add section"（type enum + sort + image + product_ids + CTA + 10 语言 text） | ❌ NO | ✅ UI + drag-reorder | ✅ 10 语言 tab | ✅ block_id stable + type enum | ⚠️ 缺关键字段阻止 |
-
-**强制**：
-- ✅ normal operator **从不**直接编辑 raw JSON（**RAW_JSON_REQUIRED_FOR_NORMAL_OPERATOR=NO**）
-- ✅ Directus **从不**成为 free-form page builder
-- ✅ Repeater interface 提供 controlled add/remove/reorder UX
-- ✅ per-locale text 通过 tab 切换编辑
+**Phase 2A 不创建任何 service user 或 token**。
 
 ---
 
-## 7. inquiries.status 处理（v4）
+## 7. Structured Fields · Operator UX（v4 沿用）
+
+- Option A: Directus Repeater interface + raw JSON hidden
+- 降级路径：Phase 2B 实测 Repeater 不足 → Option B controlled child collections
+- **RAW_JSON_REQUIRED_FOR_NORMAL_OPERATOR=NO**
+
+---
+
+## 8. inquiries.status 处理（v5）
 
 | 项 | 处理 |
 |---|---|
 | Field name | `status`（保留） |
-| Choices enum | `[new, contacted, qualified, quoted, follow_up, closed]` |
-| Default value | `new` |
+| Choices enum | `[new, contacted, qualified, quoted, follow_up, closed]`（替换 `[pending, handled]`） |
+| Default value | `new`（替换 `pending`） |
 | Legacy `pending` runtime | 不保留 |
 | API 翻译层 | 不增加 |
+| Inquiry Writer write permission | **DENIED** |
+| Browser POST status | 拒绝接收 |
 | Destructive? | NO（0 records + metadata-only） |
 
 ---
 
-## 8. URL Inventory（v4 修正 · 762 total）
+## 9. Product Applications 实测（v5 程序化）
 
-| 类型 | 数量 | × 10 locales | total URLs |
+```
+PRODUCT_APPLICATION_UNIQUE_SOURCE_VALUES  = 20
+PRODUCT_APPLICATION_OCCURRENCES            = 23
+AUTO_APPROVED_EXACT_UNIQUE_VALUES          = 7
+AUTO_APPROVED_EXACT_OCCURRENCES            = 10
+UNRESOLVED_UNIQUE_VALUES                   = 13
+UNRESOLVED_OCCURRENCES                     = 13
+
+Invariant: 10 + 13 = 23 ✓
+Invariant: 13 >= 13 ✓
+```
+
+**完整 20-row review 表见 `compatibility-map.md §2.2`**
+
+**v3/v4 错算**：66 unique / 59 unresolved / 58 occurrences —— **实测错误**。v5 已纠正。
+
+---
+
+## 10. URL Inventory（v5 沿用 v4）
+
+| 类型 | 数量 | × 10 locales | total |
 |---|---|---|---|
-| Fixed content | 7 patterns | × 10 | 70 |
-| Dynamic news | 10 slugs | × 10 | 100 |
-| Dynamic products | 28 slugs | × 10 | 280 |
-| Dynamic categories | 31 slugs | × 10 | 310 |
-| **Subtotal public** | — | — | **760** |
-| Root redirect | 1 | × 1 | 1 |
-| API | 1 | × 1 | 1 |
-| **Total route instances + endpoints** | — | — | **762** |
+| Public locale content URLs | — | — | **760** |
+| Root redirect | 1 | × 1 | **1** |
+| API | 1 | × 1 | **1** |
+| **Total** | — | — | **762** |
 
-**Route patterns**: 7 + 3 + 1 + 1 = **12**
-**Slug-bearing records**: 69 (categories 31 + products 28 + news 10)
-**Unique literal slug values**: 41
+**ROUTE_PATTERNS** = **12**
 
 ---
 
-## 9. 媒体资源（v4 修正 · 5 EXISTS / 3 MISSING）
+## 11. 媒体资源（v5 拆分）
 
-| 类别 | 数量 | 大小 |
-|---|---|---|
-| Directus media | 0 records | — |
-| Repository static media | 46 files (45 webp + 1 svg) | 16 MB |
-| **Missing fallback refs** | **3** | — |
-| EXISTS fallback refs | 5 | — |
+| 类别 | 数量 |
+|---|---|
+| FRONTEND_PUBLIC_IMAGES_FILES | **45 webp** |
+| FRONTEND_PUBLIC_ROOT_MEDIA_FILES | **1 svg** |
+| TOTAL_REPOSITORY_STATIC_MEDIA_FILES | **46** |
+| FALLBACK_MEDIA_REFS | **8** |
+| FALLBACK_MEDIA_EXISTS | **5** |
+| FALLBACK_MEDIA_MISSING | **3** |
 
-**v4 修正一致性**：所有文档统一使用 **5 EXISTS / 3 MISSING**，**不再**说 "Missing references = 0"。
+**v4 错误**：`frontend/public/images/** = 46`（混淆了根目录 svg）。**v5 正确拆分**。
 
 ---
 
-## 10. Blockers 重新分类（v4 强制）
+## 12. inquiries Collection 字段 wording（v5 修正）
+
+```
+INQUIRIES_EXISTING_FIELDS        = 11
+INQUIRIES_UNCHANGED_FIELDS        = 10   (id, customer_name, email, company_name, phone, message, source_page, product_interested, locale, date_created)
+INQUIRIES_METADATA_UPDATE_FIELDS  = 1    (status: enum + default)
+INQUIRIES_NEW_FIELDS             = 7     (date_updated, whatsapp, country, assigned_to, internal_notes, outcome, next_follow_up_at)
+INQUIRIES_CANONICAL_TOTAL        = 18   (10 + 1 + 7)
+```
+
+**v3/v4 错误**："11 unchanged + 1 metadata update + 7 new"（status 在 unchanged 11 中又计了一次）。**v5 修正**。
+
+---
+
+## 13. Blockers 重新分类（v5 沿用 v4）
 
 ### A. Phase 2B Schema Gate Blockers（必须先解决才能开始 schema dry-run）
 
 | # | BLOCKER |
 |---|---|
-| A1 | **v3 / v4 修正文档的 Owner 审批** |
-| A2 | **Directus 11.x 安装版本号 + API 行为实测**（schema 操作顺序与实际 API 调用必须 dry-run） |
+| A1 | **v3 / v4 / v5 修正文档的 Owner 审批** |
+| A2 | **Directus 11.x 版本 + API 行为实测**（schema 操作顺序与实际 API 调用） |
 | A3 | **Phase 2B apply-schema.mjs 设计 + dry-run 实测**（不实际写入生产） |
+| A4 | **Directus service token 模型验证**（static token ↔ role ↔ policy 绑定模型） |
 
 ### B. Pre-Data-Migration Blockers（导入 fallback 数据前需解决）
 
 | # | BLOCKER |
 |---|---|
-| B1 | **真实 Directus staff 邮箱地址**（用于创建 user accounts 分配新角色；**不是 schema 创建本身的 blocker**） |
-| B2 | **3 MISSING fallback 图片资源**（export-capability-v2, quality-control, supply-chain） |
-| B3 | **真实产品图 / 业务图 / Logo / Favicon** |
-| B4 | **Directus folder 配置**（/Products, /News, /Private 等；Phase 2B 确定性创建 + 记录 folder IDs） |
-| B5 | **应用关系 59 unique values + 58 occurrences 人工 review**（运营人员填表后导入） |
+| B1 | 真实 staff 邮箱（用于 user accounts 分配新角色） |
+| B2 | 3 MISSING fallback 图片资源 |
+| B3 | 真实产品图 / 业务图 / Logo / Favicon |
+| B4 | Directus folder 配置（Phase 2B 确定性创建 + 记录 IDs） |
+| B5 | 13 unresolved unique + 13 occurrences 应用关系人工 review |
 
 ### C. Pre-Cutover Blockers（生产切换前需解决）
 
 | # | BLOCKER |
 |---|---|
-| C1 | **fallback products 28 条 → Directus import**（含 applications fuzzy match 审查结果） |
-| C2 | **fallback business content → pages sections import**（中文公司名 等） |
-| C3 | **10 语言翻译工作**（fallback 仅 en，其他 9 语言需翻译或留空 + noindex） |
-| C4 | **生产 Directus 配置确认**（verify credentials, verify tokens, verify policies） |
-| C5 | **Inquiries API 集成测试**（/api/inquiries + Directus_token + 字段白名单 + 限流 + honeypot） |
-| C6 | **SMTP 邮件通知**（用户指令不启用 → 仅入库不入邮件） |
+| C1 | fallback products 28 条 → Directus import（含 applications review 结果） |
+| C2 | fallback business content → pages sections import（中文公司名 等） |
+| C3 | 10 语言翻译工作 |
+| C4 | 生产 Directus 配置确认 |
+| C5 | Inquiries API 集成测试（含 Inquiry Writer + status 不写） |
+| C6 | SMTP（用户指令不启用） |
 
 ### D. Post-Launch / Optional Housekeeping
 
 | # | ITEM |
 |---|---|
-| D1 | **redirects collection 启用**（slug 变更后 301 维护） |
-| D2 | **GitHub Actions secrets 配置**（VPS_HOST / VPS_USER / VPS_PORT / VPS_SSH_KEY） |
-| D3 | **fallback-data.ts / business.ts 移除**（schema 应用 + 数据迁移完成后；逐步移除以保留兜底） |
-| D4 | **Pre-Data-Migration 阶段不需要时跳过**：
-
-### E. 不在 Phase 2B 启动 Blockers 中的项目（v4 重分类）
-
-**以下事项不阻碍 Phase 2B schema dry-run 启动**：
-
-- ❌ **真实用户邮箱**（schema 创建不需要 user accounts；user 创建属于 Pre-Data-Migration）
-- ❌ **真实图片资源**（schema 创建不需要真实图；图片属于 Pre-Data-Migration）
-- ❌ **SMTP 配置**（用户指令不启用；不影响 schema 或询盘入库）
-- ❌ **业务内容导入**（schema 创建完成后才能导入；属于 Pre-Data-Migration）
-- ❌ **GitHub Actions secrets**（部署脚本配置；属于 Pre-Cutover 或 Post-Launch）
-- ❌ **redirects 启用**（optional；schema 可以创建但不写入数据；属于 Post-Launch）
+| D1 | redirects collection 启用 |
+| D2 | GitHub Actions secrets 配置 |
+| D3 | fallback-data.ts / business.ts 移除（schema 应用 + 数据迁移完成后） |
 
 ---
 
-## 11. Dry-Run 总汇总（v4 术语分离版）
+## 14. Dry-Run 总汇总（v5 术语分离版）
 
-```text
-=== apply-schema dry-run (v4, idempotent, non-destructive) ===
+```
+=== apply-schema dry-run (v5, idempotent, non-destructive) ===
 
 Collections CREATE:        7
-  site_settings, product_categories, products,
-  applications, news_categories, news, pages
 Collections UNCHANGED:     1  (inquiries, all 11 field names preserved)
 Collections UPDATE:        0
-Collections DELETE:        0
 Junction tables required:   2  (products_files, applications_products)
 Optional CREATE:            1  (redirects, IF enabled — currently disabled)
 
 # 字段计数术语分离
-A. Canonical total fields:          600
-B. Unchanged fields:                10  (inquiries)
-C. Metadata-update fields:          1   (inquiries.status: enum + default)
-D. Planned new-model fields (A-B-C): 589
+A. Canonical total fields:                 600
+B. Unchanged fields:                       10   (inquiries)
+C. Metadata-update fields:                 1    (inquiries.status: enum + default)
+D. Planned new-model fields (A-B-C):       589
 E. Actual Directus fields.create API operations: TO_BE_VERIFIED_IN_PHASE_2B
-Fields DELETE:                      0
-Fields RENAMED:                     0  (products.applications NOT created)
 
 # Relations 分层
-F. Logical relations:               16
-G. M2M relations:                   2
-H. Junction collections required:   2
-I. Junction fields required:        4
-J. Physical FK constraints expected: 18  (14 M2O × 1 + 2 M2M × 2)
-K. Directus relation API operations: TO_BE_VERIFIED_IN_PHASE_2B
+F. Logical relations:                      16
+G. M2M relations:                          2
+H. Junction collections required:          2
+I. Junction fields required:               4
+J. Directus relation API operations:       TO_BE_VERIFIED_IN_PHASE_2B
 
-Policies CREATE:           6  (Content Editor, Product Manager, Sales Staff,
-                                  SEO Editor, Website Reader, Inquiry Writer)
+# Service identities
+K. SERVICE_IDENTITIES_REQUIRED:            2
+L. SERVICE_IDENTITY_BINDING_IMPLEMENTATION: TO_BE_VERIFIED_IN_PHASE_2B
+
+# RBAC critical
+M. INQUIRY_WRITER_STATUS_WRITE_PERMISSION: DENIED
+N. INQUIRY_STATUS_INITIALIZATION:           DIRECTUS_DEFAULT_NEW
+
+Policies CREATE:           6
 Policies UNCHANGED:        3
-Roles CREATE:               4  (Content Editor, Product Manager, Sales Staff,
-                                  SEO Editor)
-Service Tokens CREATE:      2  (Website Reader, Inquiry Writer)
-Roles UNCHANGED:            2  (Administrator x2)
-
+Roles CREATE:               4
+Roles UNCHANGED:            2
 Permissions CREATE:        ~80  (estimated)
 Permissions UNCHANGED:     20
 
@@ -352,46 +361,32 @@ EXPECTED UNEXPECTED ON 2nd RUN:    0
 
 ---
 
-## 12. 关键设计决策（v4 全部）
+## 15. 关键设计决策（v5 全部 16 项）
 
 | # | 决策 |
 |---|---|
-| 1 | products.applications JSON **不创建**（消除双真理源） |
-| 2 | pages.sections **单 canonical + inline translations**（不分离 10 个 `_*` 字段） |
-| 3 | highlights 多语言结构化（id + sort + translations） |
-| 4 | company_name_cn **单字段**（中文公司名，不参与 10 语言 suffix；locales 不含 zh-CN） |
-| 5 | Public 媒体 **folder-based authorization（implementable · folder ID based）**（不依赖不存在的 `is_public`） |
-| 6 | inquiries.status **直接 v1.5 canonical enum + default new**（不保留 pending，不加 API 翻译） |
-| 7 | Specifications / Highlights / Page Sections：**Option A Repeater interface（Phase 2B 验证）**（如不安全则降级 Option B child collections） |
-| 8 | **URL inventory 4 类分组** · 762 total · 12 patterns · root/API 不乘 10 locales |
-| 9 | **Slug-bearing records 69** · **Unique literal slug values 41**（区分记录与字面值） |
-| 10 | **Media 5 EXISTS / 3 MISSING**（v3 矛盾已纠正） |
-| 11 | **产品→应用关系：仅 7 精确 auto-map · 59 unique + 58 occurrences 待人工 review** |
-| 12 | **Slug typo 修正**：`vecos-index-improvers` → `viscosity-index-improvers` |
-| 13 | **字段计数术语分离**：canonical 600 / planned 589 / actual API **TO_BE_VERIFIED** |
-| 14 | **Relations 4 层分类**：logical 16 / M2M 2 / junction 2+4 / FK 18 / API **TO_BE_VERIFIED** |
-| 15 | **Blockers 重新分类**：A. Schema Gate / B. Pre-Data-Migration / C. Pre-Cutover / D. Post-Launch |
+| 1 | products.applications JSON **不创建** |
+| 2 | pages.sections 单 canonical + inline translations |
+| 3 | highlights 多语言结构化 |
+| 4 | company_name_cn 单字段（中文公司名） |
+| 5 | Public 媒体 folder-based authorization（folder ID allowlist） |
+| 6 | inquiries.status 直接 v1.5 canonical enum + default `new` |
+| 7 | Specifications / Highlights / Page Sections：Option A Repeater interface |
+| 8 | URL inventory 762 total / 12 patterns |
+| 9 | slug-bearing records 69 / unique literal 41 |
+| 10 | Media 45 webp + 1 svg = 46 |
+| 11 | **Product applications 23/20/7/10/13/13**（v5 实测纠正） |
+| 12 | Slug typo 全纠正 |
+| 13 | 字段计数术语分离（canonical 600 / planned 589 / actual API TO_BE_VERIFIED） |
+| 14 | Relations 4 层（logical 16 / M2M 2 / junction 2+4 / API TO_BE_VERIFIED） |
+| 15 | **Inquiries wording**：10 unchanged + 1 metadata update + 7 new = 18 |
+| 16 | **Inquiry Writer 用 Directus field names（非 DTO names）** |
+| 17 | **status NOT writable by Inquiry Writer** |
+| 18 | **Service Identities 是逻辑需求**（Phase 2B 验证） |
+| 19 | **Blockers A/B/C/D** 分层 |
 
 ---
 
-## 13. 待审批项（v4 修正后 · 13 项）
+**Phase 2A v5 修正完成 · 暂停等 Owner Audit (v6) 审批。**
 
-| # | 待审批 |
-|---|---|
-| 1 | 7 个新 Collection 字段定义（含公司名拆为 `company_name_*` ×10 + `company_name_cn` 单字段） |
-| 2 | inquiries 保留 11 字段名 + status enum 替换（v1.5 canonical） |
-| 3 | products / categories / news 实测量（28 / 31 / 10）· slug typo 修正 |
-| 4 | 16 logical relations + 2 junction + 4 junction fields + 18 FK |
-| 5 | 6 个新 Policies + 4 个新 Roles + 2 个 Service Tokens |
-| 6 | 媒体策略：Directus folder-based + Repository static 保留 |
-| 7 | destructive changes = 0 + 重复运行零非预期变化 |
-| 8 | Products.applications JSON 移除（双真理源 → 单一 M2M） |
-| 9 | Pages.sections 单 canonical + translations |
-| 10 | 总字段数 600 / planned 589 / actual API **TO_BE_VERIFIED_IN_PHASE_2B** |
-| 11 | Blockers A/B/C/D 四类分层（schema dry-run 只需解决 A 类） |
-| 12 | **仅 7 unique values auto-map** · **59 unique + 58 occurrences 待人工** · **禁止 fuzzy/substring/invented** |
-| 13 | Public 媒体 folder-based authorization（**implementable · folder ID based · Phase 2B 确定性创建**） |
-
----
-
-**Phase 2A v4 修正完成 · 暂停等审批。**
+**PHASE_2A_STATUS=WAITING_FOR_PHOENIX_OWNER_AUDIT**
