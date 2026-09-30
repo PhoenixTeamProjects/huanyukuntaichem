@@ -228,9 +228,9 @@ function diffFields(prodFields, plannedFieldNamesByColl) {
     }
   }
 
-  // 7 new fields
+  // 7 new fields — these are CREATEs (POST /fields), not updates
   for (const def of inquiriesMetadata.new_fields) {
-    update.push({ collection: 'inquiries', field: def.field });
+    create.push({ collection: 'inquiries', field: def.field });
   }
 
   // For each NEW collection: ALL fields are CREATE (no existing fields)
@@ -314,8 +314,8 @@ function printReport(diff, prodState) {
 
   // FIELDS
   console.log('--- FIELDS ---');
-  console.log(`CREATE:  ${diff.fields.create.length} fields across ${ALL_DEFINITIONS.length} new collections + ${inquiriesMetadata.new_fields.length} inquiries new + ${Object.keys(inquiriesMetadata.metadata_update_fields).length} inquiries metadata update`);
-  console.log(`UPDATE:  ${diff.fields.update.length} inquiries fields (1 metadata + ${inquiriesMetadata.new_fields.length} new — both flag as UPDATE since inquiries collection exists)`);
+  console.log(`CREATE:  ${diff.fields.create.length} fields.create API calls (7 new collections + 7 inquiries new fields)`);
+  console.log(`UPDATE:  ${diff.fields.update.length} fields.update API call(s) (inquiries.status metadata only)`);
   console.log(`UNCHANGED: ${diff.fields.unchanged.length} inquiries field names preserved`);
   console.log(`DELETE:  0`);
   console.log(`RENAME:  0`);
@@ -455,14 +455,14 @@ async function applyProduction(diff) {
     }
   }
 
-  // 2. Update inquiries.status metadata + add 7 new fields
+  // 2. Update inquiries.status metadata (PATCH) + add 7 new fields (POST)
   console.error('[3/4] Updating inquiries schema...');
   for (const [fname, fdef] of Object.entries(inquiriesMetadata.metadata_update_fields)) {
     const payload = toDirectusField(fdef);
     payload.field = fname;
     try {
       await api('PATCH', `/fields/inquiries/${fname}`, payload);
-      console.error(`  ✓ updated inquiries.${fname}`);
+      console.error(`  ✓ updated inquiries.${fname} (PATCH)`);
     } catch (e) {
       console.error(`  ✗ update inquiries.${fname}: ${e.message}`);
     }
@@ -472,9 +472,9 @@ async function applyProduction(diff) {
     payload.field = fdef.field;
     try {
       await api('POST', '/fields/inquiries', payload);
-      console.error(`  ✓ added inquiries.${fdef.field}`);
+      console.error(`  ✓ created inquiries.${fdef.field} (POST)`);
     } catch (e) {
-      console.error(`  ✗ add inquiries.${fdef.field}: ${e.message}`);
+      console.error(`  ✗ create inquiries.${fdef.field}: ${e.message}`);
     }
   }
 
