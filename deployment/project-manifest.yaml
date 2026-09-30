@@ -1,0 +1,117 @@
+schema_version: 1
+site_id: huanyukuntaichem
+company_name: "西安寰宇坤泰工业科技有限公司"
+company_english_name: "Xi'an Huanyu Kuntai Industrial Technology Co., Ltd."
+website_brand: "HUANYU KUNTAI CHEM"
+repository: "PhoenixTeamProjects/huanyukuntaichem"
+production_branch: main
+domains:
+  primary: huanyukuntaichem.com
+  www: www.huanyukuntaichem.com
+  cms: cms.huanyukuntaichem.com
+paths:
+  project_root: /opt/websites/huanyukuntaichem-site
+  repo: /opt/websites/huanyukuntaichem-site/repo
+  current: /opt/websites/huanyukuntaichem-site/current
+  releases: /opt/websites/huanyukuntaichem-site/releases
+  backups: /opt/websites/huanyukuntaichem-site/backups
+  shared: /opt/websites/huanyukuntaichem-site/shared
+  shared_backend: /opt/websites/huanyukuntaichem-site/shared/backend
+  shared_frontend_env: /opt/websites/huanyukuntaichem-site/shared/frontend.env
+  locks: /opt/websites/huanyukuntaichem-site/locks
+  legacy_backend: /opt/websites/huanyukuntaichem-site/backend   # 保留作历史，不再生效
+ports:
+  frontend: 3007                # PM2 only, loopback
+  cms: 8055                     # 命名空间纠正后保持不变
+  db: 5432                       # 容器内端口，不发布公网
+locales:
+  - en
+  - es
+  - ru
+  - ar
+  - fr
+  - pt
+  - de
+  - id
+  - tr
+  - fa
+rtl_locales:
+  - ar
+  - fa
+default_locale: en
+compose_project: huanyukuntaichem
+docker_network: huanyukuntaichem-network
+volumes:
+  postgres_data:
+    docker_name: huanyukuntai_postgres_data
+    target_name: huanyukuntaichem-postgres-data   # 后续 rename 计划
+    status: mounted via external:true with original name; data preserved
+  directus_uploads:
+    docker_name: huanyukuntai_directus_uploads
+    target_name: huanyukuntaichem-uploads
+    status: mounted via external:true with original name; data preserved
+  directus_extensions:
+    docker_name: huanyukuntai_directus_extensions
+    target_name: huanyukuntaichem-extensions
+    status: mounted via external:true with original name; data preserved
+nginx:
+  primary_vhost: /etc/nginx/sites-enabled/huanyukuntaichem.conf
+  primary_vhost_target: /etc/nginx/sites-available/huanyukuntaichem.conf
+  cert_path: /etc/letsencrypt/live/huanyukuntaichem.com/fullchain.pem
+  cert_key_path: /etc/letsencrypt/live/huanyukuntaichem.com/privkey.pem
+  cert_expiry: 2026-12-07T13:12:30Z
+pm2:
+  app_name: huanyukuntaichem-frontend
+  mode: fork
+  cwd: /opt/websites/huanyukuntaichem-site/current/frontend
+  max_memory_restart: 768M
+images:
+  directus: directus/directus:11
+  postgres: postgres:16-alpine
+  nextjs: next:16.2.11
+containers:
+  cms_container: huanyukuntaichem-directus
+  db_container: huanyukuntaichem-postgres
+deployment_lock:
+  path: /opt/websites/huanyukuntaichem-site/locks/deploy.lock
+  mechanism: flock
+  script: /opt/websites/huanyukuntaichem-site/locks/deploy.lock.script.sh
+backup:
+  schedule: "0 15 2 * * *"      # systemd daily 02:15 UTC（v1.5 §47 默认）
+  retention_days: 14
+  timer_name: huanyukuntaichem-backup.timer
+  paths:
+    - postgres_data
+    - directus_uploads
+    - directus_extensions
+    - schema_snapshot
+    - role_policy_snapshot
+    - nginx_vhost
+    - pm2_ecosystem
+    - shared_env
+smtp:
+  enabled: false                  # v1.5 §43 询问盘 SMTP 不阻塞入库
+ai_translation:
+  enabled: false                  # v1.5 §28 模板支持，先不启用
+  provider: null
+  source_locale: en
+inquiry_retention_policy:
+  days: null                     # 项目资料未确认前留空
+compatibility_map:
+  legacy_container_names: huanyukuntai-directus, huanyukuntai-postgres
+  legacy_volume_names: huanyukuntai_postgres_data, huanyukuntai_directus_uploads, huanyukuntai_directus_extensions
+  legacy_database_name: huanyukuntai_directus
+  legacy_postgres_user: directus
+  legacy_compose_project: huanyukuntai
+  legacy_docker_network: huanyukuntai
+  namespace_correction_date: 2026-09-30
+  namespace_correction_backup: backups/before-namespace-correction-20260930T144311Z
+  data_preserved_inplace: true
+  rationale: "Docker named volumes cannot be renamed in place. Strategy: create new huanyukuntaichem Compose project with new container/network names, mount old named volumes as external: true. Result: containers/networks/Compose project renamed; data kept in place; old volumes kept per backup retention policy."
+industry_extensions:
+  enabled: true
+  notes: "化工行业扩展字段详见 backend/directus/schema/industry-extensions.md（待写）"
+server_registry: deployment/server-registry.md
+preflight: deployment/preflight/server-preflight.md
+resource_ownership_matrix: deployment/preflight/resource-ownership-matrix.md
+next_review_by: "A01-A44 验收完成 + schema 应用 + Permissions 配置完成后"

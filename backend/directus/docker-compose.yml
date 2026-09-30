@@ -1,0 +1,123 @@
+# huanyukuntaichem Directus Compose Project
+# Namespace Correction · Plan A
+# Per v1.5 §40 multi-site isolation rules
+#
+# Naming:
+#   Compose Project:   huanyukuntaichem
+#   Directus Container: huanyukuntaichem-directus
+#   Postgres Container: huanyukuntaichem-postgres
+#   Docker Network:     huanyukuntaichem-network
+#
+# Volume strategy:
+#   Original named volumes (huanyukuntai_*) are declared as `external: true`
+#   so the data is preserved across the rename. The rename from old to new
+#   names is NOT performed at the Docker level (named volumes cannot be
+#   renamed in place per Docker limitations); instead the same backing data
+#   is re-attached under the new container names. The old named volumes
+#   remain on disk and are kept per backup retention policy.
+#
+# CMS port: 127.0.0.1:8055 (unchanged from prior setup; nginx upstream
+# does not need to change).
+
+name: huanyukuntaichem
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: huanyukuntaichem-postgres
+    restart: unless-stopped
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - type: volume
+        source: huanyukuntai_postgres_data
+        target: /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - huanyukuntaichem-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1g
+          pids: 256
+
+  directus:
+    image: directus/directus:11
+    container_name: huanyukuntaichem-directus
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8055:8055"
+    environment:
+      KEY: ${DIRECTUS_KEY}
+      SECRET: ${DIRECTUS_SECRET}
+      DB_CLIENT: pg
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_DATABASE: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+      PUBLIC_URL: ${DIRECTUS_PUBLIC_URL}
+    volumes:
+      - type: volume
+        source: huanyukuntai_directus_uploads
+        target: /directus/uploads
+      - type: volume
+        source: huanyukuntai_directus_extensions
+        target: /directus/extensions
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8055/server/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+    networks:
+      - huanyukuntaichem-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1g
+          pids: 256
+
+networks:
+  huanyukuntaichem-network:
+    name: huanyukuntaichem-network
+    driver: bridge
+
+volumes:
+  # All three volumes are declared `external: true` because they were
+  # created by the pre-existing `huanyukuntai` Compose project with names
+  # that we deliberately retain to preserve data. Do NOT delete the source
+  # volumes until the backup retention period has elapsed.
+  huanyukuntai_postgres_data:
+    external: true
+    name: huanyukuntai_postgres_data
+  huanyukuntai_directus_uploads:
+    external: true
+    name: huanyukuntai_directus_uploads
+  huanyukuntai_directus_extensions:
+    external: true
+    name: huanyukuntai_directus_extensions
