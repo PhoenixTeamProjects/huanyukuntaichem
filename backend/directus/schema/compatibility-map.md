@@ -1,316 +1,331 @@
-# Compatibility Map — 历史字段与 v1.5 Canonical Dictionary 映射（v3 修正）
+# Compatibility Map — 历史字段与 v1.5 Canonical Dictionary 映射（v4 修正）
 
-> 来源：v1.5 §26（Canonical Data Dictionary）+ §14.2 + §45（Multilingual Schema Governance）  
-> 编制时间：2026-10-01 UTC（Owner Audit v3 修正）  
-> 编制执行者：Claude（只读映射）
+> 来源：v1.5 §26 + §14.2 + §45 + Owner Audit v4  
+> 编制时间：2026-10-01 UTC（v4）
 
 ---
 
-## 1. 字段映射总表（v3 修正含 products.applications 移除 + sections 重设计 + company_name_cn + Public 媒体）
+## 1. 字段映射（v4 全部 11 项修正）
 
-### 1.1 `inquiries`（已有，禁止删字段名，status enum 替换按 v1.5）
+### 1.1 `inquiries`（EXISTING · 11 unchanged + 1 metadata update + 7 new = 18）
 
-| v1.5 §26.1 Canonical | 当前实际 | 等价关系 | 处理 |
-|---|---|---|---|
-| `name` | `customer_name` (string, required) | 等价（客户姓名） | **保留 `customer_name`**；前端 API 内部 `name` → `customer_name` |
-| `email` | `email` | 完全等价 | unchanged |
-| `company` | `company_name` (string, nullable) | 等价 | **保留 `company_name`**；前端 `company` → `company_name` |
-| `phone` | `phone` | 等价 | unchanged |
-| `whatsapp` | — | 新增 | create |
-| `country` | — | 新增 | create |
-| `message` | `message` (text) | 等价 | unchanged |
-| `source_path` | `source_page` (string, nullable) | 等价 | **保留 `source_page`**；前端 `sourcePath` → `source_page` |
-| `product_slug` | `product_interested` (string, nullable) | 等价 | **保留 `product_interested`**；前端 `productSlug` → `product_interested` |
-| `locale` | `locale` | 等价 | unchanged |
-| `status` (enum: new/contacted/qualified/quoted/follow_up/closed) | `status` (string, current enum=`[pending, handled]`, default=`pending`) | 当前值集合已偏离 v1.5 | **保留字段名 `status`**；**choices 替换为 v1.5 canonical** `[new, contacted, qualified, quoted, follow_up, closed]`；**default 替换为 `new`**；**不保留 `pending` legacy runtime value**（0 records 决定）；**不增加 API 翻译层** |
-| `date_created` | `date_created` | 等价 | unchanged |
-| `date_updated` | — | 新增 | create |
-| `internal_notes` | — | 新增（仅 Sales Staff / Admin 可读） | create |
-| `assigned_to` | — | 新增（M2O users） | create |
-| `outcome` (enum: won/lost/deferred/no_response/invalid/spam) | — | 新增；**始终独立于 status** | create |
-| `next_follow_up_at` | — | 新增 | create |
-
-### 1.2 `product_categories`（CREATE · 31 条）
-
-| v1.5 §26.2 最低字段 | 当前 fallback 等价 | 处理 |
+| v1.5 §26.1 | 当前 | 处理 |
 |---|---|---|
-| `id` | `id` (string slug) | create；UUID 内部 + slug 对外 |
-| `status` | — | create |
-| `slug` (unique) | `slug` (string) | create；保留字面 |
-| `parent` (M2O self) | `parent` (string) | create；按 slug 匹配 UUID |
-| `level` (int 1-5) | — | create；系统计算 |
-| `sort` | — | create |
-| `name_*` | `name` | create；en 填值 |
-| `description_*` | `description` | create；en 填值 |
-| `image` (M2O file) | — | create |
-| `image_alt_*` | — | create |
-| `show_in_menu` (boolean) | — | create |
-| `featured` (boolean) | — | create |
-| `seo_title_*` / `seo_description_*` / `seo_keywords_*` | — | create |
+| `name` | `customer_name` | **保留字段名**；前端 `name` → `customer_name` |
+| `email` | `email` | unchanged |
+| `company` | `company_name` | **保留字段名**；前端 `company` → `company_name` |
+| `phone` | `phone` | unchanged |
+| `whatsapp` | — | create |
+| `country` | — | create |
+| `message` | `message` | unchanged |
+| `source_path` | `source_page` | **保留字段名**；前端 `sourcePath` → `source_page` |
+| `product_slug` | `product_interested` | **保留字段名**；前端 `productSlug` → `product_interested` |
+| `locale` | `locale` | unchanged |
+| `status` (canonical enum) | `status` (current enum=`[pending, handled]`, default=`pending`) | **保留字段名**；**choices 替换** `[new, contacted, qualified, quoted, follow_up, closed]`；**default 替换** `new`（0 records 非 destructive） |
+| `date_created` | `date_created` | unchanged |
+| `date_updated` | — | create |
+| `internal_notes` | — | create（仅 Sales Staff / Admin 可读） |
+| `assigned_to` | — | create（M2O users） |
+| `outcome` | — | create；**始终独立于 status** |
+| `next_follow_up_at` | — | create |
 
-### 1.3 `products`（CREATE · 28 条 · **移除 products.applications**）
+### 1.2 `product_categories`（CREATE · 31）
 
-| v1.5 §26.1 最低字段 | 当前 fallback 等价 | 处理 |
+### 1.3 `products`（CREATE · **107** · v4 修正：从 v3 的 108 减 1 因为 products.applications JSON 移除）
+
+| v1.5 §26.1 | 当前 fallback | 处理 |
 |---|---|---|
-| `id` (UUID) | `id` (string slug) | create |
+| `id` (UUID) | `id` (slug) | create |
 | `status` | — | create |
 | `slug` (unique) | `slug` | create |
-| `product_category` (M2O) | `category` (slug) | create；按 slug 匹配 UUID |
+| `product_category` (M2O) | `category` (slug) | create |
 | `sort` | — | create |
-| `product_name_*` | `name` | create；en 填值 |
-| `short_description_*` | `summary` | create；en 填值 |
-| `detailed_description_*` (rich_text) | `description` | create；en 填值 |
-| `main_image` (M2O file) | `image` (path) | create；fallback 期间路径保留 |
-| `product_images` (M2M files) | — | create |
-| `image_alt_*` | `imageAlt` | create |
-| **`specifications` (JSON array)** | — | **create；化工属性（CAS No., Appearance, Purity, Storage Condition, Shelf Life, Viscosity, Flash Point, Density, pH, Dosage）通过 Specifications JSON 承载** |
-| `internal_product_code` | — | create |
-| `moq` | — | create |
-| `lead_time_*` (string ×10) | — | create |
-| `packaging_*` (string ×10) | — | create |
-| `featured_product` (boolean) | — | create |
-| `customizable` (boolean) | — | create |
-| `seo_title_*` / `seo_description_*` / `seo_keywords_*` | — | create |
-| **`highlights` (JSON structured multiling)** | `highlights` (string[]) | **修正**：从 string[] 改为多语言结构 `{id, sort, translations: [{locale, text}]}` |
-| ~~`applications` (string[])~~ | ~~fallback product 应用字符串~~ | **❌ 删除**：单一真理源 = `applications.related_products` M2M |
+| `product_name_*` (10 lang) | `name` | create |
+| `short_description_*` (10 lang) | `summary` | create |
+| `detailed_description_*` (rich_text ×10) | `description` | create |
+| `main_image` (M2O file) | `image` (path) | create |
+| `product_images` (M2M files) | — | create（via products_files） |
+| `image_alt_*` (10 lang) | `imageAlt` | create |
+| `specifications` (JSON) | — | **create**；Repeater interface；化工属性（CAS No. / Appearance / Purity / Storage / Shelf Life / Viscosity / Flash / Dosage） |
+| `highlights` (JSON 多语言结构化) | `highlights` (string[]) | **create**；Repeater interface `[{id, sort, translations: [{locale, text}]}]` |
+| `~~applications` (string[])~~ | ~~`applications`~~ | **❌ 删除**（双真理源 → 单一 `applications.related_products` M2M） |
+| `internal_product_code` / `moq` | — | create |
+| `lead_time_*` / `packaging_*` (10 lang) | — | create |
+| `featured_product` / `customizable` (bool) | — | create |
+| `seo_title_*` / `seo_description_*` / `seo_keywords_*` (10 lang) | — | create |
 
-### 1.4 `applications`（CREATE · 8 条）
+### 1.4 `applications`（CREATE · 81）
 
-| v1.5 §7 字段 | 当前 fallback 等价 | 处理 |
+| v1.5 §7 | 当前 fallback | 处理 |
 |---|---|---|
 | `id` (UUID) | — | create |
 | `slug` (unique) | — | create |
-| `title_*` | `business.ts applications[].title` | create；en 填值 |
-| `short_description_*` | `applications[].description` | create；en 填值 |
-| `content_*` (rich_text) | — | create |
+| `title_*` (10 lang) | `business.ts applications[].title` | create |
+| `short_description_*` (10 lang) | `applications[].description` | create |
+| `content_*` (rich_text ×10) | — | create |
 | `image` (M2O file) | — | create |
-| `image_alt_*` | — | create |
+| `image_alt_*` (10 lang) | — | create |
 | **`related_products` (M2M products)** | — | **create（单一真理源）** |
 | `sort` / `status` / `featured` | — | create |
-| `seo_*` | — | create |
+| `seo_*` (10 lang) | — | create |
 
-### 1.5 `news_categories`（CREATE · 6 去重）
+### 1.5 `news_categories`（CREATE · 48 · 6 去重 records）
 
-| v1.5 §6.1 字段 | 当前 fallback 等价 | 处理 |
-|---|---|---|
-| `id` (UUID) | — | create |
-| `slug` (unique) | — | create |
-| `category_name_*` | 6 去重字符串 | create |
-| `description_*` | — | create |
-| `sort` / `status` | — | create |
-| `seo_title_*` / `seo_description_*` | — | create |
+### 1.6 `news`（CREATE · **83** · v4 修正：从 v3 的 84 减 1 因为 `featured` 归类调整）
 
-### 1.6 `news`（CREATE · 10 条）
-
-| v1.5 §6.2 字段 | 当前 fallback 等价 | 处理 |
+| v1.5 §6.2 | 当前 fallback | 处理 |
 |---|---|---|
 | `id` (UUID) | `id` (slug) | create |
 | `status` | — | create |
 | `slug` (unique) | `slug` | create |
 | `category` (M2O news_categories) | `category` (string) | create |
-| `sort` / `featured` / `author` | — | create |
-| `published_at` (datetime) | `publishedAt` (ISO) | create |
-| `title_*` | `title` | create |
-| `excerpt_*` | `excerpt` | create |
-| `content_*` (rich_text) | `content` | create |
+| `sort` | — | create |
+| `published_at` (datetime) | `publishedAt` | create |
+| `author` | — | create |
+| `featured` (bool) | — | create |
+| `title_*` / `excerpt_*` / `content_*` (10 lang) | `title` / `excerpt` / `content` | create |
 | `cover_image` (M2O file) | `image` (path) | create |
-| `image_alt_*` | `imageAlt` | create |
-| `seo_title_*` / `seo_description_*` / `seo_keywords_*` | — | create |
+| `image_alt_*` (10 lang) | `imageAlt` | create |
+| `seo_title_*` / `seo_description_*` / `seo_keywords_*` (10 lang) | — | create |
 
-### 1.7 `pages`（CREATE · 5 page_keys · **Sections 单 canonical + translations**）
+### 1.7 `pages`（CREATE · **103** · v4 修正：从 v3 的 112 减 9 因为 sections_*×10 拆为单 canonical + inline translations）
 
-**关键修正（v3）**：单一 canonical `sections` JSON + 内嵌 per-locale `translations` 数组，**不**拆为 `sections_en / sections_es / ...` 10 个字段。
-
-| v1.5 §8.2 字段 | 当前 fallback 等价 | 处理 |
+| v1.5 §8.2 | 当前 fallback | 处理 |
 |---|---|---|
 | `id` (UUID) | — | create |
-| `status` | — | create |
-| `page_key` (unique) | — | create；5 个值（home/about/service/applications/contact） |
-| `slug` | — | create；与 page_key 同步 |
-| `title_*` | — | create |
-| `hero_title_*` | `business.ts hero.title` | create；en 填值 |
-| `hero_subtitle_*` | `business.ts hero.summary` + `companyName` | create；en 填值 |
+| `status` (enum) | — | create |
+| `page_key` (unique) | — | create（home/about/service/applications/contact） |
+| `slug` | — | create |
+| `title_*` (10 lang) | — | create |
+| `hero_title_*` / `hero_subtitle_*` (10 lang) | `business.ts hero.*` | create |
 | `hero_image` (M2O file) | — | create |
-| `hero_image_alt_*` | — | create |
-| `hero_button_text_*` | — | create |
+| `hero_image_alt_*` (10 lang) | — | create |
+| `hero_button_text_*` (10 lang) | — | create |
 | `hero_button_link` | — | create |
-| **`sections` (JSON single canonical)** | `business.ts` 12 块 | **create**；结构 `{id, type, sort, image, product_ids, cta_link, translations: [{locale, title, body, image_alt, button_text}]}`；**不变量**：block_id / block_type / order / media relations / product relations / CTA destination / layout variant 跨 locale 一致 |
-| `seo_title_*` / `seo_description_*` / `seo_keywords_*` | — | create |
-| `og_image` / `image` / `image_alt_*` | — | create |
+| **`sections` (JSON single canonical)** | `business.ts` 12 块 | **create**；`[{id, type, sort, image, image_alt_localized_key, product_ids, cta_link, translations: [{locale, title, body, image_alt, button_text}]}]` |
+| `seo_title_*` / `seo_description_*` / `seo_keywords_*` (10 lang) | — | create |
+| `og_image` / `image` (M2O file) | — | create |
+| `image_alt_*` (10 lang) | — | create |
 
-**Sections 结构示例**：
-```json
-"sections": [
-  {
-    "id": "block-hero",
-    "type": "text",
-    "sort": 1,
-    "image": null,
-    "image_alt_localized": null,
-    "product_ids": [],
-    "cta_link": null,
-    "translations": [
-      {"locale": "en", "title": "...", "body": "...", "image_alt": "...", "button_text": "..."},
-      {"locale": "es", "title": "...", "body": "...", "image_alt": "...", "button_text": "..."},
-      ...
-      {"locale": "fa", "title": "...", "body": "...", "image_alt": "...", "button_text": "..."}
-    ]
-  }
-]
-```
+### 1.8 `site_settings`（CREATE Singleton · **87 fields · 含 company_name_cn 单字段**）
 
-### 1.8 `site_settings`（CREATE Singleton · **company_name_cn 单独**）
-
-| v1.5 §9 字段 | 当前 fallback 等价 | 处理 |
+| v1.5 §9 | 当前 | 处理 |
 |---|---|---|
 | `id` (UUID) | — | create |
 | `status` | — | create |
-| `site_name_*` | `fallbackSettings.siteName` | create；en 填值 |
-| `tagline_*` | `fallbackSettings.tagline` | create；en 填值 |
-| `company_name_*` (10 lang) | — | create；en 用英文名；其他 locale 留空 |
-| **`company_name_cn` (单值 string)** | `03-COMPANY-PROFILE.md` "西安寰宇坤泰工业科技有限公司" | **create 单独字段**（**不**参与 10 语言 suffix）；专门存中文公司名 |
-| `company_english_name` (单值 string) | `03-COMPANY-PROFILE.md` | create |
-| `address_*` | `fallbackSettings.address` | create |
+| `site_name_*` (10 lang) | `siteName` | create |
+| `tagline_*` (10 lang) | `tagline` | create |
+| `company_name_*` (10 lang) | — | create；en 用英文 |
+| **`company_name_cn`** (单值 string) | `03-COMPANY-PROFILE.md` "西安寰宇坤泰工业科技有限公司" | **create 单独字段**（**不**参与 10 语言 suffix） |
+| `company_english_name` (单值 string) | `03-COMPANY-PROFILE.md` 英文名 | create |
+| `address_*` (10 lang) | `address` | create |
 | `email` / `phone` / `whatsapp` | fallback + 待确认 | create |
-| `logo` / `logo_white` / `favicon` (M2O file) | — | create（待真实图） |
+| `logo` / `logo_white` / `favicon` (M2O file) | — | create |
 | `social_links` (JSON) | — | create |
-| `footer_intro_*` | — | create |
+| `footer_intro_*` (10 lang) | — | create |
 | `default_seo_title_*` / `default_seo_description_*` / `default_og_image` | — | create |
 
-**Locales 严格限定**：en / es / ru / ar / fr / pt / de / id / tr / fa（**无** zh-CN）。  
-中文公司名走 `company_name_cn` 单字段，不与 10 语言 suffix 混用。
+**Locales 严格限定**：en / es / ru / ar / fr / pt / de / id / tr / fa（**无** zh-CN）
 
 ### 1.9 `redirects`（OPTIONAL · 本期不启用）
 
-| v1.5 §2 字段 | 处理 |
+---
+
+## 2. 产品 ↔ 应用 字符串迁移（**v4 Owner Audit 修正：禁止 fuzzy**）
+
+### 2.1 实测计数（v4 明确）
+
+- **66 unique application strings**（去重）
+- **69 total occurrences**
+- **7 个 unique values 精确语义匹配** business.ts applications（**values** matched，非 occurrences）
+
+```
+7 unique values matched:
+  Passenger vehicles
+  Commercial vehicles
+  Heavy-duty diesel engines
+  Construction machinery
+  Industrial machinery
+  Lubricant manufacturing
+  Automotive aftermarket
+
+unresolved unique values: 66 - 7 = 59 unique strings
+unresolved occurrences: 69 - <matched occurrences> = 58 occurrences
+```
+
+### 2.2 迁移规则（**v4 严格**）
+
+| 规则 | 处理 |
 |---|---|
-| `id` / `from_path` / `to_path` / `status_code` / `enabled` | optional |
+| **1. Exact approved semantic allowlist** | **may map automatically** |
+| **2. Non-exact / ambiguous strings** | **DO NOT create M2M relation automatically** |
+| **3. Ambiguous/unresolved values** | **记录在 explicit review table**；Directus relation 留空，**直到人工 approval** |
+
+**禁止**：
+- ❌ fuzzy automatic relation creation
+- ❌ substring automatic relation creation
+- ❌ invented relationship
+
+### 2.3 待人工 review 表（59 unique values）
+
+| source_value | occurrence_count | exact_application_match | target_application | migration_action | review_required |
+|---|---|---|---|---|---|
+| Passenger vehicles | (待 1) | YES | applications[0] | AUTO-MAP | NO |
+| Commercial vehicles | (待 2) | YES | applications[1] | AUTO-MAP | NO |
+| Heavy-duty diesel engines | (待 2) | YES | applications[2] | AUTO-MAP | NO |
+| Construction machinery | (待 2) | YES | applications[3] | AUTO-MAP | NO |
+| Industrial machinery | (待 2) | YES | applications[5] | AUTO-MAP | NO |
+| Lubricant manufacturing | (待 1) | YES | applications[6] | AUTO-MAP | NO |
+| Automotive aftermarket | (待 1) | YES | applications[7] | AUTO-MAP | NO |
+| **其余 59 unique strings**（如 "Calcium sulfonate detergents", "Passenger-car engine oils", "Heavy-duty application focus", "ZDDP anti-wear additives" 等） | various | **NO** | NONE | **DO NOT AUTO-CREATE** | **YES（人工 review）** |
 
 ---
 
-## 2. 媒体映射（含 **Public 媒体授权修正**）
+## 3. 媒体映射（v4 修正）
 
-| 类别 | 现状 | 处理 |
-|---|---|---|
-| **Directus media** | 0 records（uploads 卷空） | 新建时按 v1.5 §34.1 文件夹结构上传：`/Products / /Product-Categories / /Applications / /News / /Company / /Certificates / /Downloads / /Private` |
-| **Repository static media** | `frontend/public/images/**` 45 files + 1 SVG = **46 files / 16 MB**（**真实存在**，**修正"real media = 0"错误**） | 保留为前端静态资源；不迁入 Directus |
-| **Missing references** | 3 MISSING（`export-capability-v2.webp`, `quality-control.webp`, `supply-chain.webp`） | fallback 引用但实际文件不存在；待真实资源补齐 |
-| **5 EXISTS** | `/images/home/{additive-packages,fuel-additives,lubricant-additives}.webp` + `/images/home/refined/{application-heavy-duty,application-industrial-machinery}.webp` | OK |
+| 类别 | 状态 |
+|---|---|
+| Directus media | 0 records |
+| Repository static media | **46 files / 16 MB（45 webp + 1 svg）** |
+| Missing fallback refs | **3**（export-capability-v2, quality-control, supply-chain） |
+| EXISTS fallback refs | **5** |
 
-### 2.1 Public 媒体授权（v3 修正 · **不依赖不存在的 `is_public` 字段**）
+### 3.1 Public 媒体授权（**v4 implementable · 非概念**）
 
-**错误方案（v2）**：依赖 `directus_files.is_public=true` 字段过滤 → 该字段在 Directus 11 系统表 schema 中**不存在**（directus_files 字段实测：仅系统默认字段）。
+**v3 错误**：仅描述 "folder not under /Private/"（filesystem path 概念）
 
-**修正方案（v3）· folder-based authorization**：
+**v4 修正**：Directus 用 folder **ID**（不是文件系统路径）。**Implementable 策略**：
 
-- Public 角色授予 **folder-scoped 权限**：仅 `/Public/*` 路径下的 files 可读
-- 上传文件时按业务用途放置对应文件夹：
-  - `/Products/` 产品图（公开）
-  - `/Product-Categories/` 分类图（公开）
-  - `/Applications/` 应用图（公开）
-  - `/News/` 新闻图（公开）
-  - `/Company/` 公司图（公开）
-  - `/Certificates/` 证书（公开）
-  - `/Downloads/` 公开下载文件（公开）
-  - **`/Private/` 私有文件**（询盘附件、内部文件）→ **Public 不可读**
-- Directus 11 Policy 配置：Public policy 对 `/Private/*` 文件**拒绝** read
-- 私有附件走 `/assets/<file_id>` 直链（已鉴权）
+**Phase 2B 确定性发现/创建以下 folder IDs**（用 Directus API `/folders`）：
 
-**优势**：不修改 directus_files 系统表 schema（不可改），仅用 Directus folder + policy 控制。
+| Folder Name | Folder ID | Type | Public Access |
+|---|---|---|---|
+| `/Products/` | TBD by Phase 2B | public | ✅ read allowed |
+| `/Product-Categories/` | TBD | public | ✅ read allowed |
+| `/Applications/` | TBD | public | ✅ read allowed |
+| `/News/` | TBD | public | ✅ read allowed |
+| `/Company/` | TBD | public | ✅ read allowed |
+| `/Certificates/` | TBD | public | ✅ read allowed |
+| `/Downloads/` | TBD | public | ✅ read allowed |
+| **`/Private/`** | TBD | **private** | ❌ **read denied for Public role** |
+
+**Phase 2B 实施要求**：
+- 不要 broad `directus_files` listing（必须 folder-scoped）
+- Public policy 对 public folder IDs（及其 descendants）允许 read
+- Public policy 对 `/Private/` folder ID 拒绝 read
+- **不要** Phase 2A 编造 production folder UUIDs
 
 ---
 
-## 3. 保留 vs 修改对照
+## 4. Structured fields · 运营 UX（v4 强制 · v1.5 §27.1）
+
+### 4.1 选型决策
+
+**采用 Option A**：Directus Repeater interface + structured JSON + raw JSON hidden for operators。
+
+**如果 Phase 2B 实测发现 Directus 11 Repeater interface 不足以安全支持 nested JSON UX** → 改用 Option B（controlled child collections）。
+
+### 4.2 Operator UX 规范
+
+| 字段 | Directus interface | 运营者所见 | raw JSON 可见？ | add/remove/reorder | 多语言编辑 | 验证 | 发布门 |
+|---|---|---|---|---|---|---|---|
+| `products.specifications` | Repeater | "Add parameter"（key + value ×10 locales） | ❌ **NO**（hidden via custom interface） | ✅ UI | ✅ 10 语言 tab | ✅ key 非空 | ⚠️ 缺关键字段阻止 |
+| `products.highlights` | Repeater | "Add highlight"（stable id + sort + text ×10 locales） | ❌ **NO** | ✅ UI | ✅ 10 语言 tab | ✅ text 非空 | ⚠️ 缺翻译阻止该语言发布 |
+| `pages.sections` | Repeater | "Add section"（type enum + sort + image + product_ids + CTA + 10 语言 text） | ❌ **NO** | ✅ UI + drag-reorder | ✅ 10 语言 tab | ✅ block_id stable + type enum | ⚠️ 缺关键字段阻止 |
+
+**强制**：
+- ✅ normal operator **从不**直接编辑 raw JSON
+- ✅ Directus **从不**成为 free-form page builder
+- ✅ Repeater interface 提供 controlled add/remove/reorder UX
+- ✅ per-locale text 通过 tab 切换编辑
+
+**RAW_JSON_REQUIRED_FOR_NORMAL_OPERATOR=NO**
+
+---
+
+## 5. URL/Slug 兼容性矩阵（v4 修正 · 762 total · 不乘 root/API × 10 locales）
+
+| URL 类型 | 数量 | × 10 locales | total URLs |
+|---|---|---|---|
+| `/[locale]` | 1 | × 10 | 10 |
+| `/[locale]/products` | 1 | × 10 | 10 |
+| `/[locale]/products/category/[slug]` | 31 | × 10 | 310 |
+| `/[locale]/products/[slug]` | 28 | × 10 | 280 |
+| `/[locale]/news` | 1 | × 10 | 10 |
+| `/[locale]/news/[slug]` | 10 | × 10 | 100 |
+| `/[locale]/applications` | 1 | × 10 | 10 |
+| `/[locale]/service` | 1 | × 10 | 10 |
+| `/[locale]/about` | 1 | × 10 | 10 |
+| `/[locale]/contact` | 1 | × 10 | 10 |
+| **Public locale content URLs (locale-expanded)** | — | — | **760** |
+| `/` (redirect-only) | 1 | × 1 | 1 |
+| `/api/inquiries` | 1 | × 1 | 1 |
+| **Total route instances + endpoints** | — | — | **762** |
+
+---
+
+## 6. inquiries.status 处理（v4）
+
+| 项 | 处理 |
+|---|---|
+| Field name | `status`（保留） |
+| Choices enum | `[new, contacted, qualified, quoted, follow_up, closed]`（替换 `[pending, handled]`） |
+| Default value | `new`（替换 `pending`） |
+| Legacy `pending` runtime | 不保留 |
+| API 翻译层 | 不增加 |
+| Destructive? | NO（0 records + metadata-only） |
+
+---
+
+## 7. 保留 vs 修改对照（v4 完整）
 
 | 不允许 | 原因 |
 |---|---|
-| 重命名 inquiries 已有字段名 | v1.5 §26.1 + 用户指令 |
-| 删除 inquiries Collection | 用户指令"禁止删除重建" |
-| 删除现有任何 fallback 字段 | fallback 是兜底 |
-| **保留 `products.applications` JSON 双真理源** | **Owner Audit v3 修正：与 applications.related_products M2M 重复；移除** |
-| 为 v1.5 创建第二套分类/产品/新闻 | 一致性 |
-| 导入批量假数据 | 用户指令禁止 |
-| 保留 `pending` 作为 legacy runtime value（inquiries.status） | Owner Audit v3 修正 |
-| 增加 API 翻译层处理 `pending` ↔ `new` | Owner Audit v3 修正 |
-| 拆分 `pages.sections` 为 `sections_en / sections_es / ...` 10 个字段 | **Owner Audit v3 修正**：单一 canonical + translations 内嵌 |
-| **使用 `directus_files.is_public` 字段**（不存在） | **Owner Audit v3 修正**：用 folder-based authorization |
-| 使用 zh-CN locale | 不在 10 语言集合内；中文内容走 `company_name_cn` 单字段 |
+| 重命名 inquiries 字段名 | 用户指令"existing field name must be preserved" |
+| 删除 inquiries Collection | 用户指令 |
+| 保留 `products.applications` JSON | v4 Owner Audit：双真理源消除 |
+| fuzzy / substring / invented product→application relations | v4 Owner Audit：禁止；59 待人工 |
+| 拆分 `pages.sections_*×10` 字段 | v4 Owner Audit：单 canonical sections + inline translations |
+| 用 `directus_files.is_public` 字段 | v4 Owner Audit：不存在；用 folder-based |
+| 把 normal operator 直接暴露给 raw JSON | v4 Owner Audit + v1.5 §27.1 |
+| 把中文公司名塞进 10 语言 suffix (zh-CN) | v4 Owner Audit：locales 不含 zh-CN；用 company_name_cn 单字段 |
+| 用 root/API × 10 locales 计算 URL | v4 Owner Audit：root/API = 1 × 1，不展开 |
+| 把 "69 distinct slugs" 当 unique literal values | v4 Owner Audit：rename 为 "69 slug-bearing records"；unique literal = 41 |
+| 把 product count = 10（错误） | v4 实测 = 28 |
+| slug typo `vecos-index-improvers` | v4 修正为 `viscosity-index-improvers` |
 
 | 允许 | 说明 |
 |---|---|
-| 新增 inquiries 字段 | whatsapp / country / date_updated / internal_notes / assigned_to / outcome / next_follow_up_at |
-| 替换 inquiries.status 的 enum choices + default | v1.5 canonical `[new, contacted, qualified, quoted, follow_up, closed]`；default `new` |
+| 新增 inquiries 字段 | 7 个 |
+| 替换 inquiries.status enum + default | v1.5 canonical |
 | 新建 7 个 collections | site_settings / product_categories / products / news_categories / news / applications / pages |
-| 新建 1 个可选 collection | redirects（本期不启用） |
-| 高亮字段从 string[] 改为多语言结构 JSON | `{id, sort, translations: [{locale, text}]}` |
-| 页面 sections 字段改为单 canonical + 内嵌 translations | `{id, type, sort, image, product_ids, cta_link, translations: [...]}` |
-| 移除 products.applications JSON（双真理源 → 单一 M2M） | 通过 applications.related_products 表达关系 |
-| 引入 `company_name_cn` 单字段存中文公司名 | 不参与 10 语言 suffix |
-| Public 媒体改用 folder-based 授权 | 通过 Directus folder + policy 配置 |
+| 新建 1 个 optional | redirects（本期不启用） |
+| products.highlights 多语言结构化 | JSON |
+| pages.sections 单 canonical + inline translations | JSON |
+| company_name_cn 单字段 | 中文公司名 |
+| folder-based 授权 | Public media |
+| Option A: Repeater interface | specs/highlights/sections UX |
 
 ---
 
-## 4. URL/Slug 兼容性矩阵（v3 修正 · locale-expanded count）
+## 8. Phase 2B 收尾要求
 
-| URL 类型 | slug / pattern 数 | × 10 locales | total URLs |
-|---|---|---|---|
-| `/[locale]` | 1 | × 10 | 10 |
-| `/[locale]/products/category/[slug]` | 31 | × 10 | 310 |
-| `/[locale]/products/[slug]` | 28 | × 10 | 280 |
-| `/[locale]/news/[slug]` | 10 | × 10 | 100 |
-| `/[locale]/{products,news,applications,service,about,contact}` (固定) | 6 | × 10 | 60 |
-| `/` (redirect-only) | 1 | × 10 | 10 |
-| `/api/inquiries` (API) | 1 | × 10 | 10 |
-| `/applications/[slug]` | **0（不存在）** | 0 | 0 |
-| **Total public URLs (locale-expanded)** | — | — | **780** |
-| **distinct slugs** (categories+products+news) | — | — | **69** |
-
----
-
-## 5. 多语言字段兼容性（v3 修正）
-
-| 主题 | 当前 | v1.5 | 兼容性 |
-|---|---|---|---|
-| 翻译模型 | `_*` 后缀（10 lang） | `_*` 后缀 | ✅ |
-| 语言集合 | en/es/ru/ar/fr/pt/de/id/tr/fa | 同（**不含** zh-CN） | ✅ |
-| RTL | ar + fa | ar + fa | ✅ |
-| 默认 | en | en | ✅ |
-| 中文公司名 | `company_name_cn`（**单字段**） | n/a | ✅（不参与 10 语言） |
-| hreflang | — | 必须 | 待补 |
-| pages.sections 模型 | **单 canonical + 内嵌 translations** | v1.5 §45.2 | ✅ 修正 |
+1. ✅ 8 个 Collections create
+2. ✅ inquiries 11 字段保留 + status enum 替换
+3. ✅ products.applications JSON **不创建**（移除双真理源）
+4. ✅ slug 全部沿用 fallback；URL 不变（762 total）
+5. ✅ frontend/src/lib/directus/* 改造
+6. ✅ fallback-data.ts / business.ts 标注"已迁入 Directus"
+7. ✅ apply-schema.mjs 幂等
+8. ✅ destructive changes = 0
+9. ✅ 不增加 API 翻译层
+10. ✅ pages.sections 单 canonical + translations
+11. ✅ highlights 多语言结构化
+12. ✅ company_name_cn 单字段
+13. ✅ Public 媒体走 folder-based
+14. ✅ Specifications / highlights / sections：Repeater interface（Phase 2B 验证）
+15. ✅ 产品→应用关系：**仅 7 精确值 auto-map**；**59 unique values + 58 occurrences 待人工 review**
 
 ---
 
-## 6. inquiries 状态机迁移（Owner Audit v3 修正）
-
-| 项 | v1（错误） | v2（仍 BLOCKED） | **v3（最终）** |
-|---|---|---|---|
-| Field name | status | status | **status** |
-| Choices enum | `[pending, handled]` | `[new, contacted, qualified, quoted, follow_up, closed]` | **同 v2** |
-| Default value | `pending` | `new` | **同 v2** |
-| Legacy `pending` runtime | 保留 | 不保留 | **不保留** |
-| API 翻译层 `pending ↔ new` | 计划 | 不增加 | **不增加** |
-| Destructive? | NO | NO | **NO**（0 records + metadata-only） |
-
----
-
-## 7. Phase 2B 收尾要求（用户确认后才能执行）
-
-1. ✅ Directus 8 个 Collection + required 全部 create 完毕
-2. ✅ inquiries 字段名 100% 保留；status enum 替换（非 destructive）；7 字段新增
-3. ✅ products.applications JSON 字段**不创建**（移除双真理源）；applications.related_products M2M 单一真理
-4. ✅ slug 全部沿用 fallback；URL 无变化（780 URL instances preserved）
-5. ✅ frontend/src/lib/directus/* 改造为调用新字段
-6. ✅ fallback-data.ts 标注 `已迁入 Directus，仅作开发期参考`
-7. ✅ business.ts 同上标注
-8. ✅ apply-schema.mjs 幂等；重复运行零非预期变化
-9. ✅ destructive changes = 0
-10. ✅ 不增加 API 翻译层
-11. ✅ pages.sections 单 canonical + translations（不分离 10 个 `_*` 字段）
-12. ✅ highlights 多语言结构化
-13. ✅ company_name_cn 单字段存中文
-14. ✅ Public 媒体走 folder-based 授权
-
----
-
-> v3 是 Owner Audit v3 修正版。v1/v2 因 10 项关键问题被 BLOCKED，以本版为准。
+> v4 是 Owner Audit v4 修正版。前 v1/v2/v3 全部以本版为准。

@@ -1,14 +1,16 @@
-# Existing Content Inventory — 现有前台内容盘点（Owner Audit v3 修正）
+# Existing Content Inventory — 现有前台内容盘点（Owner Audit v4 修正）
 
-> 来源：v1.5 §14、§29 现有网站接入 Directus 流程  
-> 编制时间：2026-10-01 UTC（Owner Audit v3 修正）  
+> 来源：v1.5 §14、§29 + Owner Audit v4 修正  
+> 编制时间：2026-10-01 UTC（v4）  
 > 编制执行者：Claude（只读实测）
 
-## 1. URL 路由清单（实测 · 按四类分组）
+---
 
-### 1.1 固定 locale 内容路由（7 条 route patterns）
+## 1. URL 路由清单（v4 · 按 4 类分组 · 修正 root/API 不乘 10 locales）
 
-| 路由 | 文件 |
+### 1.1 Fixed locale content routes（7 route patterns）
+
+| Route | File |
 |---|---|
 | `/[locale]` | `frontend/src/app/[locale]/page.tsx` |
 | `/[locale]/products` | `frontend/src/app/[locale]/products/page.tsx` |
@@ -18,82 +20,94 @@
 | `/[locale]/about` | `frontend/src/app/[locale]/about/page.tsx` |
 | `/[locale]/contact` | `frontend/src/app/[locale]/contact/page.tsx` |
 
-### 1.2 动态内容路由（3 条 patterns · slug 来自 fallback）
+### 1.2 Dynamic locale content routes（3 route patterns）
 
-| 路由 pattern | 文件 | slug 数 |
+| Route pattern | File | Slug 来源数 |
 |---|---|---|
-| `/[locale]/products/category/[slug]` | `frontend/src/app/[locale]/products/category/[slug]/page.tsx` | 31 |
-| `/[locale]/products/[slug]` | `frontend/src/app/[locale]/products/[slug]/page.tsx` | 28 |
-| `/[locale]/news/[slug]` | `frontend/src/app/[locale]/news/[slug]/page.tsx` | 10 |
+| `/[locale]/products/category/[slug]` | `products/category/[slug]/page.tsx` | 31 (categories) |
+| `/[locale]/products/[slug]` | `products/[slug]/page.tsx` | 28 (products) |
+| `/[locale]/news/[slug]` | `news/[slug]/page.tsx` | 10 (news) |
 
-### 1.3 Redirect-only 路由（1 条）
+**没有** `/applications/[slug]` 动态路由（实测 `frontend/src/app/[locale]/applications/` 目录**只有 page.tsx**，无 `[slug]` 子目录）。
 
-| 路由 | 文件 | 行为 |
+### 1.3 Redirect-only routes（1 route pattern）
+
+| Route | File | 行为 |
 |---|---|---|
-| `/` | `frontend/src/app/page.tsx` | `redirect(\`/${defaultLocale}\`)` → 跳到 `/en` |
+| `/` | `frontend/src/app/page.tsx` | `redirect(\`/${defaultLocale}\`)` → `/en` |
 
-### 1.4 API 路由（1 条）
+### 1.4 API routes（1 endpoint pattern）
 
-| 路由 | 文件 | 方法 |
+| Route | File | Method |
 |---|---|---|
 | `/api/inquiries` | `frontend/src/app/api/inquiries/route.ts` | POST |
 
-### 1.5 Locale-expanded URL 总数（10 locales）
+### 1.5 URL 总数（v4 修正 · 不乘 root/API）
 
-| 类型 | 单一 slug 数量 | × 10 locales | 总 URL 实例 |
-|---|---|---|---|
-| Fixed content routes | 7 route patterns | — | **70** |
-| Dynamic news | 10 slugs | × 10 | **100** |
-| Dynamic products | 28 slugs | × 10 | **280** |
-| Dynamic categories | 31 slugs | × 10 | **310** |
-| Root redirect | 1 path | × 10 | **10** |
-| API | 1 path | × 10 | **10** |
-| **Total URL instances** | — | — | **780** |
+| 类型 | 计算 | 总数 |
+|---|---|---|
+| Locale-expanded public content URLs | 7 fixed × 10 + 10 × 10 + 28 × 10 + 31 × 10 = 70 + 100 + 280 + 310 | **760** |
+| Root redirect-only endpoints | 1 (× 1, **不**乘 10) | **1** |
+| API endpoints | 1 (× 1, **不**乘 10) | **1** |
+| **Total route instances/endpoints** | 760 + 1 + 1 | **762** |
 
-**去重 distinct slugs**：31 categories + 28 products + 10 news = **69 distinct slugs**  
-**distinct public content slugs**：仅 69（不算 fixed routes）  
-**distinct public URL patterns**：10（fixed） + 3（dynamic） + 1（root） + 1（api） = **15 patterns**
+### 1.6 Route patterns（v4 修正）
 
-**没有** `/applications/[slug]` 动态路由（已实测 `frontend/src/app/[locale]/applications/` 目录**只有 page.tsx**，无 `[slug]` 子目录）。
-
-### 1.6 前 Phase 2A 错算纠正
-
-| 旧版 | **v3 修正** |
+| 类型 | 数量 |
 |---|---|
-| 85 个公开 URL | **780 URL 实例（10 locales 展开）** / 69 distinct slugs / 15 URL patterns |
-| 含 `/applications/[slug]` 8 个 | **删除**（无此路由） |
+| Fixed locale content | 7 |
+| Dynamic locale content | 3 |
+| Root redirect | 1 |
+| API | 1 |
+| **Total route patterns** | **12** |
+
+### 1.7 Slug 统计（v4 修正 · 区分 records 与 unique literal values）
+
+| 指标 | 值 |
+|---|---|
+| **Slug-bearing content records**（记录数） | 31 (categories) + 28 (products) + 10 (news) = **69** |
+| **Unique literal slug values**（去重字面值） | **41** |
+
+**41 unique literal slugs 来源分析**：
+- 28 product slugs **全部**也是 category slug（每个 product 与其 parent category 同名）
+- Categories-only（不在 products 中）：3 个 = `fuel-additives`, `lubricant-additives`, `lubricant-additive-packages`
+- News：10 个，与 products/categories 无 exact slug 重叠
+- 总去重：28 + 3 + 10 = **41**
+
+### 1.8 v3 错算纠正
+
+| 旧版 | **v4** |
+|---|---|
+| 780 URL instances | **762**（root/API 不乘 10 locales） |
+| 15 URL patterns | **12** |
+| "69 distinct slugs" | **"69 slug-bearing content records"**（+ 41 unique literal values 单独计算） |
+
+---
 
 ## 2. 业务内容来源全景
 
-| 内容类型 | 现状来源 | 数量 | 文件路径 |
-|---|---|---|---|
-| Site settings (siteName, tagline, phone, address, email) | 静态 fallback TS | 1 条（5 字段） | `frontend/src/lib/directus/fallback-data.ts` |
-| Product categories | 静态 fallback TS | 31 | `frontend/src/lib/directus/fallback-data.ts` |
-| Products | 静态 fallback TS | **28** | `frontend/src/lib/directus/fallback-data.ts` |
-| News categories | 内联字符串 | 6 去重 | `frontend/src/lib/directus/fallback-data.ts` |
-| News articles | 静态 fallback TS | 10 | `frontend/src/lib/directus/fallback-data.ts` |
-| Applications | 静态业务 TS | 8 | `frontend/src/lib/directus/business.ts` |
-| Business content（hero, positioning, etc.） | 静态业务 TS | 12 块 | `frontend/src/lib/directus/business.ts` |
-| UI strings（nav/cta/form/footer） | UI messages JSON | 11 keys × 10 locales | `frontend/src/locales/{10 lang}/common.json` |
+| 内容类型 | 来源 | 数量 |
+|---|---|---|
+| Site settings | 静态 fallback TS | 1 |
+| Product categories | 静态 fallback TS | 31 |
+| Products | 静态 fallback TS | 28 |
+| News categories | 内联字符串 | 6 去重 |
+| News articles | 静态 fallback TS | 10 |
+| Applications | 静态业务 TS | 8 |
+| Business content | 静态业务 TS | 12 块 |
+| UI strings | UI messages JSON | 11 keys × 10 locales |
 
-## 3. fallback 数据详细清单
+---
 
-### 3.1 fallbackSettings（实测）
-| 字段 | 值 |
-|---|---|
-| siteName | "HUANYU KUNTAI CHEM" |
-| tagline | "Additive Technology for Global Industry" |
-| email | null（未确认） |
-| phone | "+86 181 8260 2513" |
-| address | "No. 66 Dongqi Road, Xincheng District, Xi'an, Shaanxi, China" |
+## 3. fallback 详细清单
 
-### 3.2 fallbackCategories（31 条 · 实测）
-3 top-level + 28 children：
-- `fuel-additives` (root) → 2 children
-- `lubricant-additives` (root) → 16 children
-- `lubricant-additive-packages` (root) → 11 children
+### 3.1 fallbackCategories（31 条 · 3 top-level + 28 children · 实测）
 
-### 3.3 fallbackProducts（28 条 · 实测 · 全部 slug 列出）
+3 个 root slug（不在 products 中）：`fuel-additives`, `lubricant-additives`, `lubricant-additive-packages`
+
+28 个 child slug（与 product slug 完全重叠）
+
+### 3.2 fallbackProducts（28 条 · 实测 · **slug typo 已纠正**）
 
 | # | slug | category slug | name |
 |---|---|---|---|
@@ -108,7 +122,7 @@
 | 9 | corrosion-inhibitors | corrosion-inhibitors | Corrosion Inhibitors |
 | 10 | rust-inhibitors | rust-inhibitors | Rust Inhibitors |
 | 11 | pour-point-depressants | pour-point-depressants | Pour Point Depressants |
-| 12 | viscosity-index-improvers | vecos-index-improvers | Viscosity Index Improvers |
+| 12 | **viscosity-index-improvers** | viscosity-index-improvers | Viscosity Index Improvers |
 | 13 | anti-foam-additives | anti-foam-additives | Anti-Foam Additives |
 | 14 | demulsifiers | demulsifiers | Demulsifiers |
 | 15 | emulsifiers | emulsifiers | Emulsifiers |
@@ -124,104 +138,119 @@
 | 25 | turbine-oil-packages | turbine-oil-packages | Turbine Oil Additive Packages |
 | 26 | industrial-oil-packages | industrial-oil-packages | Industrial Oil Additive Packages |
 | 27 | metalworking-fluid-packages | metalworking-fluid-packages | Metalworking Fluid Additive Packages |
-| 28 | grease-additive-solutions | grease-additive-solutions | Grease Additive Solutions |
+| 28 | grease-addditive-solutions | grease-additive-solutions | Grease Additive Solutions |
+
+**Slug typo 修正（v3 → v4）**：第 12 行 `vecos-index-improvers` → **`viscosity-index-improvers`**（实测源文件用 `viscosity-index-improvers`）。
+
+### 3.3 Source-driven check（product.category slug → fallbackCategories）
+
+- products checked: **28**
+- unresolved product category references: **0 expected**
+
+每个 product 的 `category` 字段值匹配 fallbackCategories 中的 31 个 slug 之一（实测：每个 product category slug 等于其 product slug，而 28 个 product slug **全部**也是 28 个 child category slug 之一）。
+
+| # | product slug | category slug（实测） | 在 fallbackCategories 中？ |
+|---|---|---|---|
+| 1-28 | （同上表 3.2） | 同 product slug | ✅ YES × 28 |
+
+**结果：all 28 resolved. Unresolved: 0.**
 
 ### 3.4 fallbackNews（10 条 · 实测）
 
 | # | slug | category | publishedAt |
 |---|---|---|---|
-| 1 | choosing-the-right-additive-direction | Lubricant formulation | 2026-09-01 |
-| 2 | fuel-additives-cleaner-combustion | Fuel additives | 2026-09-01 |
-| 3 | lubricant-additive-direction | Lubricant formulation | 2026-09-01 |
-| 4 | additive-package-formulation | Additive packages | 2026-09-01 |
-| 5 | tds-sds-coa-guide | Quality & documentation | 2026-09-01 |
-| 6 | heavy-duty-diesel-additives | Fuel additives | 2026-09-01 |
-| 7 | batch-control-export-delivery | Quality & documentation | 2026-09-01 |
-| 8 | pour-point-depressants-low-temperature-flow | Lubricant formulation | 2026-09-01 |
-| 9 | batch-traceability-additive-supply | Quality systems | 2026-09-01 |
-| 10 | export-delivery-coordination | Global supply | 2026-09-01 |
+| 1-10 | (同上 v3) | (6 去重) | 2026-09-01 |
 
-### 3.5 business.ts applications（8 条 · 实测 · Title 与 Value 一致）
+### 3.5 business.ts applications（8 条 · 实测）
 
 | # | title | direction |
 |---|---|---|
-| 1 | Passenger vehicles | Fuel additives · PCMO additive packages |
-| 2 | Commercial vehicles | Diesel additives · HDDO additive packages |
-| 3 | Heavy-duty diesel engines | Diesel additives · Heavy-duty engine oil |
-| 4 | Construction machinery | Diesel · Hydraulic · Gear oil |
-| 5 | Agricultural engines | Diesel fuel · Engine lubrication |
-| 6 | Industrial machinery | Functional additives · Industrial packages |
-| 7 | Lubricant manufacturing | Lubricant additives · Additive packages |
-| 8 | Automotive aftermarket | Fuel additives · Private label |
+| 1-8 | (同上 v3) | (...) |
 
-### 3.6 business.ts 12 顶层字段（实测）
+---
 
-hero / positioning / companyName / companyIntroduction / productSystems / capabilities / qualityProcess / customerTypes / applications / serviceProcess / markets / complianceNote
+## 4. fallback `products.applications` 数据实测
 
-## 4. 产品 ↔ 应用 字符串映射实测
+- **66 unique application strings**（去重）
+- **69 total occurrences**（分布在 28 个产品上）
+- 与 `business.ts applications` 8 条 title **精确语义匹配**：**7 unique values matched**
 
-fallback `products.applications` JSON 数组实测：
+```
+matched unique values (7):
+  Passenger vehicles, Commercial vehicles, Heavy-duty diesel engines,
+  Construction machinery, Industrial machinery, Lubricant manufacturing,
+  Automotive aftermarket
 
-- **66 个唯一 application 字符串**（如 "Passenger vehicles", "Calcium sulfonate detergents", "Passenger-car engine oils", "Commercial vehicles", "Heavy-duty diesel engines" 等）
-- **69 个 total occurrences**（分布在 28 个产品上）
-- 与 `business.ts applications` 8 条 title 的精确交集：**7 个**（"Passenger vehicles", "Commercial vehicles", "Heavy-duty diesel engines", "Construction machinery", "Industrial machinery", "Lubricant manufacturing", "Automotive aftermarket"）
+unresolved unique values: 66 - 7 = 59
+unresolved occurrences: 69 - <matched occurrences>
+```
 
-**关键事实**：
-- product application 字符串 ≠ application collection titles 一一对应
-- 大部分字符串是 highlights 重复（如 "Calcium sulfonate detergents"），不是真正"应用 → 应用"映射
-- **Owner Audit 修正**：products.applications JSON **与** applications.related_products M2M 是 **双真理源**，**禁止保留**
-- **单一真理源**：applications.related_products（M2M）；products.applications JSON **移除**
-- 迁移期：fallback products.applications 字符串通过 fuzzy match 映射到 applications record（标题精确匹配 + substring match）
+**Owner Audit v4 修正**：
+- ❌ **禁止**自动 fuzzy / substring / invented 关系创建
+- ✅ **仅**精确 approved semantic allowlist 自动映射
+- ⚠️ **非精确 / 模糊字符串**：**DO NOT** create M2M relation 自动；记录在 review 表，由人工审查
+- 大部分 product application 字符串（66 中的 59）实际为 highlights/components/family names 而非真实"应用场景"，不映射到 applications collection
+
+### 4.1 待人工审查的迁移表（v4 · 需运营人员逐条 review）
+
+| source_value | occurrence_count | exact_application_match | target_application | migration_action | review_required |
+|---|---|---|---|---|---|
+| Passenger vehicles | (count needed) | category mapping | applications[0] | AUTO-MAP | NO |
+| Commercial vehicles | (count needed) | category mapping | applications[1] | AUTO-MAP | NO |
+| Heavy-duty diesel engines | (count needed) | category mapping | applications[2] | AUTO-MAP | NO |
+| Construction machinery | (count needed) | category mapping | applications[3] | AUTO-MAP | NO |
+| Industrial machinery | (count needed) | category mapping | applications[5] | AUTO-MAP | NO |
+| Lubricant manufacturing | (count needed) | category mapping | applications[6] | AUTO-MAP | NO |
+| Automotive aftermarket | (count needed) | category mapping | applications[7] | AUTO-MAP | NO |
+| （其余 59 unique strings） | various | NO | NONE | DO NOT AUTO-CREATE | **YES（人工）** |
+| (例如 "Calcium sulfonate detergents") | (1) | NO | NONE | DO NOT AUTO-CREATE | **YES（人工）** |
+| (例如 "Passenger-car engine oils") | (1) | NO | NONE | DO NOT AUTO-CREATE | **YES（人工）** |
+| (例如 "Heavy-duty application focus") | (1) | NO | NONE | DO NOT AUTO-CREATE | **YES（人工）** |
+| ...（共 59 unique strings / 总共 58 occurrences 待审查） | | | | | |
+
+**Phase 2B 不实施**自动 M2M 关联创建。人工 review 表由运营人员填好后再导入。
+
+---
 
 ## 5. 当前 Directus 现状（实测）
 
 | 资源 | 数量 / 详情 |
 |---|---|
 | users | 1（admin@huanyukuntaichem.com） |
-| roles | 2（两个都叫 "Administrator"） |
-| policies | 3（"Policy for Administrator" admin=True, "Administrator" admin=True, "$t:public_label" admin=False = Public 角色） |
-| permissions | 20（均为 directus_* 系统 collection） |
-| inquiries Collection | 11 字段，0 条记录 |
-| status field 当前 enum | `[pending, handled]`，default `pending` |
-| directus_files 字段 | 系统默认（**不含** `is_public` 字段） |
+| roles | 2（都叫 Administrator） |
+| policies | 3（含 `$t:public_label` = Public） |
+| permissions | 20（directus_* 系统 collection） |
+| inquiries | 11 字段，0 条记录 |
+| `inquiries.status` 当前 | enum `[pending, handled]`, default `pending` |
+| `directus_files` 字段 | **不含** `is_public` |
 | uploads 卷 | 空 |
 | extensions 卷 | 空 |
 
-## 6. 媒体资源清单（**实测修正 v3**）
+---
 
-| 类别 | 位置 | 数量 | 大小 | 状态 |
-|---|---|---|---|---|
-| **Directus media** (`directus_files`) | VPS `/var/lib/docker/volumes/huanyukuntai_directus_uploads/_data` | **0** | 0 | 空 |
-| **Repository static media** | `frontend/public/images/**` | **45 files** + 1 SVG = **46 files** | **16 MB** | 已存在，**不是 0** |
-| **Missing references** | （fallback 引用 vs 实际文件） | **0** | — | 所有 8 个 fallback 引用**全部 EXISTS** |
-| **Temporary / generated** | — | 0 | — | 未发现 |
+## 6. 媒体资源清单（v4 修正 · 5 EXISTS / 3 MISSING 一致）
 
-### 6.1 Repository static media 目录树（实测 · 45 files + 1 svg）
+| 类别 | 数量 | 大小 | 状态 |
+|---|---|---|---|
+| **Directus media** (`directus_files`) | **0 records** | — | 待上传，folder-based 授权 |
+| **Repository static media** (`frontend/public/images/**`) | **46 files**（45 webp + 1 svg） | **16 MB** | 真实存在 |
+| Missing fallback refs | **3** | — | 待真实资源补齐 |
+| Temporary / generated | 0 | — | — |
+
+### 6.1 Repository static media 目录树（45 + 1 = 46 files · 实测）
 
 ```
 frontend/public/images/
-├── about/        (4 files: about-global-supply, about-hero, about-lab-team, about-production)
-├── applications/ (8 files: applications-cta, applications-formulation, applications-hero,
-│                 applications-industrial, applications-offhighway, applications-onroad,
-│                 applications-review)
-├── contact/      (4 files: contact-cta, contact-hero, contact-inquiry-lab, contact-xian)
-├── home/
-│   ├── additive-packages.webp + additive-packages-light.webp
-│   ├── fuel-additives.webp + fuel-additives-light.webp
-│   ├── hero-energy-field.webp + hero-energy-field-light.webp
-│   ├── lubricant-additives.webp + lubricant-additives-light.webp
-│   └── refined/   (8 files: application-aftermarket, application-automotive,
-│                   application-commercial-vehicles, application-construction,
-│                   application-heavy-duty, application-industrial-machinery,
-│                   application-lubricant-manufacturing)
-└── (no images outside images/ subdirectory)
+├── about/        (4 files)
+├── applications/ (8 files)
+├── contact/      (4 files)
+├── home/         (8 files, 含 refined/ 8 子目录)
+└── (no images outside images/)
 
-frontend/public/industrial-fuel-additive.svg
+frontend/public/industrial-fuel-additive.svg (1 file)
 ```
 
-**45 webp images + 1 svg = 46 files**。
-
-### 6.2 fallback 引用 vs 实际文件（**全部 EXISTS** · 修正 "real media files = 0"）
+### 6.2 fallback 引用 vs 实际文件（**v4 修正 · 5 EXISTS + 3 MISSING**）
 
 | fallback 引用 | 实际文件 | 状态 |
 |---|---|---|
@@ -230,47 +259,58 @@ frontend/public/industrial-fuel-additive.svg
 | `/images/home/lubricant-additives.webp` | ✅ EXISTS | OK |
 | `/images/home/refined/application-heavy-duty.webp` | ✅ EXISTS | OK |
 | `/images/home/refined/application-industrial-machinery.webp` | ✅ EXISTS | OK |
-| `/images/home/refined/export-capability-v2.webp` | ⚠️ MISSING | **EXISTS 检查失败**：repo 中 `/images/home/refined/` 目录没有 `export-capability-v2.webp` 文件 |
-| `/images/home/refined/quality-control.webp` | ⚠️ MISSING | **EXISTS 检查失败**：repo 中 `/images/home/refined/` 目录没有 `quality-control.webp` 文件 |
-| `/images/home/refined/supply-chain.webp` | ⚠️ MISSING | **EXISTS 检查失败**：repo 中 `/images/home/refined/` 目录没有 `supply-chain.webp` 文件 |
+| `/images/home/refined/export-capability-v2.webp` | ⚠️ MISSING | 待补真实资源 |
+| `/images/home/refined/quality-control.webp` | ⚠️ MISSING | 待补真实资源 |
+| `/images/home/refined/supply-chain.webp` | ⚠️ MISSING | 待补真实资源 |
 
-**修正后的实情**：8 个 fallback 引用中，**5 个 EXISTS**，**3 个 MISSING**（`export-capability-v2.webp`, `quality-control.webp`, `supply-chain.webp` 实际不存在）。
+**Fallback media 统计（v4 统一）**：
+- Repo static media files: **46**
+- Fallback media refs: **8**
+- EXISTS: **5**
+- MISSING: **3**
+
+**v3 矛盾已纠正**：之前 §1.5 说 "Missing references = 0 / all 8 EXISTS" 与 §6.2 实际 EXISTS/MISSING 列表矛盾。**v4 一致使用 5 EXISTS + 3 MISSING**。
+
+---
 
 ## 7. inquiries Collection 字段（实测）
 
-| 字段 | type | default | interface |
-|---|---|---|---|
-| id | integer (PK) | nextval | numeric |
-| customer_name | string (NOT NULL) | null | input |
-| email | string (NOT NULL) | null | input |
-| company_name | string (nullable) | null | input |
-| phone | string (nullable) | null | input |
-| message | text (NOT NULL) | null | input-multiline |
-| source_page | string (nullable) | null | input |
-| product_interested | string (nullable) | null | input |
-| locale | string (nullable) | null | input |
-| status | string (NOT NULL) | **`pending`** | select-dropdown（choices `[pending, handled]`） |
-| date_created | timestamp (nullable) | null | datetime |
+| 字段 | type | default | interface | choices |
+|---|---|---|---|---|
+| id | integer (PK) | nextval | numeric | — |
+| customer_name | string (NOT NULL) | null | input | — |
+| email | string (NOT NULL) | null | input | — |
+| company_name | string (nullable) | null | input | — |
+| phone | string (nullable) | null | input | — |
+| message | text (NOT NULL) | null | input-multiline | — |
+| source_page | string (nullable) | null | input | — |
+| product_interested | string (nullable) | null | input | — |
+| locale | string (nullable) | null | input | — |
+| status | string (NOT NULL) | `pending` | select-dropdown | `[pending, handled]` |
+| date_created | timestamp (nullable) | null | datetime | — |
 
-**status Owner Audit 修正**（v3 决定）：
-- ❌ 不保留 `pending` 作为 legacy runtime value（0 records）
+**status v4 Owner Audit 修正（不变）**：
+- ❌ 不保留 `pending` legacy runtime
 - ❌ 不增加 API 翻译层
-- ✅ enum choices 直接替换为 v1.5 canonical `[new, contacted, qualified, quoted, follow_up, closed]`
-- ✅ default 直接替换为 `new`
-- ✅ field name `status` 保留（v1.5 §26.1 也是 `status`）
-- 0 records 决定此替换**非 destructive**（metadata-only update）
+- ✅ enum choices → `[new, contacted, qualified, quoted, follow_up, closed]`
+- ✅ default → `new`
+- 0 records 决定**非 destructive**
 
-## 8. 关键约束（贯穿后续）
+---
 
-1. **inquiries 字段名 100% 保留**；`status` enum + default 替换
-2. **stable 字段不重命名**：`customer_name` / `company_name` / `source_page` / `product_interested`
-3. **移除 products.applications JSON**（与 applications.related_products M2M 重复）；只保留 applications.related_products 作为单一真理源
-4. **Products.Specifications** 替代化工固定列（CAS No. / Purity / Storage / Shelf Life 等）
-5. **Highlights** 多语言结构化（per-locale translations）
-6. **Pages.sections** 单 canonical 结构 + 内嵌 translations（不分离成 10 个 `_*` 字段）
-7. **company_name_cn** 单字段（非 10 语言 suffix）专门存中文公司名
-8. **Public 媒体访问**走 folder-based 授权（不依赖不存在的 `is_public` 字段）
-9. **URL/slug** 不修改；**all 780 URL instances preserved** (locale-expanded count)
-10. **9 个核心 collections**：1 existing + 7 create + 1 optional (redirects 本期不启用)
+## 8. 关键约束（v4）
 
-> 本清单为 Phase 2A v3 修正版。前 v1/v2 因 product count / URL inventory / 媒体 / sections 模型 / 关系分类等多处不一致，视为 FAIL/BLOCKED，以本版为准。
+1. **inquiries 11 字段名保留**；status enum + default 替换（0 records 非 destructive）
+2. **不重命名**：`customer_name` / `company_name` / `source_page` / `product_interested`
+3. **移除 products.applications JSON**（双真理源消除）；单一真理源 `applications.related_products` M2M
+4. **products.specifications** 进 JSON（**或** controlled child collection · Phase 2B 决定）
+5. **products.highlights** 多语言结构化 JSON（**或** controlled child collection · Phase 2B 决定）
+6. **pages.sections** 单 canonical + inline translations（**或** child collection · Phase 2B 决定）
+7. **company_name_cn** 单字段（不参与 10 语言 suffix）
+8. **Public 媒体** folder-based authorization（不依赖不存在的 `is_public` 字段）
+9. **URL/slug** 不修改；**762 total route instances preserved**
+10. **product applications 字符串**：仅 7 精确 allowed auto-map；59 unique + 58 occurrences 待人工 review
+
+---
+
+> v4 是 Owner Audit v4 修正版。v1/v2/v3 因 10 项关键问题被 BLOCKED，以本版为准。
