@@ -789,7 +789,7 @@ const PAGES_FIELDS = [
 
   // relations (3)
   { field: 'hero_image',  type: 'uuid', nullable: true, relation: 'm2o', related_collection: 'directus_files' },
-  { field: 'og_image',     type: 'url',   nullable: true },
+  { field: 'og_image',     type: 'uuid', nullable: true, relation: 'm2o', related_collection: 'directus_files' },
   { field: 'image',        type: 'uuid', nullable: true, relation: 'm2o', related_collection: 'directus_files' },
 
   { field: 'date_created',  type: 'timestamp', nullable: true, system: true },
@@ -922,7 +922,15 @@ export const ALL_RELATIONS = [
     relation_type: 'm2o',
     on_delete: 'SET NULL',
   },
-  // 10. pages → directus_files (image)
+  // 10. pages → directus_files (og_image)
+  {
+    collection: 'pages',
+    field: 'og_image',
+    related_collection: 'directus_files',
+    relation_type: 'm2o',
+    on_delete: 'SET NULL',
+  },
+  // 11. pages → directus_files (image)
   {
     collection: 'pages',
     field: 'image',
@@ -930,7 +938,7 @@ export const ALL_RELATIONS = [
     relation_type: 'm2o',
     on_delete: 'SET NULL',
   },
-  // 11. site_settings → directus_files (logo)
+  // 12. site_settings → directus_files (logo)
   {
     collection: 'site_settings',
     field: 'logo',

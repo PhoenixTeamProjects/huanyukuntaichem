@@ -109,16 +109,28 @@ async function api(method, path, body) {
 }
 
 async function getAll(path) {
+  // Directus 11 quirk: `/fields` endpoint IGNORES `limit` and always returns ALL
+  // fields. For other endpoints (`/collections`, `/folders`, `/roles`,
+  // `/policies`, `/users`, `/permissions`), `limit` IS respected.
+  // We use limit=200 + manual pagination; for fields we skip pagination.
+  if (path.startsWith('/fields')) {
+    const res = await api('GET', path);
+    return res.data || [];
+  }
   const out = [];
   let offset = 0;
   const limit = 200;
   while (true) {
     const sep = path.includes('?') ? '&' : '?';
-    const res = await api('GET', `${path}${sep}limit=${limit}&offset=${offset}&meta=filter_count`);
+    const res = await api('GET', `${path}${sep}limit=${limit}&offset=${offset}`);
     const items = res.data || [];
     out.push(...items);
     if (items.length < limit) break;
     offset += limit;
+    if (offset > 100000) {
+      console.error('  [WARN] pagination safety stop at offset=', offset);
+      break;
+    }
   }
   return out;
 }
@@ -265,9 +277,11 @@ function diffFolders(prodFolders) {
 // Deterministic hash for idempotency check
 // =========================================================================
 
-function hash(obj) {
-  const crypto = require('crypto');
-  return crypto.createHash('sha256').update(JSON.stringify(obj)).digest('hex').slice(0, 16);
+async function hash(obj) {
+  // Use Node's built-in Web Crypto (ESM-compatible)
+  const data = new TextEncoder().encode(JSON.stringify(obj));
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
 }
 
 // =========================================================================
@@ -539,7 +553,7 @@ async function main() {
     relations:   diff.relations,
     folders:     diff.folders,
   };
-  const h = hash(hashInput);
+  const h = await hash(hashInput);
   console.log(`DRY_RUN_1_HASH = ${h}`);
   console.log(`DRY_RUN_2_HASH = ${h}  (re-run with unchanged production yields identical hash)`);
   console.log(`DRY_RUN_DETERMINISTIC = YES`);
