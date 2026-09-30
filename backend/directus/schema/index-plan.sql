@@ -57,6 +57,7 @@ CREATE INDEX IF NOT EXISTS idx_inquiries_status           ON inquiries (status);
 CREATE INDEX IF NOT EXISTS idx_inquiries_date_created     ON inquiries (date_created);
 CREATE INDEX IF NOT EXISTS idx_inquiries_assigned_to      ON inquiries (assigned_to);
 CREATE INDEX IF NOT EXISTS idx_inquiries_next_follow_up_at ON inquiries (next_follow_up_at);
+CREATE INDEX IF NOT EXISTS idx_inquiries_outcome          ON inquiries (outcome);
 
 -- =====================================================
 -- JUNCTION TABLE INDEXES

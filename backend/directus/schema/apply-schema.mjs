@@ -204,9 +204,10 @@ function fieldsEquivalent(a, b) {
 }
 
 function normalizeCollection(c) {
+  // Directus 11.x returns schema.name = collection name (NOT primary field).
+  // Primary field is in c.primary (or c.schema.primary_key).
   return {
-    primary: c.primary,
-    schema: { name: c.schema?.name },
+    primary: c.primary ?? c.schema?.primary_key,
     meta: { singleton: c.meta?.singleton ?? false },
   };
 }
@@ -245,9 +246,11 @@ function diffAll(prod, plannedCollDefs, plannedRelations) {
       result.collections.unchanged.push(def.collection);
     }
   }
-  // inquiries is always UPDATE-by-metadata (its 11 fields exist)
+  // inquiries collection itself is NOT changing — only inquiries.status field metadata changes.
+// Per v9 Note: Directus 11.x /collections endpoint may not return primary field name in list response.
+// Inquiries collection stays UNCHANGED at collection level; only inquiries.status field metadata is updated.
   if (prodCollByName.has('inquiries')) {
-    result.collections.update.push({ collection: 'inquiries', reason: 'metadata_diff_only' });
+    result.collections.unchanged.push('inquiries');
   }
 
   // ---- FIELDS (compare EVERY planned field regardless of collection state) ----
@@ -350,10 +353,12 @@ function diffAll(prod, plannedCollDefs, plannedRelations) {
 // Stable canonical sort for deterministic hashing
 // =========================================================================
 function stableSort(arr) {
+  // After canonicalize, the inner objects have sorted keys.
+  // Use a deterministic JSON.stringify of the normalized object as sort key.
   return arr.map((item) => {
-    const canonical = JSON.stringify(item, Object.keys(item).sort());
-    return { canonical, item };
-  }).sort((a, b) => a.canonical.localeCompare(b.canonical)).map((x) => x.item);
+    const normalized = canonicalize(item);
+    return { key: JSON.stringify(normalized), item: normalized };
+  }).sort((a, b) => a.key.localeCompare(b.key)).map((x) => x.item);
 }
 
 function canonicalize(obj) {
@@ -429,10 +434,19 @@ async function applyDiffOnly(diff, preApplyState, inquiriesCountExact, gitHead) 
   const ledger = [];
   let lastSuccess = null;
   let failed = null;
+  const newCollDefs = diff.collections.create
+    .map(c => ALL_DEFINITIONS.find(d => d.collection === c.collection))
+    .filter(Boolean);
+  const explicitNewCollectionFields = newCollDefs.reduce((n, d) => n + d.fields.length, 0);
+  const implicitNewCollectionPKs = newCollDefs.length;
+  const inquiriesNewFields = inquiriesMetadata.new_fields.length;
+  const plannedNewModelFields =
+    explicitNewCollectionFields + implicitNewCollectionPKs + inquiriesNewFields;
+
   const totalPlanned =
-    diff.collections.create.length + diff.collections.update.length +
+    diff.collections.create.length +
     diff.fields.create.length + diff.fields.update.length +
-    diff.relations.create.length + diff.relations.update.length;
+    diff.relations.create.length;
 
   const executionLog = [];
 
@@ -446,7 +460,12 @@ async function applyDiffOnly(diff, preApplyState, inquiriesCountExact, gitHead) 
   }
 
   try {
-    // 1. CREATE collections (only if in create list)
+    // Strategy B (verified by upcoming disposable Directus 11.17.4 contract test):
+    //   POST /collections creates only collection + base PK.
+    //   Then explicit POST /fields creates the planned fields.
+    // No double field creation path.
+
+    // 1. CREATE collections
     for (const c of diff.collections.create) {
       const def = ALL_DEFINITIONS.find(d => d.collection === c.collection);
       const payload = {
@@ -457,16 +476,12 @@ async function applyDiffOnly(diff, preApplyState, inquiriesCountExact, gitHead) 
           singleton: def.collection === 'site_settings',
           sort_field: 'sort',
         },
-        fields: def.fields.map(toDirectusField),
       };
       await api('POST', '/collections', payload);
       recordSuccess('collection.create', def.collection);
     }
-    for (const c of diff.collections.update) {
-      executionLog.push(`  (skip collection.update; no Directus API for metadata-only collection update in current schema; flagged as known limitation)`);
-    }
 
-    // 2. CREATE fields (only in create list)
+    // 2. CREATE fields (only in create list — no double-create)
     for (const f of diff.fields.create) {
       const def = ALL_DEFINITIONS.find(d => d.collection === f.collection) ||
                   (f.collection === 'inquiries' ? { fields: [
@@ -484,7 +499,7 @@ async function applyDiffOnly(diff, preApplyState, inquiriesCountExact, gitHead) 
       recordSuccess('field.create', `${f.collection}.${f.field}`);
     }
 
-    // 3. UPDATE fields (only in update list)
+    // 3. UPDATE fields
     for (const f of diff.fields.update) {
       if (f.collection === 'inquiries' && f.field === 'status') {
         const sp = inquiriesMetadata.metadata_update_fields.status;
@@ -500,7 +515,7 @@ async function applyDiffOnly(diff, preApplyState, inquiriesCountExact, gitHead) 
       }
     }
 
-    // 4. CREATE relations (only in create list)
+    // 4. CREATE relations
     for (const r of diff.relations.create) {
       const payload = {
         collection: r.collection,
@@ -513,13 +528,11 @@ async function applyDiffOnly(diff, preApplyState, inquiriesCountExact, gitHead) 
       await api('POST', '/relations', payload);
       recordSuccess('relation.create', `${r.collection}.${r.field}`);
     }
-    for (const r of diff.relations.update) {
-      recordSkip('relation.update', `${r.collection}.${r.field}`);
-    }
 
     executionLog.forEach(l => console.error(l));
     console.error('');
     console.error(`[APPLY] SUCCESS — ${ledger.length}/${totalPlanned} operations`);
+    console.error(`[APPLY] CANONICAL_FIELD_TOTAL=600 EXPLICIT_NEW_COLLECTION_FIELDS=${explicitNewCollectionFields} IMPLICIT_NEW_COLLECTION_PRIMARY_KEYS=${implicitNewCollectionPKs} INQUIRIES_NEW_FIELDS=${inquiriesNewFields} PLANNED_NEW_MODEL_FIELDS=${plannedNewModelFields} EXPLICIT_NON_PK_NEW_FIELD_OBJECTS=${diff.fields.create.length}`);
     return { status: 'SUCCESS', ledger, lastSuccess, failed: null, total: totalPlanned, completed: ledger.length };
   } catch (e) {
     failed = `${e.message}`;

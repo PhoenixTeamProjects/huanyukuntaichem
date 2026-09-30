@@ -1,22 +1,23 @@
-# Directus 11.17.4 Schema API Contract — Verification Report (Placeholder)
+# Directus 11.17.4 Schema API Contract — Verification Report
 
-> **STATUS**: NOT VERIFIED YET  
-> **Owner Audit v8 requirement #14 + #15 + #16 + #17 + #18**  
-> Phase 2B remains `BLOCKED_CORRECTIVE` until this report is completed via
-> a throwaway disposable Directus 11.17.4 + PostgreSQL 16.x environment.
+> **STATUS**: Phase 2B BLOCKED_CORRECTIVE  
+> Disposable Directus 11.17.4 instance NOT YET PROVISIONED.  
+> This document will be populated by the actual disposable verification.  
+> Phoenix Owner has not requested disposable provisioning in this pass.
 
-## Required Disposable Environment
+## Disposable Environment Specification (Planned)
 
 | Item | Value |
 |---|---|
 | Compose project name | `huanyukuntaichem-schema-test` |
-| Network name | `huanyukuntaichem-test-net` (separate from production) |
-| Directus version | 11.17.4 (same as production) |
-| Postgres version | 16.x compatible with production |
-| Directus port (loopback) | 8058 (non-production) |
-| Postgres port | 5440 (non-production) |
-| Admin email (throwaway) | admin@test.local |
-| Volumes | separate, non-shared with production |
+| Network name | `huanyukuntaichem-test-net` |
+| Directus version | 11.17.4 |
+| Postgres version | 16.x |
+| Directus loopback port | 8058 (non-production) |
+| Postgres loopback port | 5440 (non-production) |
+| Admin email | `admin@test.local` (throwaway) |
+| Admin password | generated at runtime (throwaway) |
+| Directus KEY/SECRET | generated at runtime (throwaway) |
 
 ## Forbidden During Verification
 
@@ -28,33 +29,33 @@
 - ❌ production env
 - ❌ production folders
 
-## Verification Items (Owner Audit v8 #14-#17)
+## Verification Items (16)
 
 | # | Item | Status |
 |---|---|---|
-| 1 | POST /collections exact accepted payload | PENDING |
-| 2 | Nested `fields` behavior | PENDING |
-| 3 | Automatic primary-key behavior | PENDING |
-| 4 | Automatic system fields behavior | PENDING |
-| 5 | Physical M2O field creation (uuid) | PENDING |
-| 6 | M2O relation API payload | PENDING |
-| 7 | GET /relations actual response shape (Directus 11.x) | PENDING |
-| 8 | M2M alias creation + junction behavior | PENDING |
-| 9 | Junction collection creation (auto-managed) | PENDING |
-| 10 | Junction field creation (auto-managed) | PENDING |
-| 11 | FK creation (Directus auto vs explicit) | PENDING |
-| 12 | Idempotent re-run of equivalent creation | PENDING |
-| 13 | status field PATCH (default + choices) | PENDING |
-| 14 | exact inquiries aggregate/count query | PENDING |
-| 15 | field meta/interface payload structure | PENDING |
-| 16 | singleton collection behavior (site_settings) | PENDING |
+| 1 | POST /collections exact accepted payload | NOT_RUN |
+| 2 | nested fields behavior | NOT_RUN |
+| 3 | Partial AST schema.name vs primary key reporting | NOT_RUN |
+| 4 | Partial AST system fields behavior | NOT_RUN |
+| 5 | physical M2O field creation | NOT_RUN |
+| 6 | M2O relation API payload | NOT_RUN |
+| 7 | GET /relations actual response structure | NOT_RUN |
+| 8 | M2M alias behavior | NOT_RUN |
+| 9 | junction collection creation | NOT_RUN |
+| 10 | junction field creation | NOT_RUN |
+| 11 | FK creation | NOT_RUN |
+| 12 | idempotent equivalent re-run behavior | NOT_RUN |
+| 13 | status PATCH default + choices | NOT_RUN |
+| 14 | exact aggregate/count query | NOT_RUN |
+| 15 | field meta/interface payload | NOT_RUN |
+| 16 | singleton behavior | NOT_RUN |
 
 ## Method (Planned)
 
 ```bash
 # 1. Spin up disposable stack
 docker compose -p huanyukuntaichem-schema-test \
-  -f tests/disposable-compose.yml up -d
+  -f backend/directus/schema/tests/disposable-compose.yml up -d
 
 # 2. Wait for healthy
 until curl -sf http://127.0.0.1:8058/server/health; do sleep 1; done
@@ -69,10 +70,28 @@ $TOKEN=$(curl -sS -X POST http://127.0.0.1:8058/auth/login \
 #    (record verbatim — sanitize any tokens/ids)
 ```
 
-## Output
+## Output Format Per Item
 
-This document will be populated with concrete API request/response transcripts
-from the disposable instance after verification completes. Until then, all
-fields above remain `PENDING`.
+For each verified item:
 
-**Until this report is finalized, Phase 2B remains `BLOCKED_CORRECTIVE`.**
+```markdown
+### Item N
+
+**Request:**
+[verbatim HTTP request shape]
+
+**Response:**
+[verbatim HTTP response shape]
+
+**Observed Behavior:**
+[actual Directus 11.17.4 behavior]
+
+**Impact on apply-schema.mjs:**
+[what code change is required, if any]
+
+**Status:** PASS | FAIL | NOT_SUPPORTED
+```
+
+## Current Status: PENDING ALL
+
+**Until all 16 items become PASS or FAIL with documented evidence, Phase 2B remains BLOCKED_CORRECTIVE.**
