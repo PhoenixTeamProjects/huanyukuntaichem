@@ -107,15 +107,15 @@
 
 ### 3.2 Per-value 完整 review 表（20 unique values · 全部列出）
 
-| # | source_value | occurrence_count | exact_application_match | target_application | migration_action | review_required |
+| # | source_value | occurrence_count | exact_application_match | target_application_slug | migration_action | review_required |
 |---|---|---|---|---|---|---|
-| 1 | Automotive aftermarket | 1 | YES | applications[8] | AUTO-MAP | NO |
-| 2 | Commercial vehicles | 2 | YES | applications[2] | AUTO-MAP | NO |
-| 3 | Construction machinery | 1 | YES | applications[4] | AUTO-MAP | NO |
-| 4 | Heavy-duty diesel engines | 2 | YES | applications[3] | AUTO-MAP | NO |
-| 5 | Industrial machinery | 2 | YES | applications[6] | AUTO-MAP | NO |
-| 6 | Lubricant manufacturing | 1 | YES | applications[7] | AUTO-MAP | NO |
-| 7 | Passenger vehicles | 1 | YES | applications[1] | AUTO-MAP | NO |
+| 1 | Automotive aftermarket | 1 | YES | `automotive-aftermarket` | AUTO-MAP | NO |
+| 2 | Commercial vehicles | 2 | YES | `commercial-vehicles` | AUTO-MAP | NO |
+| 3 | Construction machinery | 1 | YES | `construction-machinery` | AUTO-MAP | NO |
+| 4 | Heavy-duty diesel engines | 2 | YES | `heavy-duty-diesel-engines` | AUTO-MAP | NO |
+| 5 | Industrial machinery | 2 | YES | `industrial-machinery` | AUTO-MAP | NO |
+| 6 | Lubricant manufacturing | 1 | YES | `lubricant-manufacturing` | AUTO-MAP | NO |
+| 7 | Passenger vehicles | 1 | YES | `passenger-vehicles` | AUTO-MAP | NO |
 | 8 | Automatic transmission fluids | 1 | NO | NONE | DO NOT AUTO-CREATE | **YES（人工）** |
 | 9 | Automotive gear oils | 1 | NO | NONE | DO NOT AUTO-CREATE | **YES（人工）** |
 | 10 | Compressor oils | 1 | NO | NONE | DO NOT AUTO-CREATE | **YES（人工）** |
@@ -132,13 +132,34 @@
 
 **Sum check**：7 (matched) × various + 13 (unresolved) × 1 each = 10 + 13 = 23 ✅
 
-### 3.3 迁移规则（v5 严格）
+### 3.3 Migration rule（v6 · 严禁位置索引 · 必用稳定 slug）
 
-- ✅ **仅 7 unique values** 精确 allowlist auto-map（见上表 #1-7）
-- ⚠️ **13 unique values 待人工 review**（见上表 #8-20）
-- ❌ 禁止 fuzzy / substring / invented
-- ❌ 禁止自动创建未审批关系
-- DO NOT AUTO-CREATE = leave Directus relation empty + human approval required
+**正确**（v6 强制）：
+```
+source exact value
+→ approved target application slug（stable identifier）
+→ resolve Directus application UUID by slug
+→ create M2M relation
+```
+
+**禁止**（v6 强制）：
+- ❌ array position（`applications[1]`、`applications[8]`）
+- ❌ record order
+- ❌ 任何位置索引作为迁移标识
+
+**Approved target application slugs（v6）**：
+
+| Source value (exact) | Approved target slug |
+|---|---|
+| Passenger vehicles | `passenger-vehicles` |
+| Commercial vehicles | `commercial-vehicles` |
+| Heavy-duty diesel engines | `heavy-duty-diesel-engines` |
+| Construction machinery | `construction-machinery` |
+| Industrial machinery | `industrial-machinery` |
+| Lubricant manufacturing | `lubricant-manufacturing` |
+| Automotive aftermarket | `automotive-aftermarket` |
+
+**Slug-conflict check（v6 强制）**：以上 7 个 slug 与现有 8 个 applications titles 的 lowercased-dashed 规范化 **无冲突**（titles 包括 Passenger vehicles / Commercial vehicles / Heavy-duty diesel engines / Construction machinery / **Agricultural engines** / Industrial machinery / Lubricant manufacturing / Automotive aftermarket —— 其中 `agricultural-engines` 不在 7 个目标 slug 之列，其余 7 个与目标 slug 一一对应）。
 
 ---
 

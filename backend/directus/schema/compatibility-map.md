@@ -73,20 +73,20 @@ INQUIRIES_CANONICAL_TOTAL        = 18
 
 ### 2.2 Per-value 完整 review 表（**v5 · 20 unique values · 全部列出 · 无 placeholder**）
 
-| # | source_value | occurrence_count | exact_application_match | target_application | migration_action | review_required |
+| # | source_value | occurrence_count | exact_application_match | target_application_slug | migration_action | review_required |
 |---|---|---|---|---|---|---|
-| 1 | Automotive aftermarket | 1 | YES | applications[8] | AUTO-MAP | NO |
-| 2 | Commercial vehicles | 2 | YES | applications[2] | AUTO-MAP | NO |
-| 3 | Construction machinery | 1 | YES | applications[4] | AUTO-MAP | NO |
-| 4 | Heavy-duty diesel engines | 2 | YES | applications[3] | AUTO-MAP | NO |
-| 5 | Industrial machinery | 2 | YES | applications[6] | AUTO-MAP | NO |
-| 6 | Lubricant manufacturing | 1 | YES | applications[7] | AUTO-MAP | NO |
-| 7 | Passenger vehicles | 1 | YES | applications[1] | AUTO-MAP | NO |
+| 1 | Automotive aftermarket | 1 | YES | `automotive-aftermarket` | AUTO-MAP | NO |
+| 2 | Commercial vehicles | 2 | YES | `commercial-vehicles` | AUTO-MAP | NO |
+| 3 | Construction machinery | 1 | YES | `construction-machinery` | AUTO-MAP | NO |
+| 4 | Heavy-duty diesel engines | 2 | YES | `heavy-duty-diesel-engines` | AUTO-MAP | NO |
+| 5 | Industrial machinery | 2 | YES | `industrial-machinery` | AUTO-MAP | NO |
+| 6 | Lubricant manufacturing | 1 | YES | `lubricant-manufacturing` | AUTO-MAP | NO |
+| 7 | Passenger vehicles | 1 | YES | `passenger-vehicles` | AUTO-MAP | NO |
 | 8 | Automatic transmission fluids | 1 | NO | NONE | **DO NOT AUTO-CREATE** | **YES（人工）** |
 | 9 | Automotive gear oils | 1 | NO | NONE | **DO NOT AUTO-CREATE** | **YES（人工）** |
 | 10 | Compressor oils | 1 | NO | NONE | **DO NOT AUTO-CREATE** | **YES（人工）** |
 | 11 | Construction and agricultural power systems | 1 | NO | NONE | **DO NOT AUTO-CREATE** | **YES（人工）** |
-| 12 | Construction equipment | 1 | NONE | NONE | **DO NOT AUTO-CREATE** | **YES（人工）** |
+| 12 | Construction equipment | 1 | NO | NONE | **DO NOT AUTO-CREATE** | **YES（人工）** |
 | 13 | Cutting fluids | 1 | NO | NONE | **DO NOT AUTO-CREATE** | **YES（人工）** |
 | 14 | Industrial gear oils | 1 | NO | NONE | **DO NOT AUTO-CREATE** | **YES（人工）** |
 | 15 | Lubricating grease formulations | 1 | NO | NONE | **DO NOT AUTO-CREATE** | **YES（人工）** |
@@ -96,7 +96,17 @@ INQUIRIES_CANONICAL_TOTAL        = 18
 | 19 | Private-label fuel-treatment programs | 1 | NO | NONE | **DO NOT AUTO-CREATE** | **YES（人工）** |
 | 20 | Turbine oils | 1 | NO | NONE | **DO NOT AUTO-CREATE** | **YES（人工）** |
 
-**Sum**: 7 × {1,2,1,2,2,1,1} = 10 matched + 13 × 1 = 13 unresolved = **23 total** ✅
+**Migration rule（v6 · 严禁位置索引）**：
+```
+source exact value
+→ approved target application slug（stable identifier）
+→ resolve Directus application UUID by slug
+→ create M2M relation
+```
+
+**禁止**：array position（applications[1] 等）、record order。**Column 已从 `target_application` 改为 `target_application_slug`**。
+
+**Slug-conflict check（v6）**：以上 7 个 target slug 与现有 8 个 application titles 的 lowercased-dashed 规范化无冲突（titles: Passenger vehicles / Commercial vehicles / Heavy-duty diesel engines / Construction machinery / Agricultural engines / Industrial machinery / Lubricant manufacturing / Automotive aftermarket —— 其中 `agricultural-engines` 不在目标集）。
 
 ### 2.3 迁移规则（v5 严格 · 无 fuzzy）
 
@@ -286,27 +296,66 @@ SERVICE_IDENTITY_BINDING_IMPLEMENTATION = TO_BE_VERIFIED_IN_PHASE_2B_AGAINST_INS
 
 ---
 
-## 9. Phase 2B 收尾要求
+## 9. Phase 2B 收尾要求（v6 · 仅限 schema dry-run / apply gate）
 
-1. ✅ Directus 8 个 Collections create
-2. ✅ inquiries 11 字段保留（**10 unchanged + 1 metadata update**） + status enum 替换
-3. ✅ products.applications JSON **不创建**
-4. ✅ slug typo 全纠正（`vecos-index-improvers` → `viscosity-index-improvers`）
-5. ✅ frontend/src/lib/directus/* 改造
-6. ✅ fallback-data.ts / business.ts 标注"已迁入 Directus"
-7. ✅ apply-schema.mjs 幂等
-8. ✅ destructive changes = 0
-9. ✅ 不增加 API 翻译层
-10. ✅ pages.sections 单 canonical + translations
-11. ✅ highlights 多语言结构化
-12. ✅ company_name_cn 单字段
-13. ✅ Public 媒体走 folder-based authorization
-14. ✅ **Inquiry Writer 用 Directus field names（非 DTO names）**
-15. ✅ **status NOT writable by Inquiry Writer**（默认 `new`）
-16. ✅ 仅 7 unique values auto-map · 13 unique + 13 occurrences 待人工
-17. ✅ Service Identities 是逻辑需求（Phase 2B 验证绑定）
-18. ✅ Repeater interface（Phase 2B 验证）
+**PHASE_2B_SCOPE=SCHEMA_DRY_RUN_AND_SCHEMA_APPLY_GATE_ONLY**
+
+Phase 2B 仅包括：
+- final schema definition（已由 Phase 2A 完成）
+- apply-schema.mjs 设计 + dry-run
+- Diff 输出（含 create / update / delete / fields / relations / API operations）
+- Directus 11.x 版本 + API 行为实测
+- 幂等性验证
+- Phoenix 显式审批
+- 仅在审批后 Apply Schema（写 production Directus）
+
+### Phase 2B 完成判据（v6 严格）
+
+```
+COLLECTIONS_CREATE                  = 7
+COLLECTIONS_EXISTING                = 1   (inquiries, 必须保留)
+COLLECTIONS_UPDATE                  = 1   (inquiries schema/metadata diff)
+COLLECTIONS_DELETE                  = 0
+OPTIONAL_COLLECTIONS_DISABLED       = 1   (redirects, 本期不启用)
+
+DESTRUCTIVE_CHANGES                 = 0
+EXPECTED_UNEXPECTED_ON_2ND_RUN      = 0
+APPLY_PROD_ONLY_AFTER_PHOENIX_APPROVAL = TRUE
+```
+
+### Phase 2B **不**包括（v6 严格）
+
+- ❌ frontend/src/lib/directus/* 集成 → **Phase 2D**
+- ❌ fallback-data.ts 移除/标注 → **later, after verified migration**
+- ❌ business.ts 移除/标注 → **later, after verified migration**
+- ❌ 真实 fallback 内容导入 → **Later Data Migration phase**
+- ❌ frontend cutover → **Cutover phase**
+
+**Fallback-data.ts / business.ts 现状**（v6）：
+- 状态：current existing-content sources / fallback sources
+- 未标注 "已迁入 Directus"
+- **Until verified migration + frontend cutover** 才可标注 "已迁入 Directus"
+- **DO NOT write "已迁入 Directus" before actual migration evidence exists**（v6 强制）
+
+### Phase 边界（v6 总览）
+
+| Phase | 内容 |
+|---|---|
+| **Phase 2B** | Schema Dry Run + Schema Apply Gate（**仅限**） |
+| **Phase 2C** | Roles / Policies / Permissions / Service Identities 配置 |
+| **Phase 2D** | frontend/src/lib/directus/ · Adapter / Canonical DTO / Frontend integration |
+| **Later Data Migration** | existing fallback content → Directus 逐条 import（含 applications 13 unique + 13 occurrences 人工 review） |
+| **Cutover** | Directus 成为 Business Content Single Source of Truth |
+
+### 顺序约束
+
+1. Phase 2B 完成 → Phoenix 审批
+2. Phase 2C 完成 → Phoenix 审批
+3. Phase 2D 完成 → Phoenix 审批
+4. Later Data Migration → 运营人员执行
+5. Cutover → Directus 替代 fallback
+6. **仅** Cutover 完成后才可移除/标注 fallback-data.ts / business.ts
 
 ---
 
-> v5 是 Owner Audit v5 修正版。
+> v6 是 Owner Audit v6 修正版。前 v1-v5 全部以本版为准。
