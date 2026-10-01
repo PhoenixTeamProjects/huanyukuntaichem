@@ -400,11 +400,12 @@ function toDirectusField(f) {
     out.meta.special = ['m2o'];
     if (f.related_collection) out.related_collection = f.related_collection;
   } else if (f.relation === 'm2m') {
+    // M2M: Directus auto-creates the alias field on relation POST.
+    // Per Directus 11.17.4 verified contract: M2M field is alias type with meta.special=['m2m'].
     out.type = 'alias';
     out.related_collection = f.related_collection;
     out.meta = out.meta || {};
     out.meta.special = ['m2m'];
-    if (f.junction_table) out.meta.junction_table = f.junction_table;
   } else if (f.relation === 'o2m') {
     out.meta = out.meta || {};
     out.meta.special = ['o2m'];
@@ -517,14 +518,30 @@ async function applyDiffOnly(diff, preApplyState, inquiriesCountExact, gitHead) 
 
     // 4. CREATE relations
     for (const r of diff.relations.create) {
+      // Directus 11.17.4 verified relation payload format:
+      //   meta.many_collection, many_field, one_collection, one_field, junction_field (M2M only)
+      //   NOT related_collection / relation_type
+      const meta = {
+        one_field: `${r.collection}_id`,
+      };
+      if (r.junction_table) {
+        // M2M
+        meta.many_collection = r.collection;
+        meta.many_field = r.field;
+        meta.one_collection = r.related_collection;
+        meta.one_field = `${r.related_collection}_id`;
+        meta.junction_field = `${r.collection}_id`;
+      } else {
+        // M2O
+        meta.many_collection = r.collection;
+        meta.many_field = r.field;
+        meta.one_collection = r.related_collection;
+      }
       const payload = {
         collection: r.collection,
         field: r.field,
-        related_collection: r.related_collection,
-        relation_type: r.relation_type,
-        meta: { one_field: `${r.collection}_id` },
+        meta: meta,
       };
-      if (r.junction_table) payload.meta.junction_table = r.junction_table;
       await api('POST', '/relations', payload);
       recordSuccess('relation.create', `${r.collection}.${r.field}`);
     }

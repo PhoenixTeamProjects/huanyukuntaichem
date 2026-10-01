@@ -1,0 +1,68 @@
+# Disposable Directus 11.17.4 Schema Test
+#
+# CRITICAL: This compose file is for Phase 2B contract verification ONLY.
+# It runs an isolated Directus 11.17.4 + PostgreSQL instance that is COMPLETELY
+# SEPARATE from production.
+#
+# Production resources (containers, volumes, network, env) are NOT referenced.
+# Compose project name: huanyukuntaichem-schema-test
+# Network: huanyukuntaichem-test-net (isolated)
+# All credentials are throwaway runtime-generated values.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: huanyukuntaichem-test-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: huanyukuntaichem_test
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: ${TEST_POSTGRES_PASSWORD:?throwaway password required}
+    volumes:
+      - huanyukuntaichem-test-postgres-data:/var/lib/postgresql/data
+    networks:
+      - huanyukuntaichem-test-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d huanyukuntaichem_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  directus:
+    image: directus/directus:11.17.4
+    container_name: huanyukuntaichem-test-directus
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      KEY: ${TEST_DIRECTUS_KEY:?throwaway KEY required}
+      SECRET: ${TEST_DIRECTUS_SECRET:?throwaway SECRET required}
+      DB_CLIENT: pg
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_DATABASE: huanyukuntaichem_test
+      DB_USER: test_user
+      DB_PASSWORD: ${TEST_POSTGRES_PASSWORD:?throwaway password required}
+      ADMIN_EMAIL: ${TEST_ADMIN_EMAIL:?throwaway admin email required}
+      ADMIN_PASSWORD: ${TEST_ADMIN_PASSWORD:?throwaway admin password required}
+      PUBLIC_URL: http://127.0.0.1:8058
+      WEBSOCKETS_ENABLED: "false"
+    ports:
+      - "127.0.0.1:8058:8055"
+    networks:
+      - huanyukuntaichem-test-net
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8055/server/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  huanyukuntaichem-test-postgres-data:
+    name: huanyukuntaichem-test-postgres-data
+
+networks:
+  huanyukuntaichem-test-net:
+    name: huanyukuntaichem-test-net
+    driver: bridge
